@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>装柜工作台 · 业务流程图</title>
+<style>
+  :root{--bg:#eef1f5;--card:#fff;--line:#d8dfe8;--text:#1f2937;--muted:#6b7280;
+        --step:#2563eb;--decision:#d97706;--yes:#ef4444;--no:#16a34a;--end:#9ca3af}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);padding:28px 16px}
+  .chart-container{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 22px 30px;max-width:880px;margin:0 auto}
+  .chart-title{font-size:17px;font-weight:700;margin:0 0 4px}
+  .chart-note{font-size:12px;color:var(--muted);margin:0 0 22px}
+  .flow{display:flex;flex-direction:column;align-items:center}
+  .node{width:100%;max-width:560px;background:#fff;border:1.5px solid var(--step);border-radius:10px;padding:12px 16px;font-size:14px;line-height:1.5;text-align:center;position:relative}
+  .node .num{display:inline-block;min-width:22px;height:22px;line-height:22px;border-radius:11px;background:var(--step);color:#fff;font-size:12px;font-weight:700;margin-right:8px;text-align:center}
+  .arrow{width:2px;height:26px;background:var(--line);position:relative;margin:0}
+  .arrow::after{content:"";position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--muted);border-bottom:0}
+  .branch-row{width:100%;max-width:760px;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;margin:4px 0}
+  .decision-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+  .decision{background:#fff;border:1.5px solid var(--decision);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;text-align:center;width:100%;max-width:420px;position:relative}
+  .decision .num{background:var(--decision)}
+  .decision .d-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--decision);border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:middle}
+  .side{display:flex;flex-direction:column;justify-content:center;gap:8px}
+  .side .case{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px}
+  .case .lbl{flex:0 0 auto;font-weight:700;font-size:12px;border-radius:5px;padding:2px 9px;color:#fff}
+  .case .lbl.yes{background:var(--yes)}
+  .case .lbl.no{background:var(--no)}
+  .case .term{flex:1 1 auto;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;color:#991b1b;font-size:13px;text-align:center}
+  .case .term.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+  .case .term.muted{background:#f3f4f6;border-color:#e5e7eb;color:#4b5563}
+  .no-branch{align-self:center;font-size:12px;font-weight:700;color:var(--no);background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 12px;margin-top:2px}
+  .connector-note{align-self:center;font-size:12px;color:var(--muted);margin:2px 0 6px}
+  .end{background:#f0fdf4;border-color:#22c55e}
+  .end .num{background:#22c55e}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:24px;padding-top:16px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+  .lg-step i{background:#fff;border:1.5px solid var(--step)}
+  .lg-decision i{background:#fff;border:1.5px solid var(--decision)}
+  .lg-warn i{background:#fef2f2;border:1px solid #fecaca}
+  .lg-end i{background:#f0fdf4;border:1px solid #86efac}
+  .principle{max-width:640px;margin:22px auto 0;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:13px;color:#92400e;text-align:center}
+  .principle b{color:#78350f}
+</style>
+</head>
+<body>
+<div class="chart-container">
+  <h1 class="chart-title">装柜工作台 · 端到端业务流程</h1>
+  <p class="chart-note">供应链协同平台 · 装柜计划模块 M01｜从数据准备判断到生成 / 保护式重新预排的入口闭环</p>
+
+  <div class="flow">
+    <div class="node"><span class="num">1</span><b>进入工作台</b>：SCM 每日首屏入口，默认载入当前需求月份</div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">2</span><b>选择三筛选</b>：需求月份（N～N+6）＋ 客户 ＋ 目的地，联动汇总预测版本、批次池与货柜计划</div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">3</span><b>查看数据准备状态</b>：需求版本、排程批次、QC、SAP 四类数据的最近同步时间与异常</div>
+    <div class="arrow"></div>
+
+    <div class="branch-row">
+      <div class="side">
+        <div class="case"><span class="lbl no">具备</span><span class="term ok">可进入预排环节</span></div>
+        <div class="case"><span class="term muted">每项状态右侧提供跳转入口</span></div>
+        <div class="case"><span class="term muted">需求版本 → 需求预测</span></div>
+        <div class="case"><span class="term muted">排程批次 → 批次池</span></div>
+        <div class="case"><span class="term muted">QC / SAP → 预警中心</span></div>
+      </div>
+      <div class="side">
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>数据准备校验</b>：是否存在缺失或异常？</div>
+        <div class="case"><span class="lbl yes">缺失</span><span class="term">保留预警条目，提示预测负责人 / 数据责任人处理</span></div>
+        <div class="case"><span class="term muted">缺少启用预测版本 → 不自动阻断既有计划</span></div>
+        <div class="case"><span class="term muted">主数据缺失 / QC 风险 / 批次不足 → 保留预警，不静默排除</span></div>
+      </div>
+    </div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">4</span><b>查看四张核心指标卡</b>：需求预测量｜预计装柜量｜达成率（预计装柜量 / 预测量）｜CBM 风险柜数；点击可跳转对应明细</div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">5</span><b>处理 SCM 待处理清单</b>：按 <b>当日执行风险 &gt; CBM 超限 &gt; QC/批次不足 &gt; SAP 差异 &gt; T0 延期 &gt; 数据缺失</b> 排序，逐条「去处理」</div>
+    <div class="arrow"></div>
+
+    <div class="branch-row">
+      <div class="side">
+        <div class="case"><span class="lbl yes" style="background:#2563eb">首次</span><span class="term muted" style="background:#eff6ff;border-color:#bfdbfe;color:#1e40af">点「生成预排」：按 SKU + 客户 + 目的地的需求缺口生成货柜建议</span></div>
+        <div class="case"><span class="term muted">仅使用<b>可排且 QC 可满足</b>的批次</span></div>
+        <div class="case"><span class="term muted">缺口表可跳转批次池按 SKU 预筛选</span></div>
+      </div>
+      <div class="side">
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>是否已有计划</b>？</div>
+        <div class="case"><span class="lbl" style="background:#16a34a">已有</span><span class="term ok">点「重新预排」→ 二次确认后执行保护式重新预排</span></div>
+        <div class="case"><span class="term muted">既有货柜<b>不被改写</b></span></div>
+        <div class="case"><span class="term muted">仅补新增需求或已有缺口；需求下降形成计划余量预警</span></div>
+      </div>
+    </div>
+    <div class="arrow"></div>
+
+    <div class="node end"><span class="num">6</span><b>跳转与留痕</b>：清单与指标卡联动刷新；处理动作写入操作日志；缺口消除后对应条目自动移出清单</div>
+  </div>
+
+  <div class="principle"><b>铁律：工作台是判断层，不是处理层。</b>它只回答「能不能排柜、先处理什么、点进去到哪儿处理」；实际的数量、批次与货柜调整一律在排程视图、批次池等对应模块完成，本页不提供计划内容编辑入口。</div>
+
+  <div class="legend">
+    <span class="lg-step"><i></i>处理步骤</span>
+    <span class="lg-decision"><i></i>分支 / 判断</span>
+    <span class="lg-warn"><i></i>缺失 / 风险提示</span>
+    <span class="lg-end"><i></i>闭环 / 留痕</span>
+  </div>
+</div>
+</body>
+</html>
