@@ -1,0 +1,176 @@
+<h1>装柜计划执行表</h1>
+
+<h2>项目信息</h2>
+<table>
+  <tbody>
+    <tr><th>项目名称</th><td>供应链协同平台</td><th>模块</th><td>装柜计划执行表</td></tr>
+    <tr><th>需求名称</th><td>装柜计划执行表（仓库按日执行）</td><th>负责人</th><td>SCM 产品线</td></tr>
+    <tr><th>文档版本</th><td>V1.0</td><th>状态</th><td>已确认</td></tr>
+    <tr><th>更新日期</th><td>2026-09-11</td><th>关联原型</th><td>supply-chain-prototype.html（装柜计划执行表页）</td></tr>
+  </tbody>
+</table>
+
+<h2>版本记录</h2>
+<table>
+  <thead><tr><th>版本</th><th>日期</th><th>变更说明</th><th>作者</th></tr></thead>
+  <tbody>
+    <tr><td>V1.0</td><td>2026-09-11</td><td>初版：装柜日筛选、14 列执行表、柜号与封条号补录权限、计划有更新的时效展示、SAP 对账差异、导出与打印、已取消货柜不可见</td><td>SCM 产品线</td></tr>
+  </tbody>
+</table>
+
+<h2>需求背景</h2>
+<p>装柜计划执行表是仓库按日执行装柜计划的在线表单，用于<b>替代线下 Excel 计划表</b>。此前仓库拿到的是一份静态 Excel，计划发生调整后无法感知，且实际柜号、封条号靠线下记录后回传，形成信息断层。</p>
+<p>本模块的定位是<b>执行层</b>：仓库只需看清「今天装哪些柜、装什么、装多少」，并把实际执行信息（柜号、封条号）就地补录。计划数据本身由 SCM 在排程视图维护，执行表只读展示，不提供计划编辑能力。与排程视图的边界是：排程视图负责「计划怎么定」，执行表负责「今天怎么执行」。</p>
+
+<h2>需求目标</h2>
+<ul>
+  <li>提供按装柜日筛选的执行表，支持固定表头、横向滚动、在线预览、导出与打印。</li>
+  <li>14 列覆盖仓库执行所需信息：货柜编号、客户、目的地、运输方式、计划时段、SKU 批次数、箱数、CBM、QC 摘要、预计 T0、柜号、封条号、状态、计划有更新。</li>
+  <li><b>已取消货柜不在执行表中展示</b>——避免仓库按已作废计划执行。</li>
+  <li>仓库仅维护柜号与封条号；SKU、批次、数量、计划日期一律只读。</li>
+  <li>计划发生变更时以「计划有更新」列提示：24 小时内高亮，此后转灰，条目永久保留并可悬浮查看全量更新时间。</li>
+  <li>执行日后仍未匹配 SAP 出库时显示 SAP 对账差异预警；CBM 超限进入执行时显示高优先级对账风险。</li>
+  <li>执行表可随时在线预览、下载与打印，不依赖人工确认动作。</li>
+</ul>
+
+<h2>业务流程图</h2>
+<p>装柜计划执行表的端到端流程见下方流程图（独立文件），关键分支为「装柜日筛选」「已取消货柜过滤」「字段可编辑性判定（柜号 / 封条号）」「执行后 SAP 对账」。</p>
+<iframe src="../流程图/装柜计划执行表-flow.html" style="width:100%;height:640px;border:1px solid #e3e8ef;border-radius:8px" title="业务流程图"></iframe>
+
+<h2>界面截图</h2>
+<p>下图为现有系统「装柜计划执行表」页面的真实运行截图。顶部为装柜日筛选与可见状态说明标签：</p>
+<img src="images/execution-overview.png" alt="执行表总览" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<p>执行表 14 列（含柜号、封条号的可补录输入框，未补录时以「待补录」占位）：</p>
+<img src="images/execution-table.png" alt="执行表" style="width:100%;border:1px solid #e3e8ef;border-radius:8px" />
+
+<h2>详细方案</h2>
+<table>
+  <colgroup><col style="width:14%"><col style="width:15%"><col style="width:30%"><col style="width:41%"></colgroup>
+  <thead>
+    <tr><th>一级模块</th><th>二级功能</th><th>原型</th><th>描述</th></tr>
+  </thead>
+  <tbody>
+    <tr data-preview="overview">
+      <td rowspan="6">装柜计划执行表</td>
+      <td>装柜日筛选与可见状态</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-overview.png" alt="装柜日筛选" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>顶部装柜日筛选（日期选择器，默认今日）；右侧两个状态说明标签：「显示计划中 / 执行中 / 已完成」与「已取消货柜不可见」。</p>
+        <p><b>【交互说明】</b>切换装柜日 → 表格按该日刷新；标签为常驻说明，不作交互。</p>
+        <p><b>【功能逻辑】</b>展示范围 = 所选装柜日下、生命周期状态为计划中 / 执行中 / 已完成的货柜；<b>已取消货柜一律过滤不展示</b>。</p>
+        <p><b>【数据与内容规则】</b>装柜日以货柜计划的计划装柜日为准；跨日货柜按计划装柜日归属单日。</p>
+      </td>
+    </tr>
+    <tr data-preview="table">
+      <td>执行表（14 列）</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-table.png" alt="执行表" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>14 列：货柜编号、客户、目的地、运输方式、计划时段、SKU 批次数、箱数、CBM、QC 摘要、预计 T0、柜号、封条号、状态、计划有更新。表头固定，内容区横向滚动。</p>
+        <p><b>【交互说明】</b>点击货柜编号 → 进入货柜详情查看完整明细；列宽自适应内容，窄屏下横向滚动不重叠。</p>
+        <p><b>【功能逻辑】</b>箱数、CBM、SKU 批次数为装柜明细的实时汇总；QC 摘要展示最晚 QC 节点与风险标记；状态取货柜生命周期状态。</p>
+        <p><b>【数据与内容规则】</b>客户列展示简称（去除「股份有限公司 / 有限公司 / 有限责任公司 / 集团公司 / 公司」后缀）；CBM 展示批次合计值。</p>
+      </td>
+    </tr>
+    <tr data-preview="table">
+      <td>柜号 / 封条号补录</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-table.png" alt="柜号封条号补录" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>柜号、封条号单元格为就地输入框；未补录时显示「待补录」占位灰字。</p>
+        <p><b>【交互说明】</b>点击单元格 → 就地编辑 → 失焦或回车即保存并写入操作日志；无权限角色点击提示「当前角色无权维护该执行字段」。</p>
+        <p><b>【功能逻辑】</b>仓库仅维护柜号与封条号；<b>SKU、批次、数量、计划日期一律只读</b>，不提供任何编辑入口。</p>
+        <p><b>【前置条件与权限】</b>柜号：SCM / SCM 主管 / 仓库可补录；封条号：仓库为主责，SCM / SCM 主管亦可补录。已取消货柜不展示，故无编辑场景。</p>
+      </td>
+    </tr>
+    <tr data-preview="table">
+      <td>计划有更新提示</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-table.png" alt="计划有更新" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>「计划有更新」列展示该货柜计划内容的最近一次更新时间与相对时间（如「2 小时前」）。</p>
+        <p><b>【交互说明】</b><b>24 小时内的更新以高亮样式展示</b>，超过 24 小时后转为灰色；条目<b>永久保留</b>，鼠标悬浮可查看该货柜的全量更新时间列表。</p>
+        <p><b>【功能逻辑】</b>每次计划内容变更（日期、批次、上下架、拆批等）刷新该货柜的更新时间；无变更记录的货柜显示「—」。</p>
+        <p><b>【文案规范】</b>「计划有更新」为统一列名；悬浮面板标题为「更新时间记录」。</p>
+      </td>
+    </tr>
+    <tr data-preview="table">
+      <td>SAP 对账差异与 CBM 风险</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-table.png" alt="对账差异" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【功能逻辑】</b>执行日之后仍未匹配到 SAP 出库的货柜，在状态列或独立标识位显示 <b>SAP 对账差异预警</b>；CBM 超限仍进入执行的货柜显示<b>实际装柜高优先级对账风险</b>。</p>
+        <p><b>【边界说明】</b>上述标识<b>只提示，不阻断执行表的查看与补录</b>；风险的处理在预警中心完成。</p>
+        <p><b>【前置条件与权限】</b>对账差异由 SAP 出库回传结果驱动；未回传期间显示等待状态。</p>
+      </td>
+    </tr>
+    <tr data-preview="overview">
+      <td>导出与打印</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-overview.png" alt="导出与打印" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>页面右上角「导出」与「打印」按钮。</p>
+        <p><b>【交互说明】</b>点「导出」→ 下载当日执行表 CSV / Excel，文件名格式为「装柜计划执行表-YYYYMMDD.csv」（14 列中文表头，带 BOM 以兼容 Excel 中文）；点「打印」→ 调用浏览器打印，按横向布局输出。</p>
+        <p><b>【功能逻辑】</b>导出范围为当前筛选装柜日下的全部可见货柜（已取消货柜不包含）；导出与打印动作均写入操作日志留痕。</p>
+        <p><b>【边界说明】</b>执行表<b>可随时在线预览、下载和打印</b>，不依赖「发布快照」等人工确认动作。</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>字段可编辑性矩阵</h2>
+<table>
+  <thead><tr><th>字段</th><th>仓库</th><th>SCM 计划员</th><th>SCM 主管</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>货柜编号 / 客户 / 目的地 / 运输方式 / 计划时段</td><td>只读</td><td>只读</td><td>只读</td><td>计划数据，由排程视图维护</td></tr>
+    <tr><td>SKU 批次数 / 箱数 / CBM / QC 摘要 / 预计 T0</td><td>只读</td><td>只读</td><td>只读</td><td>系统汇总计算</td></tr>
+    <tr><td>柜号</td><td>可补录</td><td>可补录（发运后仍可）</td><td>可补录（发运后仍可）</td><td>实际物流柜号</td></tr>
+    <tr><td>封条号</td><td>可补录（主责）</td><td>可补录</td><td>可补录</td><td>仓库实际操作后补录</td></tr>
+    <tr><td>状态 / 计划有更新</td><td>只读</td><td>只读</td><td>只读</td><td>系统计算与日志</td></tr>
+  </tbody>
+</table>
+
+<h2>异常与边界</h2>
+<table>
+  <thead><tr><th>场景</th><th>处理</th></tr></thead>
+  <tbody>
+    <tr><td>已取消货柜</td><td>不在执行表中展示；标签常驻说明「已取消货柜不可见」</td></tr>
+    <tr><td>当日无货柜</td><td>表格显示空态占位，提示「当日无装柜计划」</td></tr>
+    <tr><td>无权限补录</td><td>点击单元格提示「当前角色无权维护该执行字段」</td></tr>
+    <tr><td>执行日后未匹配 SAP 出库</td><td>显示 SAP 对账差异预警；不阻断查看与补录</td></tr>
+    <tr><td>CBM 超限进入执行</td><td>显示实际装柜高优先级对账风险</td></tr>
+    <tr><td>窄屏浏览</td><td>表头固定、内容区横向滚动，列之间不重叠</td></tr>
+    <tr><td>导出时 Excel 组件未加载</td><td>降级生成带 BOM 的 CSV 备用文件</td></tr>
+  </tbody>
+</table>
+
+<h2>数据埋点</h2>
+<table>
+  <thead><tr><th>事件名</th><th>触发时机</th><th>关键属性</th></tr></thead>
+  <tbody>
+    <tr><td>exec_date_change</td><td>切换装柜日</td><td>日期、货柜数</td></tr>
+    <tr><td>exec_row_open</td><td>点击货柜编号查看详情</td><td>货柜编号、状态</td></tr>
+    <tr><td>exec_field_edit</td><td>补录柜号 / 封条号</td><td>货柜编号、字段名、角色</td></tr>
+    <tr><td>exec_field_blocked</td><td>无权限编辑被拦截</td><td>货柜编号、字段名、角色</td></tr>
+    <tr><td>exec_update_hover</td><td>悬浮查看计划更新时间全量</td><td>货柜编号、记录条数</td></tr>
+    <tr><td>exec_export</td><td>导出执行表</td><td>日期、货柜数、格式（CSV/Excel）</td></tr>
+    <tr><td>exec_print</td><td>打印执行表</td><td>日期、货柜数</td></tr>
+  </tbody>
+</table>
+
+<h2>上线计划</h2>
+<table>
+  <thead><tr><th>阶段</th><th>内容</th><th>时间</th></tr></thead>
+  <tbody>
+    <tr><td>一期</td><td>装柜日筛选、14 列执行表、柜号与封条号补录、计划有更新时效、SAP 对账差异、导出与打印、已取消货柜过滤</td><td>待确认</td></tr>
+    <tr><td>二期</td><td>批量补录、执行进度看板、按客户的执行清单打印模板</td><td>待确认</td></tr>
+  </tbody>
+</table>
+
+<h2>附录</h2>
+<table>
+  <thead><tr><th>术语</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>执行表</td><td>仓库按日执行装柜计划的在线表单，替代线下 Excel 计划表</td></tr>
+    <tr><td>计划有更新</td><td>货柜计划内容最近一次变更时间的提示标识；24 小时内高亮，之后转灰，永久保留</td></tr>
+    <tr><td>SAP 对账差异</td><td>执行日后仍未匹配到 SAP 出库的货柜所触发的差异预警</td></tr>
+    <tr><td>柜号</td><td>实际物流柜号，可由 SCM / 仓库补录，发运后仍可</td></tr>
+    <tr><td>封条号</td><td>仓库实际操作后补录或修正的封条编号，仓库为主责</td></tr>
+    <tr><td>生命周期状态</td><td>计划中 → 执行中 → 已完成 / 已取消；已取消货柜不在执行表展示</td></tr>
+  </tbody>
+</table>
