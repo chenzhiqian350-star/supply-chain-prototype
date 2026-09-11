@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="Gt8HGX05VORX0USMKAvJdq">
+<head data-page-node-id="I9s0UotUsbj371EhqdTnhQ">
+<meta charset="utf-8" data-page-node-id="kKUZmnDF6HpIgsGssnTNHA">
+<meta name="viewport" content="width=device-width,initial-scale=1" data-page-node-id="AtVSNv0rzfF4skAx8oll3L">
+<title>产品需求文档</title>
+</head>
+<body data-page-node-id="6FDfJzmshfMkP7A6DYii0z">
+<main id="prdContent" data-page-node-id="l9wiFLSGcusTohfS9NNrWI"><h1 data-page-node-id="QZSqgqJTrF665RldYyI0Bj">排程视图</h1>
+
+<h2 data-page-node-id="4PDuM6k5BnRuw2mnSl1b7B">项目信息</h2>
+<table data-page-node-id="ViOrwURm6reZ3DW67EN9R1">
+  <tbody data-page-node-id="0LnAF9zHjwnlggImpcbLYF">
+    <tr data-page-node-id="yJZzWHMsrDC372YtpST0FL"><th data-page-node-id="Oo3BG57o2bkvCs5EQ8iKSE">项目名称</th><td data-page-node-id="voqfOyIXbGSrQRo9iewGS6">供应链协同平台</td><th data-page-node-id="Y605aenxzqt9iT7cyJ0Fjm">模块</th><td data-page-node-id="egG2ouiLDO04aOjo30yRh2">装柜排程</td></tr>
+    <tr data-page-node-id="9JNgvkYCzPl02QJcOFXS5M"><th data-page-node-id="yN4ClPIhYAzwwhjrfWfbU6">需求名称</th><td data-page-node-id="P8nlQRLe039WADK92Ee0iw">排程视图（含货柜编辑与上下架）</td><th data-page-node-id="B6JDsAYX7BToxTsYeMfOui">负责人</th><td data-page-node-id="Pcmw53SOcWtL0ZNK8D7xC5">SCM 产品线</td></tr>
+    <tr data-page-node-id="yJFXD9zzqn5Hd5W7NtzBp2"><th data-page-node-id="9njBRPdL7OsYtjI4tlyWYO">文档版本</th><td data-page-node-id="2vvFgtKo1DYIT58necYnp7">V1.1</td><th data-page-node-id="5LVZtfGBOsTaAFMVDAbq3b">状态</th><td data-page-node-id="0qT4ApwAWIk5rwmbMFSDmB">已确认</td></tr>
+    <tr data-page-node-id="Be06YLPHLcPz00botwv1ay"><th data-page-node-id="0dFA6pzoODh6OkRR7LQ0Yz">更新日期</th><td data-page-node-id="toTpDDyF4CLve2yB8RySrr">2026-09-08</td><th data-page-node-id="P4h6xWFbWqjyGcR0IHo3CC">关联原型</th><td data-page-node-id="pRN1cjf9YjK9utBeMkDa42">supply-chain-prototype.html（排程视图页 / 货柜编辑抽屉）</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="BQYrz7fDEu0MhlmZetnjPL">版本记录</h2>
+<table data-page-node-id="EmZhsUCIG2ed7adqaA3lQZ">
+  <thead data-page-node-id="B3bx5lYoPjX0B9fnBvCZ4Y"><tr data-page-node-id="GJhazjQNoUNyQlDSgEDjgi"><th data-page-node-id="AW8LGCb58JRMDj8DJP8q1K">版本</th><th data-page-node-id="UnAPKMJ7ddMAFdAg3fF565">日期</th><th data-page-node-id="ck2iGv52qVXv779Cyg9H4b">变更说明</th><th data-page-node-id="vyGDhKsIewydoixGGs1oHH">作者</th></tr></thead>
+  <tbody data-page-node-id="YyH6VGvZ3FIRxabqbwScay">
+    <tr data-page-node-id="Ew4ugTZYyoJLGaU0VkgXQg"><td data-page-node-id="KDMtGm86NqKHpeODfu5Hsw">V1.0</td><td data-page-node-id="XCAssR3ak5FtfdHSEC06y9">2026-09-08</td><td data-page-node-id="JZd4Nkhnear5KGjysWFX6m">初版：月/周/日三视图、跨周拖动改期、每日装柜上限、未保存调整管理、日期链与香港工作天规则</td><td data-page-node-id="2u8Ygy4nHbhpscj6Q0jnA0">SCM 产品线</td></tr>
+    <tr data-page-node-id="ZySsvVJyQx8kJKhtuwQ4g9"><td data-page-node-id="HDn6QXYC5tOhNm2ev7VlBO">V1.1</td><td data-page-node-id="1uIAvUgUZIlvJhg16Ku439">2026-09-08</td><td data-page-node-id="SOyj9u4rXRVek981FA7YJU">补充编辑层：当日编辑链路、货柜详情抽屉（字段/操作/执行信息）、上架/下架/替换、拆批、装柜明细预览与下载、货柜状态机与权限矩阵、上下架业务规则</td><td data-page-node-id="AYXFQxz7WWhVSZkM0wROE2">SCM 产品线</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="cDDeigSNETdtUci6G4wPKP">需求背景</h2>
+<p data-page-node-id="g0IRWkOKicRH40j8uM3Gmz">排程视图是 SCM 计划员在装柜计划里「把货柜排到具体日期与时段」的核心工作台。原流程中排程调整分散在不同入口，缺少统一的三视图视角与未保存调整管理。当前需收敛四点：月/周/日三视图各司其职（日视图处理执行与 QC 风险，周视图核对排柜顺序，月视图跨周拖动改期）；每日装柜数量受上限约束（默认 5 柜，可配置）；所有排程调整统一进入未保存状态，支持撤销与批量保存；日期链按香港工作天顺推，PV/CV 特殊批次默认加 3 个工作日。</p>
+<p data-page-node-id="fmBbeHBtOry1JtGCwdEiyv">视图层之外，货柜的高频编辑动作（改日期、上下架批次、拆批、替换、明细导出）收敛在「货柜编辑抽屉」完成。核心原则：<b data-page-node-id="CZtldPBE9CeQ5ENCjg3nGz">装柜数量不能直接输入</b>，只能通过上架、拆批、替换和下架改变；跨客户、跨目的地混装在操作点直接阻断，而非事后预警。</p>
+
+<h2 data-page-node-id="VrQ5izUNsNexX8oQNvsY8D">需求目标</h2>
+<ul data-page-node-id="1C8SuctYkrFkojp4DXws6S">
+  <li data-page-node-id="pT9FzGxsLWeA4Rxg7P61gO">提供月 / 周 / 日三视图，默认进入日视图，视图间可快速切换。</li>
+  <li data-page-node-id="hlHZ2xnu1YnIEPytQizbCC">月视图支持跨周拖动货柜改期，周末不排柜；周视图按「时间段 × 工作日」矩阵核对排柜顺序。</li>
+  <li data-page-node-id="jaTL94NUvxzS3IXUsN6Wif">每日装柜数量受上限约束，超限的日期在月视图中标识并阻止改期落位。</li>
+  <li data-page-node-id="yDZPOlzTAlycTTpY3LQ7j4">拖拽、改期等调整统一进入未保存状态，支持撤销与批量保存。</li>
+  <li data-page-node-id="ExBJhXSnS12CSFbaQLaRvC">货柜日期链按「最晚 QC → 装柜 → ETD → ETA → T0」顺推，香港工作天，PV/CV +3 工作日。</li>
+  <li data-page-node-id="YOuYDwTnnRpZq8qhniqFbV">点击日视图货柜卡片进入货柜编辑抽屉，完成上下架、拆批、替换、执行信息维护与明细导出。</li>
+  <li data-page-node-id="4pQdtpv6VJXCzZ62joJHGj">上架仅允许同客户、同目的地批次；跨客户、跨目的地在操作点硬阻断。</li>
+  <li data-page-node-id="HWrThsEoiEaQwReDixDDeQ">货柜按「计划中 → 执行中 → 已完成 / 已取消」生命周期流转，计划结构字段随装柜日闸门锁定，按角色控制可编辑范围。</li>
+</ul>
+
+<h2 data-page-node-id="2ORRCHYj48iE8kmSPrfl0O">业务流程图</h2>
+<p data-page-node-id="AfV4tFZxsE2GXP4oCnBgXO">排程视图的端到端流程见下方流程图（独立文件），关键分支为「视图选择」「每日上限校验」「周末/权限拦截」「保存校验」。</p>
+<iframe src="../流程图/排程视图-flow.html" style="width:100%;height:640px;border:1px solid #e3e8ef;border-radius:8px" title="业务流程图" data-page-node-id="pY8bt5JdnMXDrHx9HKk90X"></iframe>
+
+<h2 data-page-node-id="YrsiDysdiJcaN6H182ZSh6">界面截图</h2>
+<p data-page-node-id="ySJXTiFII8QMWGHl1I77EB">下图为现有系统「排程视图」页面的真实运行截图（供应链数字化平台），依次为日视图、周视图、月视图。</p>
+<img src="images/schedule-day.png" alt="排程视图日视图" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" data-page-node-id="qV7blBcaUlm4aujJuYloXF" />
+<img src="images/schedule-week.png" alt="排程视图周视图" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" data-page-node-id="AQqTeYmRdKoXB9YyfTNaZw" />
+<img src="images/schedule-month.png" alt="排程视图月视图" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" data-page-node-id="N9aEVoEHkFzVGZ39YvvnJH" />
+<p data-page-node-id="w58wq4ip0sPqfUnBTwZXlb">点击日视图货柜卡片后打开的「货柜编辑抽屉」（含操作栏、SKU 明细、货柜与执行信息、货柜时间轴）：</p>
+<img src="images/drawer-detail.png" alt="货柜编辑抽屉" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" data-page-node-id="TCkq9qWRDiwgJW2TQnbqxY" />
+<p data-page-node-id="jdSjGjHxyClvc8FBf3Eg1W">抽屉内「上架批次」打开的可用批次池（同目的地、同 SKU 优先排序，跨目的地禁止上架）：</p>
+<img src="images/shelf-pool.png" alt="可用批次池上架弹窗" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" data-page-node-id="8Zn18BNHB64hOcE8IfC8jl" />
+<p data-page-node-id="jRMnn2CzAA7r0jHZTbPs1J">「拆分批次」弹窗（整箱为最小单位，CBM 超限时给出最少移出建议）：</p>
+<img src="images/split-batch.png" alt="拆分批次弹窗" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" data-page-node-id="ovBvH2HbaSizcj0Ho2VbAY" />
+<p data-page-node-id="TOH1T7kDfzFCHY0JZxQFsE">「预览明细」弹窗（装柜明细 26 列实时预览，支持下载 Excel 与打印）：</p>
+<img src="images/detail-preview.png" alt="装柜明细预览" style="width:100%;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="WABjfVsZYFUS18WXxdm4Yy" />
+
+<h2 data-page-node-id="qMLhxPW1o64DcMEpvNyeAX">详细方案</h2>
+<table data-page-node-id="gACGpqoiWVKMH4mnSX49id">
+  <colgroup data-page-node-id="AKyxhSWTFcNgOEPn2Bnazt"><col style="width:14%" data-page-node-id="qVUtsJF5hwmIWVPaoJM1rC"><col style="width:15%" data-page-node-id="hs6jASeUOIIBT6IXplbGUZ"><col style="width:30%" data-page-node-id="tA3avbKUJyB78EfaeETtXj"><col style="width:41%" data-page-node-id="bPAnItSJ19gqfcbwZWoUHZ"></colgroup>
+  <thead data-page-node-id="n3EcjVYyrov9VOGggVsT0s">
+    <tr data-page-node-id="TLuPdKms7EjeddFdg5URL0"><th data-page-node-id="JnDcpPLYgsTv7dGEpB1pWi">一级模块</th><th data-page-node-id="PzDyi93H9Ph3hj4gb47W6m">二级功能</th><th data-page-node-id="hPqZQJC8DSWDWNhaEn59OH">原型</th><th data-page-node-id="x9symDJAvHwFhIrXcCHsLU">描述</th></tr>
+  </thead>
+  <tbody data-page-node-id="HLdBl03pSJ6u4dVXj11vCf">
+    <tr data-preview="day" data-page-node-id="78QPW56CNDcfF6zJsobGLy">
+      <td rowspan="10" data-page-node-id="jRM6qrWOgJteaECoHuUn8h">装柜排程</td>
+      <td data-page-node-id="Bvaz3IZaXZuG9vNdO13Ddi">视图切换</td>
+      <td data-page-node-id="7cjsu2H5oT58MOWy4HqCEE"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="QVJFZ22TkRuagf6O8jR9Eu"><img src="images/schedule-day.png" alt="视图切换" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="oURBTImPrqBcl2TAZIMq07" /></div></td>
+      <td data-page-node-id="WYI8hgZV9RnNi3Zo9r03qV">
+        <p data-page-node-id="gfAK2eWeOzopvR115ZGGwa"><b data-page-node-id="hFfaxXANPdBtnTtqg2Ro5L">【页面元素】</b>顶部工具栏含「月视图 / 周视图 / 日视图」三个 Tab（默认日视图）；月视图显示「‹ 2026年9月 ›」周期切换器，周视图显示「‹ 第36周 ›」，日视图显示「前一天 / 09/01 周二 / 后一天」切换器；右侧为「撤销未保存」「批量保存」按钮。</p>
+        <p data-page-node-id="MJ5bJmiA75NstuKNqoy5jH"><b data-page-node-id="5bRaCMIAO3fdn1GAK9QgI1">【交互说明】</b>点月/周/日 Tab → 对应视图显示，周期切换器随视图联动显隐；月视图用 ‹› 按月翻页，周视图按周翻页，日视图按天翻页。</p>
+        <p data-page-node-id="JDAoZ393ErBhxbFA9SRMH8"><b data-page-node-id="rb73s2ReCGRXNRzQRj6rIf">【功能逻辑】</b>三视图共用同一份货柜数据，切换仅改变展示维度；日视图为唯一提供货柜编辑入口的视图，月/周视图用于浏览与拖动。</p>
+        <p data-page-node-id="Gtl5TWx5jea01TJ5LfVvjj"><b data-page-node-id="u2Ao5upCUXkyMCPe6aeYSK">【数据与内容规则】</b>日期范围覆盖当月起 30 天；时段固定为 09:00-10:30、10:30-12:00、13:00-14:30、14:30-16:00、16:00-17:30。</p>
+      </td>
+    </tr>
+    <tr data-preview="day" data-page-node-id="p7QnAMQXO6kInavotjtKLl">
+      <td data-page-node-id="MZT9dyrKF3ppdoG5pGnUsC">日视图</td>
+      <td data-page-node-id="vYjlXsP4BjVwLIV40mQ1ig"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="AG09oOA8QZ0mi9Is3zY8nv"><img src="images/schedule-day.png" alt="日视图" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="BG5Goba44c88u06tWPy9FU" /></div></td>
+      <td data-page-node-id="q4Gr3YcWPCAJpJB7EZYB2w">
+        <p data-page-node-id="7slhuNVISYVE4z4k81eDGF"><b data-page-node-id="kzLwryqGIzEpELxGunCWyF">【页面元素】</b>按时段纵向列出当日各时段的货柜卡片；货柜卡片展示货柜编号、客户、目的地、运输方式、SKU 数量、CBM、QC 摘要与预计 T0。</p>
+        <p data-page-node-id="qjoDUy5yabZZ6MSfA5LrBa"><b data-page-node-id="gAUoFsqQQbBzPB56U6RrIt">【交互说明】</b>点击货柜卡片 → 打开货柜编辑抽屉；前后一天切换 → 刷新当日时段列表与工作台。</p>
+        <p data-page-node-id="PYvJADzwKmwDXFIwlMKsHy"><b data-page-node-id="QntC7901g8wB7jhsZ6qNsD">【功能逻辑】</b>日视图是 SCM 处理货柜的主入口，用于查看执行情况与 QC 风险；QC 未完成或晚于装柜的货柜以预警标识提示。</p>
+        <p data-page-node-id="ChAyWyoYjjUiKvCBXNpuWx"><b data-page-node-id="N9VZvHaLuoxuSWoBKsBHJM">【边界说明】</b>某时段无货柜时显示「空时段」占位；周末日期不排柜。</p>
+      </td>
+    </tr>
+    <tr data-preview="week" data-page-node-id="cY0AD9yHVg8Sh8z6Ffx0sO">
+      <td data-page-node-id="VVMKSdNREEBG9WZnFk8Wpn">周视图</td>
+      <td data-page-node-id="JGLgDLzC3yC1uTK7SUjeJO"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="zL7oNAsVZ2wd2KYoyGlpEc"><img src="images/schedule-week.png" alt="周视图" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="GL5P7BfUd9ESQ2Pz8kMifG" /></div></td>
+      <td data-page-node-id="fZRxuEdxIdeHyFf39VXHJF">
+        <p data-page-node-id="9nmeGJ2g7vnsAm7pZPHhlj"><b data-page-node-id="EYab6I5rLZyzynFwFCTyGe">【页面元素】</b>「时间段 × 工作日」矩阵：首列为时段，其余列为周一至周五（共 5 个工作日），交叉单元格放置对应日期与时段的货柜。</p>
+        <p data-page-node-id="zuCEDncVNYo2fHWggf2gjR"><b data-page-node-id="VySGHbevwAA3u30wOJqqdT">【交互说明】</b>拖拽货柜到目标日期/时段单元格 → 完成改期；按周翻页查看不同周的排柜。</p>
+        <p data-page-node-id="9zi7WC78GJKfdZUHsLruB9"><b data-page-node-id="2C7i2VWx2CTIYIM5GSQohs">【功能逻辑】</b>周视图用于核对排柜顺序与负载分布，不提供货柜编辑入口；拖动同样进入未保存状态。</p>
+        <p data-page-node-id="cUjFQYYkkuuNpmIk794OLH"><b data-page-node-id="dsaDWOSGrn9ZsoYYvVUo98">【数据与内容规则】</b>工作日以周一至周五为列；周末不显示在周矩阵中。</p>
+      </td>
+    </tr>
+    <tr data-preview="month" data-page-node-id="hKpceea3IuGHhOEnmQAeC1">
+      <td data-page-node-id="7kUKntpcZjtMmeVLS7YfRs">月视图（跨周拖动）</td>
+      <td data-page-node-id="i9zf578I0F9zadHw6il2xi"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="g6yVcgBgBkvRU12F0L1pFe"><img src="images/schedule-month.png" alt="月视图" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="C21F0MPLMm6n56vz57JECY" /></div></td>
+      <td data-page-node-id="ZKjNrMzDaDZ0XFDFonawDM">
+        <p data-page-node-id="KRQK6QifFqwA8zCEffPYsL"><b data-page-node-id="kENwTuDeWKF2nHEXSTHyDH">【页面元素】</b>月历网格：每个日期格显示「日期 + 星期 + 已排数/上限」，下方放置当日货柜卡片；周末格有「周末不排柜」占位。</p>
+        <p data-page-node-id="FuypSKxlDpqu78t7OzK6gD"><b data-page-node-id="V4GBiKpnpcGwEUYbPCn4Yw">【交互说明】</b>拖拽货柜卡片到目标日期格 → 跨周改期；拖到周末格不响应；超限日期格以红框标识。</p>
+        <p data-page-node-id="vvlXvJe6ABfn8hZfcms9nk"><b data-page-node-id="vDvDREFNonlOdroGu4w0rf">【功能逻辑】</b>月视图用于跨周调整装柜节奏；日期格头部实时显示「已排货柜数/每日上限」，超过上限显示超限样式。</p>
+        <p data-page-node-id="hdzDSjEjqNFUQ0EiLj54v7"><b data-page-node-id="imFGmhCE8CMC0ggYfpvcXS">【边界说明】</b>月视图为浏览与拖动视图，不提供货柜内容编辑；空日期格显示「可放置货柜」。</p>
+      </td>
+    </tr>
+    <tr data-preview="month" data-page-node-id="dCkygMlKnADd8w0rxKy3Ip">
+      <td data-page-node-id="XQuqmXjZiqALZqHB3K7UHW">拖拽改期与每日上限</td>
+      <td data-page-node-id="teM2gnAClK9SfZ9iMdHAHH"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="BWvfhMUErtBEAO9OCnCGJx"><img src="images/schedule-month.png" alt="拖拽改期" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="FxFi09u21KwrOA2clVScpR" /></div></td>
+      <td data-page-node-id="yLjZA4Sxk7BdFCNgsHVZzU">
+        <p data-page-node-id="CkR194k7WL5D0o2nvAQ4Yc"><b data-page-node-id="AD7NpDKFDDlT163oEPXtE9">【功能逻辑】</b>拖拽落位时写入新日期/时段并标记未保存；改期后校验每日装柜上限（默认 5 柜），超过则提示「当日已排 N 柜，超过每日上限 5 柜，请改期或申请扩容」。</p>
+        <p data-page-node-id="utqTm5l7ZtdXJjdHEHb8B8"><b data-page-node-id="pxwMgyWsDZqr1DQXqQNovn">【边界说明】</b>周末落位被阻止；无权限（非 SCM 计划员或计划已锁定）时拖拽不响应并提示。</p>
+        <p data-page-node-id="A5AQg4DyObEtI2qx8PwDcN"><b data-page-node-id="cpWc7pnbgyNBX9kpmgoN2Q">【前置条件与权限】</b>每日上限由装柜日程主数据配置，默认 5 柜，修改后对后续排程生效。</p>
+      </td>
+    </tr>
+    <tr data-preview="day" data-page-node-id="khFqgFWwVsjNQWQ4Y0grmn">
+      <td data-page-node-id="La3Z5qFKwB2pQBFHWXBkio">未保存调整管理</td>
+      <td data-page-node-id="aEcRywAAv6147Eil1T9xWg"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="VWKmtr0BCk4ur6XQEGM7bk"><img src="images/schedule-day.png" alt="未保存调整" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="k4zQUQdguE3unFQpJNA0nJ" /></div></td>
+      <td data-page-node-id="lswVyrYSKItA9NfIau3CzL">
+        <p data-page-node-id="jFiEDMrkaVM7Gk7SAquVmE"><b data-page-node-id="QBSTpgZoD1Lab82hEeX63o">【页面元素】</b>存在未保存调整时顶部显示「你有 N 项未保存调整」提示条，含「撤销」「批量保存」按钮。</p>
+        <p data-page-node-id="DYYeZK1AGwixhWW5NKJBJI"><b data-page-node-id="IAjRKiZJarFlqGjtVg6wib">【交互说明】</b>点「批量保存」→ 校验每日上限、CBM、QC 完成时间与工作日规则后落库；点「撤销」→ 回退未保存调整。</p>
+        <p data-page-node-id="GmlrYTgWlZ3FR28vJUCedC"><b data-page-node-id="zLkBWZnxM836WWFeIRrobh">【功能逻辑】</b>所有排程调整统一进入未保存状态，保存前不写入正式计划；保存时逐项校验，命中异常时给出对应提示。</p>
+        <p data-page-node-id="ommX3f4jWjzhHxonQAjy2m"><b data-page-node-id="voJmJj3iBF9T7MHPoOcTms">【文案规范】</b>「撤销未保存」「批量保存」「你有 N 项未保存调整」为统一提示文案。</p>
+      </td>
+    </tr>
+    <tr data-preview="drawer" data-page-node-id="yDUZTotuFdq96fzLq8BYma">
+      <td data-page-node-id="pObyOT7yRH2Q0dmsyGD62o">当日编辑</td>
+      <td data-page-node-id="WEqsRbfbrG5dvydvSaYrbw"><div class="prototype-frame" data-pw="1440" data-ph="1000" data-page-node-id="wrGWxKdw3ALdIz1RZGoNgb"><img src="images/drawer-detail.png" alt="当日编辑入口" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="xI3tPhcCp4mmNsfiy4eiaC" /></div></td>
+      <td data-page-node-id="siUCcPJQ95MEIQuzhlfyFG">
+        <p data-page-node-id="CC0drrnNH2esbwHl7pdpG3"><b data-page-node-id="4jvD2UDqBY9FFXMwMdv7ov">【编辑链路】</b>日切换（前一天/后一天）定位目标日期 → 时段内点击货柜卡片 → 打开货柜编辑抽屉 → 在抽屉内完成调整日期、上下架、拆批、替换、执行信息维护 → 关闭抽屉 → 工具栏「批量保存」统一落库。</p>
+        <p data-page-node-id="nTSRT1jLomo6NzFSEJQYJl"><b data-page-node-id="Qb1lWEtuIyWh0SCwhKqBne">【页面元素】</b>日视图时段卡片含：货柜编号、客户 · 目的地 · 运输方式 · 柜型、生命周期标签（计划中/执行中/已完成/已取消）、SKU 摘要、三个日期芯片（检验完成日期 / 装柜日期 / T0 到达日期）、CBM 利用率进度条。</p>
+        <p data-page-node-id="pTkOwqI6z4N3SkKho4tzsH"><b data-page-node-id="IuveFBqI9woLnHvgkozd2U">【功能逻辑】</b>当日编辑入口收敛在日视图（点击卡片进抽屉）与月/周视图（拖拽改期）两条路径；月/周视图不提供货柜内容编辑入口。所有编辑动作（拖拽、改期、上下架、拆批、替换）统一进入未保存状态，由「批量保存」统一校验落库。</p>
+        <p data-page-node-id="FgtwWanIYVp7bnOResrp11"><b data-page-node-id="V2f87ApSoNeLLgZjTjBEuv">【前置条件与权限】</b>仅 SCM 计划员 / SCM 主管可编辑计划内容；已执行或已取消的货柜不可编辑；已到装柜日（闸门关闭）的货柜需 SCM 主管「授权变更」后方可编辑。</p>
+      </td>
+    </tr>
+    <tr data-preview="shelf" data-page-node-id="b3ri5nPe6DK99yQmVZitTn">
+      <td data-page-node-id="yfDzkHw7D9OejkXidzfIRH">上架 / 下架 / 替换</td>
+      <td data-page-node-id="g0V9LBp8fETzTIprvJHRub"><div class="prototype-frame" data-pw="1440" data-ph="1000" data-page-node-id="cpJubOGar0e075PNACIpox"><img src="images/shelf-pool.png" alt="可用批次池" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="TMB6kiyTZSNMf17UU7MX6H" /></div></td>
+      <td data-page-node-id="afY1WdESfLvRc72tFZ2OIZ">
+        <p data-page-node-id="6QoPEOSCOgRV8DggtDyDdK"><b data-page-node-id="BrsBVrGXsFP0ACiY06zgRx">【页面元素】</b>抽屉操作栏「上架批次 / 替换 / 下架」三个入口。「上架批次 / 替换」打开「可用批次池」弹窗：搜索框（SKU / 批次号 / 品名 / 目的地模糊搜索）、状态筛选（默认「可排」）、客户筛选、SKU 筛选、「显示跨目的地批次（仅查看，不可上架）」勾选框、分页控件；池表格列：批次号、SKU / 产品名称（带优先级标签）、客户、目的地、数量、箱数、CBM（带风险标签）、QC、状态、操作（上架 / 禁止上架）。</p>
+        <p data-page-node-id="EcmSwLs47Y0KkqTqSBqj3m"><b data-page-node-id="F3CylGy8v14FcRc9uVesl3">【交互说明】</b>上架 → 从批次池点「上架」将批次加入当前货柜；替换 → 先在抽屉 SKU 明细中单选柜内批次，再从批次池选择可上架批次按位替换；下架 → 在抽屉 SKU 明细中单选批次 → 点「下架」→ 二次确认后批次回到批次池。</p>
+        <p data-page-node-id="5NzIJVvB8zLjBWbFmeENQY"><b data-page-node-id="4KSieRsEPaQi5nIspJ4beQ">【排序规则】</b>批次池按「同目的地优先，其次同 SKU 优先」排序；优先级标签：同 SKU、同目的地混装、不同客户·禁止同柜、不同目的地·禁止同柜；风险标签：人工改运（空运）、不同客户·禁止同柜、不同目的地·禁止同柜、尾箱不足50%、CBM偏高、可上架。</p>
+        <p data-page-node-id="o7lcSeGFBBHs762c5GRtiM"><b data-page-node-id="U7rlbcx5iGDmvdDRSYJLQk">【数据与内容规则】</b>上架成功后批次状态置为「已分配」，货柜重算 CBM 并刷新排程 / 报表 / 执行表；下架、替换、取消货柜后原批次状态一律回「可排」回到待分配批次池；跨目的地批次默认不展示，勾选后仅查看、按钮置灰「禁止上架」。</p>
+        <p data-page-node-id="F1dkhcLeCa5OF4ReDZyhAu"><b data-page-node-id="HLRGG8hOssQnMrr6Wg8Vd1">【文案规范】</b>阻断提示「不同客户，不能放置统一货柜」「不同目的地不允许同柜，请拆为两个货柜」；下架确认「确认下架批次 X？下架后数量会回到批次池。」；成功提示「已下架，回到待分配批次池」。</p>
+      </td>
+    </tr>
+    <tr data-preview="split" data-page-node-id="4Veole3VohEmJRBJvUlDEc">
+      <td data-page-node-id="eIKJVJE5knIpBw8jBnAKrN">拆批</td>
+      <td data-page-node-id="RHirFWgOlSXQSCqcDltaqF"><div class="prototype-frame" data-pw="1440" data-ph="1000" data-page-node-id="Gc4blngI1sLBnPvaZ3ZvbQ"><img src="images/split-batch.png" alt="拆分批次" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="1K9XIAjFx2YaHDlf0pDeVG" /></div></td>
+      <td data-page-node-id="UV8JhXo7KMCDDwtGjPi0it">
+        <p data-page-node-id="sJLeAHDCDHvWEJcDgIQxGP"><b data-page-node-id="cuAwqs0tMRTkNUcAbvGMrN">【页面元素】</b>「拆分批次」弹窗：拆出箱数（默认带出系统建议值）、对应产品数量（按件装量自动换算、只读）、调整原因（选填）、剩余量提示条、「取消 / 确认拆分」按钮。</p>
+        <p data-page-node-id="lDJdVs8SeSXyRPhmX53flC"><b data-page-node-id="bRbvscKO4rkxVsFnH5Rhyk">【交互说明】</b>在抽屉 SKU 明细单选批次 → 点「拆批」或在批次池点「拆分批次」→ 输入拆出箱数（整箱为最小单位）→ 确认拆分 → 拆出数量回到批次池，剩余量留在当前货柜。</p>
+        <p data-page-node-id="DOfFxCRRMDgAfGU5j7MyVo"><b data-page-node-id="wWVXtI77AL5tBkCL4MQ1dt">【功能逻辑】</b>仅「可排」状态批次可拆批（单 SKU 单批次）；拆出数量必须大于 0 且小于批次剩余数量；CBM 超限时系统按「最少整箱移出」给出建议拆出箱数并显示预计释放的 CBM；拆出记录沿用原 SAP 批号（批号不变，以内部拆分序号追溯），状态回「可排」并标注「可排·人工拆批」；拆批后 CBM 按数量比例重算并刷新达成率与预警。</p>
+        <p data-page-node-id="75WLopWQnMcQjOv8CBHqxO"><b data-page-node-id="d5WgcWNhH6LmeDDn3lDJzM">【文案规范】</b>「请先选择一个可拆分批次」「仅可对可排批次执行单 SKU 拆批」「拆分数量必须大于 0 且小于剩余数量」。</p>
+      </td>
+    </tr>
+    <tr data-preview="preview" data-page-node-id="SeU6uiWkdA3E5YIdyNruMJ">
+      <td data-page-node-id="ftULdP31cgptVVD5quNGqT">明细预览与下载</td>
+      <td data-page-node-id="Q9AcvihiP4XqGlYFl1GSTG"><div class="prototype-frame" data-pw="1440" data-ph="1000" data-page-node-id="zdFs69KOTaYFax49KMm0Cf"><img src="images/detail-preview.png" alt="装柜明细预览" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="1JbuR1kiPbwb7OQ2ovQBTJ" /></div></td>
+      <td data-page-node-id="mrnkcoMWKMFmeGCp3qB88q">
+        <p data-page-node-id="8zqd5RGMtEd9aQVQ4m9jFM"><b data-page-node-id="fkvFqEdOxjhLf6lEFOHAGf">【页面元素】</b>「装柜明细预览」弹窗：标题（货柜编号）、说明文案（随计划实时生成，可随时预览、下载与打印，用于线下仓库按执行表单独装柜）、26 列装柜明细表格（货柜编号、计划装柜日期、产品编码、中文货名、批次号、拆分标识、拆分序号、出货数量、运输方式（SAP）、每件 CBM、件装量、箱数、每批 CBM 等，可横向滚动）、底部「下载 Excel」「打印」按钮。</p>
+        <p data-page-node-id="VWJteEd5mGUXATvmDHbZ4H"><b data-page-node-id="H5Mdt92ku4CpHq05b7qhE3">【交互说明】</b>点「预览明细」→ 实时展示当前货柜装柜明细；点「下载明细」→ 生成《装柜执行表》Excel 文件（14 列中文表头：货柜编号、计划装柜日期、产品编码、中文货名、批次号、拆分标识、拆分序号、出货数量、箱数、每批 CBM、客户、目的地、货柜名称、计划 T0 入库日期）。</p>
+        <p data-page-node-id="3hJjMtlFESAmPrySw1edYe"><b data-page-node-id="lLzYrjEWZ32eRCFSawFL2c">【功能逻辑】</b>明细与计划数据实时同步，不生成静态副本；浏览器 Excel 组件未加载时自动降级生成带 BOM 的 CSV 备用文件；预览与下载动作均写入货柜操作日志留痕。</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="EMuKqB84pBkcmo8DqIuPxO">货柜详情抽屉</h2>
+<p data-page-node-id="spwsFzxnOYu9dE33HfvBxe">点击日视图货柜卡片打开「货柜编辑抽屉」，从上到下五个区域：① 状态栏（QC 最晚完成 / 计划装柜 / CBM 利用率与预计 T0）；② 装柜产品 SKU 明细（含操作栏）；③ 货柜与执行信息；④ 货柜时间轴（计划路径：最晚 QC → 计划装柜日 → 计划离港日 → 计划到港日 → T0 入库日期）；⑤ 操作日志。抽屉标题即货柜名称，点击可直接修改，保存后生效。</p>
+
+<h3 data-page-node-id="SDmadHCIbzsmN4e9ZRAKkU">SKU 明细字段</h3>
+<table data-page-node-id="RAS4JmU8IGbJPwhFdOBjyf">
+  <thead data-page-node-id="jGw65rq4qUYthFUglzZM28"><tr data-page-node-id="BQo5v9Eh8A4BjLTV2Tf0WU"><th data-page-node-id="k57r2ZDD4YVAdDGRDwEFNv">列名</th><th data-page-node-id="tkcsQZL6BgWc9icBsZNbfb">说明</th><th data-page-node-id="O9zxKu4QlCvq83bLgprYTJ">来源</th><th data-page-node-id="LF65K6jVZ1qZrfCHLjGeii">是否可编辑</th></tr></thead>
+  <tbody data-page-node-id="8KXCM35WBBf0U9VLj3VLDG">
+    <tr data-page-node-id="MCSdkpl16ty3bkg3GD79sG"><td data-page-node-id="gu88zkqpC7toz8Ss96cONm">单选</td><td data-page-node-id="vWiWmq12FV2rOXbr9blNCZ">选中柜内批次，供拆批 / 下架 / 替换操作定位</td><td data-page-node-id="7b1VM7v23fc1rfNhn9rBF4">页面控件</td><td data-page-node-id="bmkwaf8De75waADXnkup6m">—</td></tr>
+    <tr data-page-node-id="qhDPi81gXCmAuOLbco5WCu"><td data-page-node-id="JOoZpcdyMM8sE3z2mObc9i">SKU / 产品名称</td><td data-page-node-id="dRg43NTZ6VeefwumwYEKaS">产品编码与中文货名</td><td data-page-node-id="SBvFsrAsfV8wGTEv2wptHl">批次池同步</td><td data-page-node-id="vd3LZ0lXeO6U6JkeQk7urq">只读</td></tr>
+    <tr data-page-node-id="EsCWHzNhZBvHqrTo9FmFER"><td data-page-node-id="xav1RrORGkxvJHBNZ4He00">批次号</td><td data-page-node-id="JB6DN2pKcrHJ2ApK8B4Ei9">SAP 批号，拆批子记录共用同一批号</td><td data-page-node-id="DimRFR7lBDvdoklvUn1iil">批次池同步</td><td data-page-node-id="XaXD5bdWtez4C8w7TAnBNV">只读</td></tr>
+    <tr data-page-node-id="XiNy7jHmaudUkdE6vgsALA"><td data-page-node-id="ngK2AE6M56Zsxvlqc1IKvk">装柜数量</td><td data-page-node-id="BFA4sH5UIU1kNP5DGPfz8k">批次在本柜的装载数量</td><td data-page-node-id="IuTbJzjj6JjmRMiZV9cH67">系统计算</td><td data-page-node-id="LSxSoBWsUoZNK2r59woKq0">不可直接输入，仅通过上架 / 拆批 / 替换 / 下架改变</td></tr>
+    <tr data-page-node-id="WVjCdqVEIIVYCwryXvPj59"><td data-page-node-id="iH0fgsh2QG7qd5C69JRtOI">件装量 / 箱数</td><td data-page-node-id="claWklzS8f2VtXqg48oU8I">每件数量与整箱数（向上取整）</td><td data-page-node-id="cZfBfoJ82mxxOv5UOfESRB">主数据 / 系统计算</td><td data-page-node-id="bm9O9mSbgoID4R5frR8R5Z">只读</td></tr>
+    <tr data-page-node-id="LBUQGnj4LK5Etzcw1hKED1"><td data-page-node-id="fHjfqyzhgrjmE2bLJyc7GL">每件 CBM / 每批 CBM</td><td data-page-node-id="YdvFtiSd3xizjMaDFo2mr6">单件体积与批次合计体积</td><td data-page-node-id="SZhJy95pCfQ1FqLFqMlHac">主数据 / 系统计算</td><td data-page-node-id="CGAzW0paiAF47wpyAZY4Bg">只读</td></tr>
+    <tr data-page-node-id="0jc5usWELDFaiNL6cFjtJ9"><td data-page-node-id="HpCF8RVpmkEzS4R7D0JVHL">生产完成 / QC 完成</td><td data-page-node-id="bkFCagUKrctEGCcVcAeQpm">生产完工日期与 QC 放行节点</td><td data-page-node-id="Q2eXxHABADQzAO9jSuTqgY">排程、QC 同步</td><td data-page-node-id="3a3ppi5nSadzXhS3dXwUEl">只读</td></tr>
+    <tr data-page-node-id="WxPEA2FeEaqRRDqp54S8L6"><td data-page-node-id="JyPiBJjQCYEgErXZjKcDKG">当月达成率</td><td data-page-node-id="6yOPzIYNgKHYxjX3CTVTut">该 SKU 当月预计装柜量 / 预测数量</td><td data-page-node-id="DvV5HNFqCw2tDX7d3hyHOR">系统计算</td><td data-page-node-id="2EfBsTtTTeajEFcccANX7j">只读</td></tr>
+    <tr data-page-node-id="tv4rWsTOE3m77aWWsvG7u7"><td data-page-node-id="IoeamchxTqV7La0YuTphik">状态</td><td data-page-node-id="NINY79kbiPCk9TFI21ix3B">可排 / 预警标识（QC 风险、CBM 异常等）</td><td data-page-node-id="vLZR6wO0KzgTSrt7V45bnv">系统计算</td><td data-page-node-id="X6iLZ2GTKYOqaoDjY4nasU">只读</td></tr>
+    <tr data-page-node-id="TlmyqNYY9mmpPc7ibFGSiS"><td data-page-node-id="XyATEUFAeC8EBNHUQvyA5l">操作（拆批）</td><td data-page-node-id="Ig2B20qQ4qJiZjZCLjYLgW">对该批次发起拆批</td><td data-page-node-id="9mYhUtw65PQWDzmFFNwYbo">页面控件</td><td data-page-node-id="jzoZARmOnjLr0BEDuTkLFb">受计划可编辑权限控制</td></tr>
+  </tbody>
+</table>
+
+<h3 data-page-node-id="KF6r7tCxvc84cPTUxnGh2z">货柜与执行信息字段</h3>
+<table data-page-node-id="mhydtxUQ5ZzArFu1xP00Hu">
+  <thead data-page-node-id="V9F9l6iuwo2btWLxLUVVdP"><tr data-page-node-id="vbZTQLSQf6cK9rVpSUkkdD"><th data-page-node-id="zYCyH7QdVNubgmshSkkVgE">字段</th><th data-page-node-id="cQ5OJwSTvq0g8ltlbY2Mpj">说明</th><th data-page-node-id="bhw4WXBL8A6banXUK9EiXf">维护角色</th><th data-page-node-id="wTiob6pFsX4ETTHi0ykHEC">可编辑条件</th></tr></thead>
+  <tbody data-page-node-id="1HunJFIwqHFHrpPLF7joKR">
+    <tr data-page-node-id="ab62BK6MVEd6JbqFzgfufF"><td data-page-node-id="mv6KWCQBatmW56ZZGxV2CJ">货柜名称（计划标识）</td><td data-page-node-id="PnHM4F4Vpy9gudj3KIkcfT">按货柜类型、周数、序号等规则生成，用于排程、执行表与计划明细关联</td><td data-page-node-id="e7MfsK9hjjNOWVF3gUuBOT">系统 / SCM</td><td data-page-node-id="NEm8G97u41ppHYdQGCZEl9">计划可编辑时</td></tr>
+    <tr data-page-node-id="0BMBmQtd8YD0NYlYOWRYZU"><td data-page-node-id="0f6cUXL2eTkl92nojkKQQS">客户 / 目的地</td><td data-page-node-id="OTKFoF4PRHz8j6JpjjDr5P">影响上架推荐与混装预警</td><td data-page-node-id="dLRsjzP8r2DvnEXyUZVSUn">主数据带出</td><td data-page-node-id="VI1uSVOu9uXYCdDCszwcZN">计划可编辑时调整</td></tr>
+    <tr data-page-node-id="j23iWnunMc7r47eJku4ozA"><td data-page-node-id="pa0i4RoweA1ZpCaOZ0kOTp">货柜类型 / 运输方式</td><td data-page-node-id="eoOLa3lDLaEtTKRylzymHV">40'RF / 40'HQ / 20'RF / 20'GP；陆运 / 海运 / 空运</td><td data-page-node-id="VGeQWnZR4DlwCno8B43ntB">SCM</td><td data-page-node-id="G2DzJ29EKGCDl3eRU4PB2F">计划可编辑时</td></tr>
+    <tr data-page-node-id="HPDVGbCAE9a7q4OVjEZpaq"><td data-page-node-id="U7CryEjtBTCMfF8wLimUOM">合同号 / 销售订单号 / 船名</td><td data-page-node-id="GMVziTAuuJqkj4rNYJhRH5">业务与物流字段（页面标注 SCM/SN 维护，当前版本按计划内容字段受装柜日闸门控制）</td><td data-page-node-id="MmRF1t2dJ1sey60F4NmQ6P">SCM / SN</td><td data-page-node-id="TvjtmMHAttEXzQyKXgJRUH">计划可编辑时</td></tr>
+    <tr data-page-node-id="1ZAr5wgviCJYTcbr8N0c8k"><td data-page-node-id="l8BexZiWURkrTGH1FIH7Et">直清</td><td data-page-node-id="BV6JvkWWBrbpkPRgrLMG8b">勾选 / 不勾选</td><td data-page-node-id="ap8wX5HhH3tOu8tSPpssSf">SCM</td><td data-page-node-id="vfCphBqFFkrveONo0w1Di5">页面开放</td></tr>
+    <tr data-page-node-id="61HZAmHVnWgs7pGz3NBQzR"><td data-page-node-id="09t5QMdzPwt3tgDJS2HODx">周数</td><td data-page-node-id="LaESKVNg1LEbb7I8XCmnMe">装柜所属周数</td><td data-page-node-id="2bGs0CwaZdog95x2NJ2wZl">系统计算</td><td data-page-node-id="jp3cF6GDcfhyxbWwdQxk7Y">可手改</td></tr>
+    <tr data-page-node-id="InlOAF7bUhRPfwsjuiN89e"><td data-page-node-id="EgMwkSzd1tGgMZrkBgC5PE">TT-字母 / TT-序号</td><td data-page-node-id="mnpQ3DhcdMZoF5t49Mdgjy">发运后的 TT 编码</td><td data-page-node-id="Y6wthj8Tye0NfMmb1o1GgA">SCM</td><td data-page-node-id="TpbXTZXtNfB7lvoJzYwNr5"><b data-page-node-id="Fxs21x0mg25rsw54x2uUod">仅发运后</b>（SAP 出库覆盖全部计划批次）由 SCM / SCM 主管补录</td></tr>
+    <tr data-page-node-id="EuUFVbRCMijzj8vvYogN1L"><td data-page-node-id="nsrPsoVE9AKegHv3rOkyfs">柜号</td><td data-page-node-id="5WPwVOBYsfqG214AOvFFFG">实际物流柜号</td><td data-page-node-id="QD9ZXC5dI7UjZZUImXsCVK">SCM / SN</td><td data-page-node-id="E6QOuPuYpacGk8tAtWzfDc">SCM / SCM 主管 / 仓库；<b data-page-node-id="C5P1Zxw6DiFPOgQGx7mApE">发运后仍可补录</b></td></tr>
+    <tr data-page-node-id="b9jqESd0OFrlMNqTAbqUPz"><td data-page-node-id="FCN0OlftErWEacrd4Tfsb9">封条号</td><td data-page-node-id="RMZaCNFlHjFHA4kbZKoyuf">仓库实际操作后的封条号</td><td data-page-node-id="HOV6H4RRt7oV56qolCO4md">仓库</td><td data-page-node-id="l1gGkW2ETbw4g7rtfODR0e">仓库 / SCM / SCM 主管</td></tr>
+  </tbody>
+</table>
+<p data-page-node-id="6D1PgRce3yY1ANM1Xs1z9g">保存按钮文案随权限变化：计划内容可编辑时为「保存货柜与执行信息」，计划锁定时为「保存执行信息」（仅保存柜号 / 封条号等执行字段）。</p>
+
+<h3 data-page-node-id="vTn2dBAx6mnWEBH0839d75">操作按钮矩阵</h3>
+<table data-page-node-id="xfrtrCHuJfoV5RDbvkBP3N">
+  <thead data-page-node-id="P3A6pDi2iab00kADTS6u8T"><tr data-page-node-id="Lj44Z3KYzCq4TqMAd014bd"><th data-page-node-id="EA0EfgpvqGXTdJKhV2ZDo0">按钮</th><th data-page-node-id="nV7JFG1yOMBPlB3zkVKXUU">触发条件与权限</th><th data-page-node-id="VTUzbC0zAuOQhVjUL7c93i">结果</th></tr></thead>
+  <tbody data-page-node-id="woJNMQjC01hlEjjL9ZTiRH">
+    <tr data-page-node-id="n3DdqocnVSOqunAaWfpKsq"><td data-page-node-id="AQoWsZMMXL4R6ZvYDpPnSG">发布执行表快照</td><td data-page-node-id="Jc1nBCQyZ1wpwY9LJDFZb5">SCM 计划员 / SCM 主管；货柜未执行且未取消；CBM 超限时阻断</td><td data-page-node-id="vRlfVz7Vo8MEiD1HBnLVcB">生成执行表快照，<b data-page-node-id="m8lC2hPDwA6XQPJc1uI3rF">不改变货柜生命周期状态</b>（仍为「计划中」）</td></tr>
+    <tr data-page-node-id="wz6ciWTSFQOuqGbuZaaLlN"><td data-page-node-id="PxNfOK9sGDh0ExF1nu8ddq">授权变更</td><td data-page-node-id="hDpzPTCa20SdoPkXwAxHhu">仅 SCM 主管；已到装柜日（闸门关闭）、未执行、未取消；<b data-page-node-id="kd6w4Z4ugz1PEDLIfB0zZc">必填变更原因</b></td><td data-page-node-id="8l0hmvEwUfrrMQ1Y8FcYIJ">解锁该货柜计划内容编辑，操作写入日志</td></tr>
+    <tr data-page-node-id="D9BfzLAVuUxCIJjyze4S3d"><td data-page-node-id="Ie489GdnoQHe6bAe3nnyu5">确认低装载</td><td data-page-node-id="s4VIC9hSLE979Rkb0YpIZ2">CBM 利用率 ≤ 85% 且未确认时出现；计划可编辑</td><td data-page-node-id="pisQDECEky0yOIlagI977q">确认后允许发布且不再提示；关联 CBM 预警置为「已处理」</td></tr>
+    <tr data-page-node-id="3J62fnDm4RUA0xzALaTsaX"><td data-page-node-id="yU1MCRSZPnVgosgBRA3CBA">调整日期</td><td data-page-node-id="7dJTNE9ArAgzpKrHDxF2GQ">计划可编辑</td><td data-page-node-id="Ddod3o8MHuFYDmCcz8GJRX">依次校验：日期在排程范围内（MM/DD）→ 非周末 → 每日上限（同日未取消货柜数 +1 ≤ 上限）→ 周频规则（非广州同客户同目的地每周仅一个出船日期）；通过后改期并进入未保存状态</td></tr>
+    <tr data-page-node-id="sIJ0wBF3fAXFQz9E9Hxth6"><td data-page-node-id="CYuryQJSe0iVXvKwrVn17u">上架批次</td><td data-page-node-id="N9yFqKZtQVy7C7Dl5N9UwL">计划可编辑</td><td data-page-node-id="Weum5AXcn9VHLRY99BL64h">打开可用批次池（上架模式）</td></tr>
+    <tr data-page-node-id="KDTp8mtkcJe7TRdlfKyLf1"><td data-page-node-id="F8gp3k13S5VzJQ0lhHqiMe">拆分批次</td><td data-page-node-id="Kefq83mDJce9Kkm7wlUCoN">计划可编辑；已选中批次</td><td data-page-node-id="LQob3teJzHR0H2MGKly2IB">打开拆批弹窗</td></tr>
+    <tr data-page-node-id="5HFrEfTeHzmCFpM3lsJYHL"><td data-page-node-id="aUyC39dfFthg9KUsiEyQKD">替换</td><td data-page-node-id="ZLD2siZn9HKyw6Kv4QKhLV">计划可编辑；已选中批次</td><td data-page-node-id="iOJx3SER0XU6T6FbZl265H">打开批次池（替换模式），新批次按位替换选中批次，原批次回池</td></tr>
+    <tr data-page-node-id="SCAiAjdFve8vCs2dle1Ibl"><td data-page-node-id="d3zdNHL5VHRtmYuQmNpiSD">下架</td><td data-page-node-id="Soo0M1nL6Zxkr54EIS5xQT">计划可编辑；已选中批次</td><td data-page-node-id="E2raidFquZLrHJ4TGc7NmF">二次确认后批次状态回「可排」，从货柜移除并重算 CBM</td></tr>
+    <tr data-page-node-id="3Jn9mAjgM0ujaq7i3DSoHD"><td data-page-node-id="tQwi9DHnPm30Fpq0AmioDO">取消货柜</td><td data-page-node-id="kBDWWzIjh5PDdLiyjm7Z7U">计划可编辑</td><td data-page-node-id="5gdbMSHkM9yEEpDAmPMyOe">二次确认后柜内全部批次回「可排」，货柜从计划移除，抽屉关闭</td></tr>
+    <tr data-page-node-id="H521IEga46OBDtbD0TajCy"><td data-page-node-id="1yhlvpzJqmlxnIVM5vsMIS">预览明细 / 下载明细</td><td data-page-node-id="DKfns0DyfPGLOzMXwCHfmA">无权限限制（已取消货柜除外）</td><td data-page-node-id="wWCtw2PF9zJWfbiHFH2dOv">打开装柜明细预览 / 下载《装柜执行表》</td></tr>
+    <tr data-page-node-id="uK8T4pq6pmqboDKcWBhFfm"><td data-page-node-id="41hs2xIuZLoisJ1HBLSbbG">交互说明</td><td data-page-node-id="qVevO6i1p49wjEd96UM9Cx">无限制</td><td data-page-node-id="9mnaAiLs0ZCpPvsdzmSymW">打开本模块（货柜编辑页）字段 / 交互 / 异常帮助说明</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="tPj7sAQ6bqM9caBIxAR4yE">货柜状态机与权限矩阵</h2>
+<h3 data-page-node-id="KEcMNr8p424TSg7tSSPpul">状态流转</h3>
+<table data-page-node-id="d1rRTbZA5YfMh8EmAvClk9">
+  <thead data-page-node-id="fUdwXF2VFxUj5TSRZG8VcN"><tr data-page-node-id="3gclESkAwk79CewAQdRTEy"><th data-page-node-id="4CnbH4HCeqfOmL589kgfFt">当前状态</th><th data-page-node-id="IoYM3AyIZTPzGPy2Dm5ekb">触发事件</th><th data-page-node-id="IVr5PylPhFfSfexKVpyo4L">目标状态</th><th data-page-node-id="yqRHyzEXgcHaFVtrhTA5Om">计划内容可编辑性</th></tr></thead>
+  <tbody data-page-node-id="fmPRHq9l1izJZVdCsAfoio">
+    <tr data-page-node-id="ib0NroIVpFFdtBBrcZFAcf"><td data-page-node-id="qoKumqnvysGvSrmkNDnaaf">计划中</td><td data-page-node-id="Q3cFHwAkNHzNBcR4donIGU">货柜创建 / 预排生成</td><td data-page-node-id="TwfkQIrJjYIpHTl1RJorzH">计划中</td><td data-page-node-id="2kV2YQH93rCRzQD7lFlzFD">SCM 计划员 / SCM 主管可编辑</td></tr>
+    <tr data-page-node-id="1FBAgJYGVekTJi4BzxbHOL"><td data-page-node-id="8i267Uk4MgRIHmED6HRziY">计划中</td><td data-page-node-id="xnHGe19KEYfNkDGFNfExsE">到达计划装柜日（闸门关闭）</td><td data-page-node-id="RqVneX86QhMgGvo7r6B2YZ">执行中</td><td data-page-node-id="VBnwvpQ0BNEdrvsJAHZ4va">计划结构字段锁定；柜号 / 封条号按角色补录</td></tr>
+    <tr data-page-node-id="SDcVRXupcr2Aj17qTDAA8H"><td data-page-node-id="Mt6DIzziigfrY2OyIB4Jdo">执行中</td><td data-page-node-id="hLAN1hNEj7bip0yAtXCCJz">SCM 主管「授权变更」（必填原因）</td><td data-page-node-id="fEhxh3BxwCGOqErMVniRWu">执行中（已解锁）</td><td data-page-node-id="gB5eD8lGFs46n4za89z5JD">该货柜计划内容恢复可编辑</td></tr>
+    <tr data-page-node-id="Gj77Nqy5hu7pxeWUqS9CZE"><td data-page-node-id="7Ex3DIUqYov4o20lkfaHNV">执行中</td><td data-page-node-id="fZw32yiLEk0x0ntMNm7moj">SAP 出库覆盖全部计划批次</td><td data-page-node-id="b3bRhMyIkOKK5u19aEFSQR">已完成</td><td data-page-node-id="DFwBskBQT4HGOgh55smixd">只读；TT 字母 / 序号可由 SCM 补录</td></tr>
+    <tr data-page-node-id="XDaOrkVs5l3pFrvcewE7cu"><td data-page-node-id="j2Ntge0GZiNEDUXD9FxY6I">计划中 / 执行中</td><td data-page-node-id="9UojLtS25aMSHm3mm3RumT">「取消货柜」（柜内批次全部回池）</td><td data-page-node-id="B9IcWUhOafHKJLtjgANAIS">已取消</td><td data-page-node-id="uhYRfIkFy3hj3uwmuPhw0r">全部字段禁用</td></tr>
+  </tbody>
+</table>
+
+<h3 data-page-node-id="jBJPKN6Q8cMXbTeJIogOil">角色 × 可编辑矩阵</h3>
+<table data-page-node-id="kfMGU0PHWDM9a2J3fUrh2x">
+  <thead data-page-node-id="6YbfykzAatJ3SN2nBljAKk"><tr data-page-node-id="1i3xnHJCnHHIx46IKTzs8a"><th data-page-node-id="u0228QdD6xXJ5OZtlURm8I">操作 / 字段</th><th data-page-node-id="tzY1UAfA2YFMtdXqzeCtEL">SCM 计划员</th><th data-page-node-id="9JEbRrYbAbCWlOP1zQmAyM">SCM 主管</th><th data-page-node-id="6tWtV96u46SXnBInMczS7n">仓库</th></tr></thead>
+  <tbody data-page-node-id="fHFo6pjpBM5XCvfHd0SMAr">
+    <tr data-page-node-id="CXSLPp2E3Uv0bedBN9WnAP"><td data-page-node-id="yPDnU3t10kyrOsLFBrg2pI">计划内容（日期、时段、SKU 明细、上下架、拆批、替换）</td><td data-page-node-id="5ioi4RvMrEriAJGoJD9HMH">装柜日前可编辑</td><td data-page-node-id="6Cb2WNPEB3DjatwysQ4q0Z">装柜日前可编辑；装柜日后可授权变更</td><td data-page-node-id="LZIKo6Ju8KqApY7EGRLZw0">不可</td></tr>
+    <tr data-page-node-id="M0MVYMVskTO5Getr1pukOi"><td data-page-node-id="HfBuIUYzgjUzM3fCknMDG8">柜号</td><td data-page-node-id="BhkADYrnoJjpBFmVwefOfG">可补录（发运后仍可）</td><td data-page-node-id="EWvlPClx4prnBs0PvQwmGG">可补录（发运后仍可）</td><td data-page-node-id="vJdL7c2L9nb9FwUNh1LGQp">可补录</td></tr>
+    <tr data-page-node-id="ksrvY8LDI0XaD95xnA4pdu"><td data-page-node-id="fE1rDr2Nn23AeHrI9vHv8Q">封条号</td><td data-page-node-id="wx9mpp70lDm8vT8wmRB2IT">可补录</td><td data-page-node-id="DDzG5lLJgpV2DqAxmiD3qm">可补录</td><td data-page-node-id="xoCk79sXYqKh6wqzhbFJMb">可补录（主责）</td></tr>
+    <tr data-page-node-id="2ciQjGEIxWJJVcf9NCEqQx"><td data-page-node-id="NcqPTILrFvNFBoBDrNImFo">TT-字母 / TT-序号</td><td data-page-node-id="N3hos6AS9VqWdDxselFiNh">仅发运后</td><td data-page-node-id="nKMOCFAPXeykVxveAaAdkq">仅发运后</td><td data-page-node-id="oxr087WIbnho2TMDOQpSt0">不可</td></tr>
+    <tr data-page-node-id="MBDncyTJYEJUngAQ4qzNf5"><td data-page-node-id="u8maGSGvhqMpqgC5ci8Hzx">发布执行表快照</td><td data-page-node-id="0MvcRH8FseufLPifGMT9hh">可</td><td data-page-node-id="sBgVrhk5ZQzZpAVZifoJQC">可</td><td data-page-node-id="KItxbfaJDb29jW7nXCfCoB">不可</td></tr>
+    <tr data-page-node-id="NSxAzwWHquE8eHgUAAVvKh"><td data-page-node-id="fdKfMbGWDwhZWbFdhalFzy">装柜日后授权变更</td><td data-page-node-id="7N1SMuaUgd2eRr6XvfYKRF">不可</td><td data-page-node-id="1S8IpCYRexetEGDvrUE6cw">可（必填原因）</td><td data-page-node-id="xE03LdxDC2DLyUMvIUDOyT">不可</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="4z8A6DVbq1iLf9BRU0u0T6">上下架业务规则</h2>
+<table data-page-node-id="EnigH32o8O8nQTyHppoxgX">
+  <thead data-page-node-id="7WjCs8zPpHSWIsYjgl4OLJ"><tr data-page-node-id="etOkcoPqYt0EHXQpVYVyk0"><th data-page-node-id="Ksb4unnu1Ct6ppOHlbzUwE">规则类型</th><th data-page-node-id="PZqy0D0GXhzEWKFBYaIrPr">规则</th><th data-page-node-id="CqvB0wJEHdX95BQmg7QD6T">提示 / 处理文案</th></tr></thead>
+  <tbody data-page-node-id="H1SApgJ0j1Wp7uutAHtDVq">
+    <tr data-page-node-id="OClHUdwxuHRPNvzza5V2Cm"><td data-page-node-id="LYlEZYnHMz8lWYsMToqHIv">允许上架</td><td data-page-node-id="VmGfUZjvXt8wb0nZPZHkeu">同客户且同目的地的「可排」状态批次</td><td data-page-node-id="yGJkdDRYDRdbNmHLWbGuC4">按钮「上架」可点</td></tr>
+    <tr data-page-node-id="jzHQGmFONlcHv5S2fd329Y"><td data-page-node-id="vMU6i4jQQ1DFLrKNHE57x5">排序优先</td><td data-page-node-id="xk35zzzac6ZA58PvoRFEkz">同目的地优先（权重 10），其次同 SKU 优先（权重 1）</td><td data-page-node-id="bJFFb8pKY6gWwb6uDCKbgK">标签「同 SKU」「同目的地混装」</td></tr>
+    <tr data-page-node-id="RHLePgWJMYgOpPaClLtcws"><td data-page-node-id="b7B4msym6qOYH1KOB6BWc0">硬阻断 ①</td><td data-page-node-id="vsgLCRxlyBwWMnn7FzFj3e">不同客户批次禁止同柜</td><td data-page-node-id="BbsaEirL59Zpu84a1ZZz7v">「不同客户，不能放置统一货柜」</td></tr>
+    <tr data-page-node-id="GWKvXBXmwYvmRC6OSRW8K8"><td data-page-node-id="IoUMheaRueuCZTKMIaTeUJ">硬阻断 ②</td><td data-page-node-id="Eto3G49yWBOQk7e9cDoUHV">不同目的地批次禁止同柜</td><td data-page-node-id="pludrhUkkFQnd5b71zqrbn">「不同目的地不允许同柜，请拆为两个货柜」</td></tr>
+    <tr data-page-node-id="IhTupIOxQcSxSa9TlHrGIY"><td data-page-node-id="yvcN6usAeafwi58nd82MLc">仅查看</td><td data-page-node-id="qM7DZOaaDjXmifrkPGyBAK">跨目的地批次默认不展示；勾选「显示跨目的地批次」后可见但不可上架</td><td data-page-node-id="wUaERqKcKjIieCFuaqhc53">按钮置灰「禁止上架」</td></tr>
+    <tr data-page-node-id="JyZ8LhSWYIlrnwGoUq5IPN"><td data-page-node-id="YJAnnyBFIAmF5x9wtJbUyM">风险提示（不阻断）</td><td data-page-node-id="BBrqc4WTv61kzIRpcbrPzT">尾箱不足 50%、单批 CBM 偏高（&gt;18）、空运批次</td><td data-page-node-id="UQKs0WqcICNuTdHMAv7Qfi">标签「尾箱不足50%」「CBM偏高」「人工改运」</td></tr>
+    <tr data-page-node-id="3AGPFrxxdhk2HqBGODvzXd"><td data-page-node-id="EMevcLlRmxzGEGLnrnBlzu">回池规则 ①</td><td data-page-node-id="oEfZQTKYRZy3OEe46vF3R5">下架：批次状态回「可排」，从货柜移除</td><td data-page-node-id="ssu3nKT0MhtTfQK8rS9I2H">「已下架，回到待分配批次池」</td></tr>
+    <tr data-page-node-id="oxOsu7UtJGockvCYDnrTuB"><td data-page-node-id="49ofcCbpLbMEqbOLdY9LPu">回池规则 ②</td><td data-page-node-id="0JIdAigvbtiLXv1uMFdZ0q">替换：新批次「已分配」入柜，被替换批次回「可排」</td><td data-page-node-id="hJERkAXEP5ooVbA2o6TzWQ">「批次 X 已替换到当前货柜」</td></tr>
+    <tr data-page-node-id="CjwQRX7LTmDAPc9MKVJxgU"><td data-page-node-id="ix2PGnsaM3vtG7zZpaaDjH">回池规则 ③</td><td data-page-node-id="GstaCZjqKOhZDQwUFMTbIA">取消货柜：柜内全部批次回「可排」，货柜移除</td><td data-page-node-id="sxzsMRODlO7LMrZTn9C9cE">「货柜已取消，柜内批次已回到待分配批次池」</td></tr>
+    <tr data-page-node-id="4RA7mK6Pa2GJlfJyrFKRZF"><td data-page-node-id="HNcUmxJHTsErmbkLxjSuZG">数量不可直改</td><td data-page-node-id="miYH7AcDNMTOEmSw2VGXXK">装柜数量不能直接输入，只能通过上架、拆批、替换、下架四条路径改变</td><td data-page-node-id="4FxZ3MyqlDuARirl6rsGJk">—</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="syDiqAIJIxLXkH0vAoG5f6">异常与边界</h2>
+<table data-page-node-id="wY2qui8AKIEAcfDuxxkkBO">
+  <thead data-page-node-id="bxM6HVO5wngHyiF1W9cLos"><tr data-page-node-id="ZOJto7KjLzNfzyXYurNsBT"><th data-page-node-id="onBKSlKl7wqdHasscokSho">场景</th><th data-page-node-id="EF7LA2GmpRgRBnfvTkVlnr">处理</th></tr></thead>
+  <tbody data-page-node-id="YGNo4Ar9x3ycD29aoH6cga">
+    <tr data-page-node-id="bfFHSV7z2Qb1mBr2Vin2X8"><td data-page-node-id="jBaE4yxbZ3i36Gxm9eaQH9">周末落位</td><td data-page-node-id="Xw7SsHQQFzQMx8HQyyC3DL">月视图周末格禁止拖放，提示「周末不排柜」</td></tr>
+    <tr data-page-node-id="sm6jBUFCcJBTg39U2FIdUO"><td data-page-node-id="74OTR2e33AeMKAgghflK3X">每日装柜超限</td><td data-page-node-id="0vb2EwVefS9iy0gqGbAFHH">月视图超限日期格标识；改期落位校验并阻止，提示改期或申请扩容</td></tr>
+    <tr data-page-node-id="ux59XcNyNg2A1YvxBoUF6t"><td data-page-node-id="DgvAS9RSDQ4P8AO0BNChBx">无权限调整</td><td data-page-node-id="4he47hx0EvheazD027V6wA">非 SCM 计划员或计划已锁定，拖拽不响应并提示「当前角色不可调整计划内容，或需装柜日后授权变更」</td></tr>
+    <tr data-page-node-id="n1SFLhtxel83YZtoeYWnYT"><td data-page-node-id="YRbToFSYDM5P8Fqho4xua4">空时段 / 空日期</td><td data-page-node-id="Fmdrn0b5oCJAOXz30YchUN">日视图显示「空时段」，月视图显示「可放置货柜」</td></tr>
+    <tr data-page-node-id="0730puv9ku5j5yEK5FY4F2"><td data-page-node-id="leKaPA2qXtL4ACFtH2PIo4">QC 未完成或晚于装柜</td><td data-page-node-id="KHSmFUvdUTIemjWuZfeCcx">货柜卡片以预警标识提示，不自动修改计划</td></tr>
+    <tr data-page-node-id="rVFEHQ10e8iSvU1d1vehKv"><td data-page-node-id="8LB9Jwvaf9cbkawW2UTTEC">不同客户 / 不同目的地同柜</td><td data-page-node-id="dlaaXkxau6E4pJegZsEGk2">上架操作点硬阻断，提示「不同客户，不能放置统一货柜」/「不同目的地不允许同柜，请拆为两个货柜」</td></tr>
+    <tr data-page-node-id="7ApFEFhzUcP38e3YpAqsFc"><td data-page-node-id="lyavC4RNYNSjD0N10K0WV1">下架未选批次</td><td data-page-node-id="xkCEaDtMZXeqVDOBQEyI93">提示「请选择货柜内批次后再下架」</td></tr>
+    <tr data-page-node-id="INyKG5OZNbquCmzfzK29zF"><td data-page-node-id="yyy2OuXGfRvGM5WwRiOi0H">拆批数量非法</td><td data-page-node-id="HLfBJlcjR4hHW0f69Ee0Fd">提示「拆分数量必须大于 0 且小于剩余数量」；非可排批次提示「仅可对可排批次执行单 SKU 拆批」</td></tr>
+    <tr data-page-node-id="d6UgbL5di9AwzBNwDSGYZD"><td data-page-node-id="ZEtSrCthO7UIlH9DB6FZSW">调整日期非法</td><td data-page-node-id="UVodKqDwCLTn29MUYRrHAV">不在排程范围提示按 MM/DD 格式重输；周末提示「周末默认不排柜，请选择工作日」；超每日上限提示「当日已排 N 柜，超过每日上限 X 柜，请改期或申请扩容」；周频冲突提示与冲突货柜编号</td></tr>
+    <tr data-page-node-id="BFKX6D2R2r2tgggurEpBKz"><td data-page-node-id="DO1enQ7SBKTsqpnPdw9PDC">CBM 超限发布</td><td data-page-node-id="EHO7ORQlHcCKoEkFAxaTaR">阻断「发布执行表快照」；超限时拆批弹窗给出最少整箱移出建议</td></tr>
+    <tr data-page-node-id="QRivRSze54EnmHKZtQjaW1"><td data-page-node-id="oYywu8u98AC4Z1TDQpqa8g">低装载（CBM ≤ 85%）</td><td data-page-node-id="WO4z8sQC1t2Ffkol7k8kyQ">需 SCM 人工「确认低装载」后方可发布，确认后不再重复提示</td></tr>
+    <tr data-page-node-id="iWypHzqp026f3hzOLYw48o"><td data-page-node-id="MrT6c12qQynX0o6VGUXIOQ">已取消货柜</td><td data-page-node-id="LyjVgq1kUdGF0FhN1sacEq">全部字段与操作按钮禁用</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="2dcBdkcE1aHTT7hk632JuV">数据埋点</h2>
+<table data-page-node-id="rwDCeolyfWB1kVY8k90lSb">
+  <thead data-page-node-id="wguOVGeHIhaXgEuDioZyDe"><tr data-page-node-id="Osc07SIlXtEHEIeeXKU4tT"><th data-page-node-id="ND13ABUPMLse3ENV13ZuwV">事件名</th><th data-page-node-id="rzxzIVTEltCC7PYUEnnvyc">触发时机</th><th data-page-node-id="CsxAJGMy3Y5WbF0Wz6xdlZ">关键属性</th></tr></thead>
+  <tbody data-page-node-id="DEWVtwXxJG7HSjCO3bDPC7">
+    <tr data-page-node-id="5Ekld7AQyIjOS1BgCg8vtW"><td data-page-node-id="aXtjpgNpA0QROFwO2xBoPi">schedule_view_switch</td><td data-page-node-id="lDclMCBQVMhm5tk57TF1wC">切换月/周/日视图</td><td data-page-node-id="s8Jcs6R2KawF9TFrvQkvfw">视图类型、当前周期</td></tr>
+    <tr data-page-node-id="oEErfBEzyFmCiZHzeITEH9"><td data-page-node-id="A5TF8ACl0jY627bzw3DU35">schedule_drag_change</td><td data-page-node-id="ETKGR7lFoGzIHrnWV9zYKg">拖拽货柜改期落位</td><td data-page-node-id="ocJzBkTvVrU4eX3TJLIqIj">货柜编号、原日期、新日期、新时段</td></tr>
+    <tr data-page-node-id="FuVHkhReBDufsHb3oEYGov"><td data-page-node-id="Te1LtrZBBp9FscIS6Ib8W9">schedule_limit_blocked</td><td data-page-node-id="OGc5K7vKYlzCGA0Ro1pjvh">改期触发每日上限拦截</td><td data-page-node-id="cNvG9GoYFoUMFcWcHl4SHS">日期、当日已排数、上限</td></tr>
+    <tr data-page-node-id="gcneyGkPlacxqyTAWCNu4K"><td data-page-node-id="E9UXTCrVYyBM0POyYHWj4u">schedule_batch_save</td><td data-page-node-id="aLtGZQQE5PeejJLk1Ap2OI">点击批量保存</td><td data-page-node-id="w71GrOoepd0UHmCqY4Kpfy">未保存项数、校验通过/异常数</td></tr>
+    <tr data-page-node-id="BdcWd3JT7ogI4nZ0EcH7jS"><td data-page-node-id="dPhHkB3BY2TXCrBLQvSbNd">drawer_open</td><td data-page-node-id="taNhfmBrHZtj3XawNBhLxq">打开货柜编辑抽屉</td><td data-page-node-id="Nm8f03F8SfNHSTbNQomO5e">货柜编号、生命周期状态、角色</td></tr>
+    <tr data-page-node-id="TlWRuieXRRj9Qfxl1R8JkM"><td data-page-node-id="1slepFEY88gJg6HsBfi6v1">shelf_pool_open</td><td data-page-node-id="jV8PplhzjmEn2Mrvwt4VnH">打开可用批次池</td><td data-page-node-id="OBaDvmqoxHi69S3BtwX0dl">货柜编号、模式（上架/替换）、池内批次数</td></tr>
+    <tr data-page-node-id="gljmOdjwECpKHAa0sAOEjr"><td data-page-node-id="VXBNAv8BoB2J9ErDgHZx7f">shelf_batch_add</td><td data-page-node-id="qjGnq5SeRxLEtt2CM65YWH">上架批次成功</td><td data-page-node-id="0L73NsT8UUxiS5nZ54CLSA">货柜编号、批次号、是否同 SKU、上架后 CBM</td></tr>
+    <tr data-page-node-id="GMsKQbD0WSeLXGOTr0mtii"><td data-page-node-id="1ptD6bDcsdRPlNhHTMNbOh">shelf_batch_remove</td><td data-page-node-id="PiXJunibqKCZxxXIEOvqUv">下架批次成功</td><td data-page-node-id="Qi5DqgC8HYioqBKWg3dILZ">货柜编号、批次号</td></tr>
+    <tr data-page-node-id="fYAdlGAuRCCyvDKm4fZ1VC"><td data-page-node-id="S4gxr0HFPQqQ5LHkax0rNe">shelf_batch_replace</td><td data-page-node-id="uMij4QwtHuxndDYg4oAq4n">替换批次成功</td><td data-page-node-id="xQg2ifcJTyE3rbKwCKGqmy">货柜编号、原批次号、新批次号</td></tr>
+    <tr data-page-node-id="vIlFdwAxwiLW89eegGBsCk"><td data-page-node-id="XgpCjVyQF56c5bH96TjFoh">shelf_blocked</td><td data-page-node-id="Aul39YeHpq2KrdTxkR9vRN">上架被硬阻断</td><td data-page-node-id="26zmlFpHo5gpiMdLNH8vK3">货柜编号、批次号、阻断原因（客户/目的地）</td></tr>
+    <tr data-page-node-id="ZgKoGo0rWFIC2A3Tkxiu44"><td data-page-node-id="VfDGZlz1dhr2QsrDvuB7Eh">split_confirm</td><td data-page-node-id="prJAoGph74pDmy9qLwY6YU">确认拆分</td><td data-page-node-id="6eXDsqbSUXW1ue0cYNwdk7">批次号、拆出箱数、拆出数量、是否超限建议</td></tr>
+    <tr data-page-node-id="5QAnykxGE7Ma2DNFBtIuMi"><td data-page-node-id="FGXc0Tyyj8PhkN7stmj1Za">detail_download</td><td data-page-node-id="W4wMnQbLFm1cc3UebBQY4F">下载装柜执行表</td><td data-page-node-id="92ix7s0uQsFJ0xOcHeYbug">货柜编号、格式（Excel/CSV）</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="GITw6aGozM7oVpJGErVgN8">上线计划</h2>
+<table data-page-node-id="hHLrjRevBXRxkz1Jfdqqk0">
+  <thead data-page-node-id="jMzucLd5tN4QHBFZ2HroUk"><tr data-page-node-id="qapuqI9x7o1KcXuB4yLGqF"><th data-page-node-id="9qp6OYMmjMRtDrKFfSNnHx">阶段</th><th data-page-node-id="41bTRArBotoEq372IJZHNW">内容</th><th data-page-node-id="T9nERMlJxDjOyMe3mtYmME">时间</th></tr></thead>
+  <tbody data-page-node-id="hVkJznnPQLPHi8VPCSePKn">
+    <tr data-page-node-id="VQ3CV1LIazaGIXIsQXLa0a"><td data-page-node-id="SVLHyB0qpgIOtg82nViG5v">一期</td><td data-page-node-id="FXAFpQHdfFCXLErSeVXwDd">月/周/日三视图、跨周拖动改期、每日上限、未保存调整管理、日期链；货柜编辑抽屉、上下架与替换、拆批、装柜明细预览与下载、状态机与权限控制</td><td data-page-node-id="qvbf0Y55Gg4V1qwiPQ3Qc5">待确认</td></tr>
+    <tr data-page-node-id="xiqAjiLsdtQgeLSQjdGWP3"><td data-page-node-id="Y6Z5BfHmYw9mMlEmpXHQa9">二期</td><td data-page-node-id="kXmBuxj0Wr5smfZcahGcC6">排程冲突自动重排建议、跨月批量调整、QC 风险一键重排</td><td data-page-node-id="CRSeTcCsSCU2NP0zcu9u91">待确认</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="8o1N9T9TGpOzmugL6hy9Oq">附录</h2>
+<table data-page-node-id="9nyNHjWDpc5vpKaGklUSw7">
+  <thead data-page-node-id="6mwSv4CtD6CwMK3WoiNS9C"><tr data-page-node-id="U76L8j71emFA1JcxKsmCf8"><th data-page-node-id="RRT7Xc4zG9GBVCkSxpGdAm">术语</th><th data-page-node-id="DfuTyltAiHX32kqNLsIvY2">说明</th></tr></thead>
+  <tbody data-page-node-id="Q674QHTHs9cArfnaHaFf28">
+    <tr data-page-node-id="cNqDCmHU4z2IeuexQbGue8"><td data-page-node-id="2S98Oy07L6JR3x3ox9dedh">三视图</td><td data-page-node-id="yVESsyFCfdWKljMqptbslJ">月视图（跨周拖动）/ 周视图（时间段矩阵）/ 日视图（执行与 QC 风险）</td></tr>
+    <tr data-page-node-id="qfSSWGcjAFnRwRkdR1kJCf"><td data-page-node-id="IFLvHfnqEEBFbIyFD89muz">每日上限</td><td data-page-node-id="JGd7tVLsveACeDyNxVhQhX">单日可排货柜数，由装柜日程主数据配置，默认 5 柜</td></tr>
+    <tr data-page-node-id="d9vHq1pBTINbZZnVSCR1az"><td data-page-node-id="KyIh0QeHIiA9SbDOcMYDic">日期链</td><td data-page-node-id="DIfV5U5oUDI5rngE9bP3TD">最晚 QC → 装柜 → ETD → ETA → T0，按香港工作天顺推</td></tr>
+    <tr data-page-node-id="UfFaaqdvzlKv2Dpe7KnR3G"><td data-page-node-id="2LDrOMzOi0YhfFHNi0gq36">PV / CV</td><td data-page-node-id="g3y7sUzHQjTj4WyegdVCKg">特殊批次标识，涉及日期链时默认加 3 个工作日</td></tr>
+    <tr data-page-node-id="oD2WgNKB6WnFQWnK6cmrJx"><td data-page-node-id="JtDZSonIr0Cf2zIbpIpulj">批次池</td><td data-page-node-id="Y8eyCNvVjCKsJ8YpNn57YR">汇集排程系统可用批次的待分配池，供预排、拆批回池和货柜上架使用；剩余量 = 原始可用量 − 已排量，并受 SAP 出库和销毁校正</td></tr>
+    <tr data-page-node-id="mwOh8oInLXAK2GuCUmvMPC"><td data-page-node-id="rNgpDeJHlRChHlgGYSahSr">上架 / 下架</td><td data-page-node-id="R7XaTCU7e7ynsLAipioNJv">把批次池中的可排批次加入货柜 / 把柜内批次退回批次池；跨客户、跨目的地均禁止同柜</td></tr>
+    <tr data-page-node-id="unTK6UnNkeV4VI31sSPTuE"><td data-page-node-id="RMMhOAg8mgfkucozJpIB1A">拆批</td><td data-page-node-id="HS5k45TZJNwE8n31Y95cl2">对单个可排批次按整箱拆分，拆出量回批次池；沿用原 SAP 批号，以拆分序号追溯</td></tr>
+    <tr data-page-node-id="duQPJUFsNwh8r2taJ4XMCy"><td data-page-node-id="x1kPaQ0gawaTu2ejJDXqI4">装柜日闸门</td><td data-page-node-id="Vdsyn6wXmrRDKYPeTCBR6A">到达计划装柜日后计划结构字段自动锁定的控制机制，解锁需 SCM 主管授权变更</td></tr>
+    <tr data-page-node-id="FguXYP8wVPAUypbCGfyWb6"><td data-page-node-id="WJuz5V8pdanlryiYMJcbS6">执行表快照</td><td data-page-node-id="CEYMvkalXVTJar52yahO0d">发布时生成的装柜执行表快照，供仓库线下执行；不改变货柜生命周期状态</td></tr>
+  </tbody>
+</table>
+</main>
+<script id="prdPages" type="application/json">[{"value": "day", "label": "P01 · 日视图", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 900}, {"value": "week", "label": "P02 · 周视图", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 900}, {"value": "month", "label": "P03 · 月视图", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 900}, {"value": "drawer", "label": "P04 · 货柜编辑抽屉（点击日视图卡片）", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 1000}, {"value": "shelf", "label": "P05 · 批次池（上架来源）", "url": "../原型/supply-chain-prototype.html#batches", "w": 1440, "h": 1000}, {"value": "split", "label": "P06 · 批次池 / 拆批", "url": "../原型/supply-chain-prototype.html#batches", "w": 1440, "h": 1000}, {"value": "preview", "label": "P07 · 装柜明细预览（日视图进抽屉）", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 1000}]</script>
+<script>window.PM_RUNTIME = { readOnly: true };</script>
+<script>(function () {
+  'use strict';
+  const cfg = window.PM_RUNTIME || {};
+  const server = cfg.server, launcher = cfg.launcher;
+  const revisions = new Map();
+  let readyPromise = null, exporting = false;
+  const path = () => decodeURIComponent(location.pathname);
+  function configCheck() {
+    if (cfg.readOnly) throw new Error('当前为只读分享模式，请在本地项目执行此操作');
+    if (!server || !cfg.projectId || !cfg.token) throw new Error('项目配置缺失，请初始化项目并加载 pm-runtime-config.js');
+  }
+  async function request(url, payload) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 120000);
+    try {
+      const response = await fetch(url, {
+        method: payload === undefined ? 'GET' : 'POST',
+        headers: {'Content-Type':'application/json', 'X-PM-Project':cfg.projectId, 'X-PM-Token':cfg.token},
+        body: payload === undefined ? undefined : JSON.stringify(payload),
+        cache:'no-store', signal:controller.signal
+      });
+      const data = await response.json();
+      if (!response.ok || data.error) throw new Error(data.error || ('HTTP ' + response.status));
+      return data;
+    } finally { clearTimeout(timer); }
+  }
+  async function health() {
+    const response = await fetch(server + '/api/health', {cache:'no-store', signal:AbortSignal.timeout(3000)});
+    const state = await response.json();
+    if (state.project_id !== cfg.projectId) {
+      const error = new Error('连接到了其他项目，请检查项目配置和端口');
+      error.identity = true; throw error;
+    }
+    if (state.read_only) { const e = new Error('当前服务为只读模式'); e.identity = true; throw e; }
+    return state;
+  }
+  async function ensureReady() {
+    configCheck();
+    if (readyPromise) return readyPromise;
+    readyPromise = (async () => {
+      try { return await health(); } catch (e) { if (e.identity) throw e; }
+      let launch;
+      try { launch = await request(launcher + '/api/launch', {}); }
+      catch (e) { throw new Error('服务未启动。请运行 python3 scripts/start_service.py --serve。' + e.message); }
+      if (!launch.ok) throw new Error(launch.error || '启动失败');
+      const deadline = Date.now() + 45000;
+      while (Date.now() < deadline) {
+        try { return await health(); } catch (e) { if (e.identity) throw e; }
+        await new Promise(r => setTimeout(r, 600));
+      }
+      throw new Error('启动超时，请在终端执行 --check 查看具体依赖问题');
+    })().finally(() => { readyPromise = null; });
+    return readyPromise;
+  }
+  async function api(route, payload) {
+    await ensureReady();
+    return request(server + route, payload);
+  }
+  async function revision(file) {
+    const data = await api('/api/revision', {path:file || path()});
+    revisions.set(file || path(), data.revision);
+    return data.revision;
+  }
+  async function save(content, file) {
+    file = file || path();
+    if (!revisions.has(file)) throw new Error('尚未读取文件版本，请重新加载页面后再保存');
+    const data = await api('/api/save-html', {path:file, content, revision:revisions.get(file)});
+    revisions.set(file, data.revision);
+    return data;
+  }
+  async function snapshot(src, opts) {
+    opts = opts || {};
+    return api('/api/snapshot', {src, base:opts.base || path(), scale:opts.scale || 2,
+      viewport:opts.viewport, force:!!opts.force});
+  }
+  async function asset(src, opts) {
+    return api('/api/asset', {src, base:(opts || {}).base || path()});
+  }
+  async function exportAll(button) {
+    if (exporting) return;
+    exporting = true;
+    const previous = button && button.textContent;
+    if (button) {button.disabled = true; button.textContent = '正在连接导出服务…';}
+    try {
+      const job = await api('/api/screenshot', {path:path(), viewport:{width:innerWidth, height:innerHeight}});
+      if (!job.started) throw new Error('导出任务没有启动');
+      const deadline = Date.now() + 300000;
+      while (Date.now() < deadline) {
+        const state = await request(server + '/api/status');
+        if (state.job_id !== job.job_id) throw new Error('导出任务已切换，请重新确认结果');
+        if (button) button.textContent = '正在导出 ' + state.progress + '/' + state.total;
+        if (state.done) {
+          if (button) button.textContent = '已导出 ' + state.success_count + ' 张 PNG';
+          window.parent.postMessage('export-success', '*');
+          return state;
+        }
+        await new Promise(r => setTimeout(r, 700));
+      }
+      throw new Error('导出等待超时，请查看服务日志');
+    } catch (e) {
+      if (button) button.textContent = '导出失败';
+      window.alert(e.message);
+      window.parent.postMessage('export-error', '*');
+    } finally {
+      exporting = false;
+      if (button) {button.disabled = false; setTimeout(() => button.textContent = previous, 2500);}
+    }
+  }
+  document.addEventListener('click', event => {
+    const button = event.target.closest('#exportFab, .export-btn, .export-fab');
+    if (!button) return;
+    event.preventDefault(); event.stopImmediatePropagation();
+    exportAll(button);
+  }, true);
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || event.data !== 'trigger-export') return;
+    exportAll(document.querySelector('#exportFab, .export-btn, .export-fab'));
+  });
+  window.PMService = {revision, save, api, health};
+  window.exportPrototypeViaServer = exportAll;
+  window.snapshotPrototypeViaServer = snapshot;
+  window.inlineAssetViaServer = asset;
+  window.ensureExportServerReady = ensureReady;
+})();
+</script>
+<script>(function () {
+  'use strict';
+  if (window.PMDocument) return;
+  const originals = new WeakMap();
+  const ui = '[data-pm-ui]';
+  const styles = document.createElement('style');
+  styles.dataset.pmUi = 'style';
+  styles.textContent = [
+    'body{font-family:system-ui,sans-serif;color:#243530;margin:0;padding:28px;background:#f7f9f8}',
+    '#prdContent{max-width:1320px;margin:auto}table{border-collapse:collapse;table-layout:fixed;width:100%;margin:18px 0}th,td{border:1px solid #dce4e0;padding:12px;position:relative;vertical-align:top;overflow-wrap:anywhere}th{background:#eef4f1}.prototype-frame{width:100%;min-width:0}',
+    '.pm-controls{display:flex;gap:4px;position:absolute;left:0;bottom:0;opacity:0;z-index:3}tr:hover .pm-controls{opacity:1}.pm-controls button{font-size:11px;padding:1px 7px}',
+    '.pm-col{position:absolute;right:0;top:0;width:6px;height:100%;cursor:col-resize}.pm-row{position:absolute;left:0;bottom:0;height:5px;width:100%;cursor:row-resize}',
+    '.pm-edited{background:#e6f5ec}.pm-toolbar{position:fixed;bottom:18px;left:18px;display:flex;gap:8px;z-index:25;flex-wrap:wrap;max-width:90vw}',
+    '.pm-toolbar button,.pm-preview button{padding:9px 12px;border:1px solid #d5e5de;border-radius:8px;cursor:pointer;background:white;color:#21654f}',
+    '.pm-status{position:fixed;left:18px;bottom:68px;max-width:500px;padding:10px;border-radius:8px;background:#173d32;color:white;z-index:26;display:none}.pm-status.show{display:block}',
+    '.pm-preview{position:fixed;right:0;top:0;height:100vh;width:var(--pm-panel,480px);background:#182622;color:#fff;z-index:20;display:flex;flex-direction:column}.pm-preview[hidden]{display:none}',
+    '.pm-preview header{display:flex;gap:7px;align-items:center;padding:12px;flex-wrap:wrap}.pm-preview select{max-width:100%;padding:8px}.pm-shell{overflow:auto;padding:20px;flex:1;min-height:0}.pm-device{flex:0 0 auto}.pm-device iframe{border:0;transform-origin:top left}',
+    '.pm-panel-grip{position:absolute;left:0;top:0;bottom:0;width:5px;cursor:col-resize}.pm-dual{padding-right:calc(var(--pm-panel,480px) + 28px)}',
+    '@media(max-width:850px){.pm-preview{width:92vw}.pm-dual{padding-right:28px}.pm-toolbar{z-index:25}}',
+    '@media print{[data-pm-ui]{display:none!important}body.pm-dual{padding:0}}'
+  ].join('\n');
+  document.querySelectorAll(ui).forEach(e => e.remove());
+  document.head.append(styles);
+  const content = document.getElementById('prdContent');
+  if (!content) return;
+
+  function notify(text) {
+    const n = document.querySelector('.pm-status');
+    n.textContent = text; n.classList.add('show');
+  }
+  function clean(root) {
+    root.querySelectorAll(ui).forEach(e => e.remove());
+    root.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+    return root;
+  }
+  function matrix(section) {
+    // Build logical columns so rowspan/colspan mutations keep cells aligned.
+    const rows = Array.from(section.rows), grid = [];
+    rows.forEach((row, r) => {
+      grid[r] = grid[r] || [];
+      let c = 0;
+      Array.from(row.cells).forEach(cell => {
+        while (grid[r][c]) c++;
+        const rs = cell.rowSpan || (rows.length-r);
+        for (let y=r; y<r+rs; y++) {
+          grid[y] = grid[y] || [];
+          for (let x=c; x<c+cell.colSpan; x++) grid[y][x] = {cell, r, c};
+        }
+        c += cell.colSpan;
+      });
+    });
+    return {rows, grid};
+  }
+  function changeRow(row, remove) {
+    const section = row.parentElement, {rows, grid} = matrix(section);
+    const index = rows.indexOf(row);
+    if (remove && rows.length <= 1) return;
+    const seen = new Set();
+    if (remove) {
+      (grid[index] || []).forEach(entry => {
+        if (!entry || seen.has(entry.cell)) return;
+        const cell = entry.cell; seen.add(cell);
+        if (entry.r < index) cell.rowSpan = Math.max(1, cell.rowSpan - 1);
+        else if (cell.rowSpan > 1 && rows[index+1]) {
+          cell.rowSpan -= 1;
+          const nextEntries = grid[index+1] || [];
+          const following = Array.from(rows[index+1].cells).find(c =>
+            nextEntries.findIndex(e => e && e.cell === c) > entry.c);
+          rows[index+1].insertBefore(cell, following || null);
+        }
+      });
+      row.remove();
+    } else {
+      const created = document.createElement('tr'), insert = index + 1;
+      (grid[index] || []).forEach(entry => {
+        if (!entry || seen.has(entry.cell)) return;
+        const cell = entry.cell; seen.add(cell);
+        if (entry.r + cell.rowSpan > insert || cell.rowSpan === 0) {
+          if (cell.rowSpan !== 0) cell.rowSpan += 1;
+        } else {
+          const blank = document.createElement(cell.tagName);
+          blank.colSpan = cell.colSpan;
+          blank.innerHTML = '<br>';
+          created.append(blank);
+        }
+      });
+      row.after(created);
+    }
+    initEditing();
+  }
+  function initEditing() {
+    content.querySelectorAll(ui).forEach(e => e.remove());
+    content.querySelectorAll('table:not(.no-edit)').forEach(table => {
+      const first = table.rows[0];
+      if (!first) return;
+      if (!table.querySelector(':scope > colgroup')) {
+        const group = document.createElement('colgroup');
+        let count = Array.from(first.cells).reduce((n,c) => n + c.colSpan, 0);
+        while (count--) group.append(document.createElement('col'));
+        table.prepend(group);
+      }
+      let colIndex = 0;
+      Array.from(first.cells).forEach(cell => {
+        const grip = document.createElement('span');
+        grip.className = 'pm-col'; grip.dataset.pmUi = 'column'; grip.dataset.index = colIndex;
+        cell.append(grip); colIndex += cell.colSpan;
+      });
+      Array.from(table.tBodies).forEach(section => Array.from(section.rows).forEach(row => {
+        if (Array.from(row.cells).every(c => c.tagName === 'TH') || !row.cells[0]) return;
+        const controls = document.createElement('span');
+        controls.className = 'pm-controls'; controls.dataset.pmUi = 'rows'; controls.contentEditable = 'false';
+        controls.innerHTML = '<button type="button" data-pm-action="add-row" aria-label="下方插入一行">＋</button><button type="button" data-pm-action="delete-row" aria-label="删除本行">−</button>';
+        row.cells[0].append(controls);
+        const grip = document.createElement('span'); grip.className='pm-row'; grip.dataset.pmUi='row';
+        row.cells[0].append(grip);
+      }));
+    });
+    content.querySelectorAll('td,th,p,li,h1,h2,h3,h4,blockquote,dd,dt').forEach(el => {
+      if (el.closest(ui + ',.no-edit') || el.querySelector('iframe,img,table,video,canvas,pre')) return;
+      el.contentEditable = 'true';
+      if (!originals.has(el)) originals.set(el, el.textContent);
+    });
+    scaleEmbeds();
+  }
+  function scaleEmbeds(width) {
+    content.querySelectorAll('.prototype-frame').forEach(outer => {
+      const iframe=outer.querySelector('iframe');if(!iframe)return;
+      const w=Number(outer.dataset.pw)||390,h=Number(outer.dataset.ph)||844;
+      if(width)outer.style.width=width+'px';
+      const visible=outer.clientWidth||320;
+      outer.style.position='relative';outer.style.height=Math.round(h*visible/w)+'px';outer.style.overflow='hidden';
+      iframe.style.cssText='position:absolute;left:0;top:0;border:0;transform-origin:top left;width:'+w+'px;height:'+h+'px;transform:scale('+visible/w+')';
+      if(!outer.querySelector('.pm-proto-grip')&&!window.PM_RUNTIME?.readOnly){
+        const grip=document.createElement('span');grip.dataset.pmUi='proto-size';grip.className='pm-proto-grip';grip.title='拖拽缩放原型';
+        grip.style.cssText='position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;background:#2c876d80';outer.append(grip);
+      }
+    });
+  }
+  document.addEventListener('focusout', e => {
+    if (originals.has(e.target) && originals.get(e.target) !== e.target.textContent) e.target.classList.add('pm-edited');
+  });
+  let catalog = [];
+  try { catalog = JSON.parse(document.getElementById('prdPages')?.textContent || '[]'); } catch (e) { notify(e.message); }
+  let current = catalog[0]?.value, zoom = null, lockUntil = 0;
+  const toolbar = document.createElement('div');
+  toolbar.className='pm-toolbar'; toolbar.dataset.pmUi='toolbar';
+  toolbar.innerHTML='<button data-pm-action="copy">一键复制全文</button>';
+  const status = document.createElement('div'); status.className='pm-status'; status.dataset.pmUi='status'; status.role='status';
+  document.body.append(toolbar,status);
+  const panel=document.createElement('aside'); panel.className='pm-preview'; panel.dataset.pmUi='preview';
+  panel.innerHTML='<div class="pm-panel-grip"></div><header><select aria-label="原型页面"></select><button data-pm-action="minus">－</button><span class="pm-zoom"></span><button data-pm-action="plus">＋</button><button data-pm-action="fit">适配</button><button data-pm-action="preview">关闭</button></header><div class="pm-shell"><div class="pm-device"><iframe title="交互原型预览"></iframe></div></div>';
+  document.body.append(panel);
+  const select=panel.querySelector('select'), frame=panel.querySelector('iframe'), wrap=panel.querySelector('.pm-device');
+  catalog.forEach(item => {const o=document.createElement('option'); o.value=item.value;o.textContent=item.label;select.append(o);});
+  function scale() {
+    const item=catalog.find(c=>c.value===current);
+    if (!item) return;
+    const factor=zoom===null ? Math.max(100,panel.querySelector('.pm-shell').clientWidth-40)/item.w : zoom;
+    frame.style.width=item.w+'px'; frame.style.height=item.h+'px'; frame.style.transform='scale('+factor+')';
+    wrap.style.width=item.w*factor+'px';wrap.style.height=item.h*factor+'px';
+    panel.querySelector('.pm-zoom').textContent=Math.round(factor*100)+'%';
+  }
+  function showPage(value) {
+    const item=catalog.find(c=>c.value===value);
+    if (!item) return;
+    current=value; select.value=value; frame.src=item.url; requestAnimationFrame(scale);
+  }
+  function togglePreview() {panel.hidden=!panel.hidden;document.body.classList.toggle('pm-dual',!panel.hidden);requestAnimationFrame(()=>{scale();scaleEmbeds();});}
+  select.addEventListener('change',()=>{lockUntil=Date.now()+4000;showPage(select.value);});
+  addEventListener('resize',()=>{scale();scaleEmbeds();});
+  addEventListener('message',e=>{
+    if(e.source!==frame.contentWindow||e.data?.type!=='page-changed')return;
+    if(catalog.some(c=>c.value===e.data.page)){current=e.data.page;select.value=current;lockUntil=Date.now()+4000;scale();}
+  });
+  addEventListener('scroll',()=>{
+    if(panel.hidden||Date.now()<lockUntil)return;
+    let node;
+    content.querySelectorAll('[data-preview]').forEach(n=>{if(n.getBoundingClientRect().top<=innerHeight*.35)node=n;});
+    if(node && node.dataset.preview!==current) showPage(node.dataset.preview);
+  },{passive:true});
+  document.addEventListener('pointerdown',e=>{
+    const grip=e.target.closest('.pm-col,.pm-row,.pm-panel-grip,.pm-proto-grip');
+    if(!grip)return;e.preventDefault();
+    const x=e.clientX,y=e.clientY, cell=grip.closest('th,td');
+    const table=cell?.closest('table'),row=cell?.parentElement;
+    const width=cell?.getBoundingClientRect().width,height=row?.getBoundingClientRect().height,panelWidth=panel.offsetWidth;
+    const protoWidth=grip.closest('.prototype-frame')?.clientWidth;
+    function move(ev){
+      if(grip.classList.contains('pm-proto-grip')){
+        scaleEmbeds(Math.max(160,Math.min(1200,protoWidth+ev.clientX-x)));
+      }else if(grip.classList.contains('pm-col')){
+        const col=table.querySelectorAll('colgroup col')[Number(grip.dataset.index)];
+        if(col)col.style.width=Math.max(48,width+ev.clientX-x)+'px';scaleEmbeds();
+      }else if(grip.classList.contains('pm-row'))row.style.height=Math.max(24,height+ev.clientY-y)+'px';
+      else {document.body.style.setProperty('--pm-panel',Math.max(320,Math.min(innerWidth-200,panelWidth+x-ev.clientX))+'px');scale();scaleEmbeds();}
+    }
+    function up(){document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);}
+    document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);
+  });
+  async function writeClipboard(html,text) {
+    try {
+      if(!navigator.clipboard||!window.ClipboardItem)throw Error('fallback');
+      await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})]);
+    }catch(e){
+      const el=document.createElement('div');el.contentEditable='true';el.style.cssText='position:fixed;left:-99999px';el.innerHTML=html;document.body.append(el);
+      const range=document.createRange();range.selectNodeContents(el);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);
+      const ok=document.execCommand('copy');selection.removeAllRanges();el.remove();if(!ok)throw Error('浏览器拒绝复制');
+    }
+  }
+  async function shrink(data) {
+    return new Promise(resolve=>{
+      const im=new Image(); im.onload=()=>{
+        if(im.width<=2000){resolve(data);return;}
+        try{const c=document.createElement('canvas');c.width=2000;c.height=Math.round(im.height*2000/im.width);const ctx=c.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.9));}catch(e){resolve(data);}
+      };im.onerror=()=>resolve(data);im.src=data;
+    });
+  }
+  let copying=false;
+  async function copyAll(force) {
+    if(copying)return;copying=true;
+    try {
+      const clone=clean(content.cloneNode(true));
+      const live=content.querySelectorAll('img,iframe'), images=clone.querySelectorAll('img,iframe');
+      live.forEach((n,i)=>{if(images[i]){images[i].style.width=Math.round(n.getBoundingClientRect().width)+'px';images[i].style.maxWidth='100%';}});
+      const cache=new Map();let ok=0,failed=0;
+      for(const el of Array.from(images)){
+        const src=el.getAttribute('src');if(!src)continue;
+        if(src.startsWith('data:')){ok++;continue;}
+        notify('正在处理图片 '+(ok+failed+1)+'/'+images.length);
+        try{
+          const key=el.tagName+src;
+          if(!cache.has(key)){
+            const data=el.tagName==='IFRAME'?await window.snapshotPrototypeViaServer(src,{force}):await window.inlineAssetViaServer(src,{});
+            cache.set(key,await shrink(data.dataUrl));
+          }
+          const im=document.createElement('img');im.src=cache.get(key);im.alt=el.getAttribute('title')||el.getAttribute('alt')||'原型图';
+          im.style.cssText=el.style.cssText+';height:auto;transform:none;position:static';
+          const outer=el.closest('.prototype-frame');
+          if(outer){outer.style.cssText='height:auto;overflow:visible';}
+          el.replaceWith(im);ok++;
+        }catch(e){
+          const fallback=document.createElement('p');fallback.textContent='[图片未复制：'+(el.title||el.alt||src)+']';el.replaceWith(fallback);failed++;
+        }
+      }
+      clone.querySelectorAll('.pm-edited').forEach(e=>e.classList.remove('pm-edited'));
+      clone.querySelectorAll('table').forEach(t=>t.style.cssText+=';border-collapse:collapse;width:100%');
+      clone.querySelectorAll('th,td').forEach(c=>c.style.cssText+=';border:1px solid #ccc;padding:8px;vertical-align:top');
+      clone.querySelectorAll('button,script').forEach(e=>e.remove());
+      await writeClipboard('<meta charset="utf-8">'+clone.innerHTML,clone.textContent);
+      notify('已复制，包含 '+ok+' 张图'+(failed?'，'+failed+' 张缺失，已标注位置':'。目标文档首次粘贴请确认图片显示正常'));
+      return {ok,failed};
+    }finally{copying=false;}
+  }
+  function serialize(){
+    const clone=clean(document.documentElement.cloneNode(true));
+    clone.querySelector('body').classList.remove('pm-dual');
+    return '<!doctype html>\n'+clone.outerHTML;
+  }
+  document.addEventListener('click',async e=>{
+    const button=e.target.closest('[data-pm-action]');if(!button)return;
+    e.preventDefault();
+    try{
+      const action=button.dataset.pmAction;
+      if(action==='add-row'||action==='delete-row')changeRow(button.closest('tr'),action==='delete-row');
+      if(action==='fit'){zoom=null;scale();}
+      if(action==='plus'||action==='minus'){
+        const now=parseFloat(panel.querySelector('.pm-zoom').textContent)/100;
+        const steps=[.25,.5,.75,1,1.25,1.5,2,3];
+        zoom=(action==='plus'?steps.find(s=>s>now+.001):steps.reverse().find(s=>s<now-.001))||now;scale();
+      }
+      if(action==='copy')await copyAll(false);
+    }catch(error){notify(error.message);}finally{button.disabled=false;}
+  });
+  if(!window.PM_RUNTIME?.readOnly)initEditing();else scaleEmbeds();
+  panel.hidden=true;
+  document.body.classList.toggle('pm-dual',false);
+  requestAnimationFrame(()=>scaleEmbeds());
+  if(window.ResizeObserver)new ResizeObserver(()=>scaleEmbeds()).observe(content);
+  window.PMDocument={initEditing,serialize,copyAll,matrix};
+  notify('只读评审模式，仅供浏览');
+})();
+</script>
+</body>
+</html>
