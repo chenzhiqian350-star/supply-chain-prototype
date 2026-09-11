@@ -1,0 +1,5 @@
+[
+  {"value": "list", "label": "P01 · 预测列表", "url": "../原型/supply-chain-prototype.html#demandForecast", "w": 1440, "h": 900},
+  {"value": "import", "label": "P02 · 导入校验", "url": "../原型/supply-chain-prototype.html#demandForecast", "w": 1440, "h": 900},
+  {"value": "detail", "label": "P03 · 明细编辑", "url": "../原型/supply-chain-prototype.html#demandForecast", "w": 1440, "h": 900}
+]
