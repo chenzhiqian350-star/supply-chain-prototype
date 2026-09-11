@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="1DUVf093wmX9jgwEkRDGRl">
+<head data-page-node-id="qZ3gWTgFiuRGOrAm7MSnVt">
+<meta charset="utf-8" data-page-node-id="5y9RZF5zpguWJ9aC2HA6G3">
+<meta name="viewport" content="width=device-width,initial-scale=1" data-page-node-id="atIql5ZpE9DGL9OnIx2zLE">
+<title>产品需求文档</title>
+</head>
+<body data-page-node-id="0jxag4mwLyAHmRUvILgyMI">
+<main id="prdContent" data-page-node-id="5QRI1GIzqJ5zNQ0M3s6WDK"><h1>预警中心</h1>
+
+<h2>项目信息</h2>
+<table>
+  <tbody>
+    <tr><th>项目名称</th><td>供应链协同平台</td><th>模块</th><td>装柜计划 · 预警中心</td></tr>
+    <tr><th>需求名称</th><td>预警中心（15 类预警统一处理）</td><th>负责人</th><td>SCM 产品线</td></tr>
+    <tr><th>文档版本</th><td>V1.0</td><th>状态</th><td>已确认</td></tr>
+    <tr><th>更新日期</th><td>2026-09-08</td><th>关联原型</th><td>supply-chain-prototype.html（预警中心页）</td></tr>
+    <tr><th>上游依据</th><td colspan="3">《预警类型与案例确认清单》V1.1（2026-09-02，11 类确认采用、4 类修改后采用）</td></tr>
+  </tbody>
+</table>
+
+<h2>版本记录</h2>
+<table>
+  <thead><tr><th>版本</th><th>日期</th><th>变更说明</th><th>作者</th></tr></thead>
+  <tbody>
+    <tr><td>V1.0</td><td>2026-09-08</td><td>初版：15 类预警目录与分级、预警生成与去重、列表与筛选、查看跳转、处置闭环、只提示不干预原则</td><td>SCM 产品线</td></tr>
+  </tbody>
+</table>
+
+<h2>需求背景</h2>
+<p>装柜计划横跨需求预测、批次 / QC、排程、执行与 SAP 对账多个环节，风险信息此前分散在各模块内，缺少统一的集中处理入口，容易出现风险漏看、重复提醒与处理不留痕。预警中心把 <b>15 类已业务确认的预警（ALT-T01～T15）</b>收敛为统一目录：每条预警必须能回到对应货柜、批次、SKU 或主数据；系统只提示和留痕，不自动取消货柜、不改写数量——需要阻断的规则（跨客户 / 跨目的地混装、CBM 超限发布、每日上限）在具体业务操作点直接阻断。</p>
+
+<h2>需求目标</h2>
+<ul>
+  <li>建立 15 类预警统一目录（编号 + 名称 + 等级），等级分高 / 中 / 低 / 动态四档。</li>
+  <li>预警由规则自动生成并去重：同一「预警编号 + 业务对象」仅保留一条，同键多条保留等级最高者，不重复堆叠。</li>
+  <li>提供类型、严重程度、处理状态三维筛选；未处理数联动工作台「今日优先处理」与导航角标。</li>
+  <li>每条预警可一键跳转到对应模块（货柜编辑抽屉 / 批次池 / 需求预测 / 主数据维护）。</li>
+  <li>处置二选一：确认「已处理」，或「暂不处理」且原因必填；全部动作写入操作日志。</li>
+  <li>预警只提示和留痕，不自动改写业务计划。</li>
+</ul>
+
+<h2>业务流程图</h2>
+<p>预警从生成、去重、展示到处置闭环的端到端流程见下方流程图（独立文件），关键分支为「查看跳转（按对象类型四分支）」与「处置确认（已处理 / 暂不处理原因必填）」。</p>
+<iframe src="../流程图/预警中心-flow.html" style="width:100%;height:640px;border:1px solid #e3e8ef;border-radius:8px" title="业务流程图"></iframe>
+
+<h2>界面截图</h2>
+<p>下图为现有系统「预警中心」页面的真实运行截图（供应链数字化平台）——预警列表、筛选与操作：</p>
+<img src="images/alerts-list.png" alt="预警中心列表" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<p>处置后的列表示例（ALT-T03 标记「已处理」、ALT-T04 标记「暂不处理」，其余保持「未处理」）：</p>
+<img src="images/alerts-handled.png" alt="处置后列表" style="width:100%;border:1px solid #e3e8ef;border-radius:8px" />
+
+<h2>详细方案</h2>
+<table>
+  <colgroup><col style="width:14%"><col style="width:15%"><col style="width:30%"><col style="width:41%"></colgroup>
+  <thead>
+    <tr><th>一级模块</th><th>二级功能</th><th>原型</th><th>描述</th></tr>
+  </thead>
+  <tbody>
+    <tr data-preview="list">
+      <td rowspan="6">预警中心</td>
+      <td>预警列表与筛选</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/alerts-list.png" alt="预警列表" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>页面标题旁固定展示「只提示，不自动干预排产」原则标签；筛选区含「预警类型（15 类 + 全部）」「严重程度（高 / 中 / 动态 / 低）」「处理状态（未处理 / 暂不处理 / 已处理）」三个下拉与「查询」按钮；列表为 7 列表格：类型（编号 + 名称）、严重、对象、说明、建议动作、状态、操作。</p>
+        <p><b>【交互说明】</b>选择筛选条件 → 点「查询」刷新列表；每行提供「查看」「处置」两个操作按钮。</p>
+        <p><b>【功能逻辑】</b>列表数据由规则实时推导生成，非静态快照；严重程度标签分色：高（红）、中 / 动态（橙）、低（蓝）；处理状态标签分色：已处理（绿）、暂不处理（橙）、未处理（蓝）。</p>
+        <p><b>【数据与内容规则】</b>类型列展示预警编号（ALT-T01～T15）便于与《预警类型与案例确认清单》对照；说明列展示触发原因与影响，建议动作列展示推荐处理路径。</p>
+      </td>
+    </tr>
+    <tr data-preview="catalog">
+      <td>预警生成与去重</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/alerts-list.png" alt="预警生成" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【生成机制】</b>两类来源：① 预警目录内的存量预警（保持对象引用，处理状态可持久化）；② 动态扫描生成，包括：下一需求月无有效已确认预测版本（ALT-T01）、同一装柜日未取消货柜数超过上限（ALT-T08）、柜内出现多个目的地（ALT-T09）、SAP 实际出库数量小于计划数量（ALT-T10）、人工改空运批次登记（ALT-T13）。</p>
+        <p><b>【去重规则】</b>以「预警编号 + 业务对象」为去重键；同一键存在多条时仅保留等级最高的一条（等级权重：高 &gt; 中 / 动态 &gt; 低 / 信息），确保同一对象同一规则不重复堆叠。</p>
+        <p><b>【功能逻辑】</b>每次刷新列表时重新推导，已生成的预警补齐编号与对象引用；处理状态在推导过程中原位保留，不因刷新丢失。</p>
+      </td>
+    </tr>
+    <tr data-preview="list">
+      <td>查看与跳转</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/alerts-list.png" alt="查看跳转" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【交互说明】</b>点「查看」→ 按预警的业务对象类型自动跳转到对应模块。</p>
+        <p><b>【跳转规则】</b>① 对象为货柜（或预警带货柜目标）→ 打开该货柜的编辑抽屉（排程视图）；② 对象为批次 → 跳转 SKU 待分配批次池；③ 对象为预测版本 / 预测类预警 → 跳转需求预测；④ 其余（主数据缺失、特殊批次加天等）→ 跳转主数据维护。跳转后以提示条告知落点。</p>
+        <p><b>【功能逻辑】</b>每条预警必须能回到对应货柜、批次、SKU 或主数据——先按预警自带目标定位，无目标时按对象值在货柜、批次中反查，再按预警类型推断。</p>
+      </td>
+    </tr>
+    <tr data-preview="handled">
+      <td>预警处置</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/alerts-handled.png" alt="预警处置" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【交互说明】</b>点「处置」→ 弹出确认框「是否将该预警标记为已处理？」：确认 → 状态置为「已处理」；取消 → 弹出「请输入暂不处理原因」，原因必填（为空则提示「暂不处理必须填写原因」且不落库），填写后状态置为「暂不处理」并记录原因。</p>
+        <p><b>【功能逻辑】</b>处置后立即刷新列表与工作台待处理计数；处理动作写入操作日志（含编号、类型、对象或原因），可追溯。</p>
+        <p><b>【文案规范】</b>「是否将该预警标记为已处理？」「请输入暂不处理原因」「暂不处理必须填写原因」「预警已标记为已处理」「已记录暂不处理原因」为统一提示文案。</p>
+      </td>
+    </tr>
+    <tr data-preview="workbench">
+      <td>待办联动</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/alerts-list.png" alt="待办联动" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>左侧导航「预警中心」显示未处理角标；装柜工作台「今日优先处理」按执行风险、CBM、QC、库存差异排序展示待办，直达对应货柜、SKU 或批次。</p>
+        <p><b>【功能逻辑】</b>预警处置后实时刷新角标与工作台待办；未处理预警按等级排序进入待办，保证最高风险最先被看到。</p>
+        <p><b>【数据与内容规则】</b>待办排序依据：当天执行风险 &gt; CBM 异常 &gt; QC 风险 &gt; 库存差异。</p>
+      </td>
+    </tr>
+    <tr data-preview="list">
+      <td>只提示不干预原则</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/alerts-list.png" alt="只提示不干预" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【功能逻辑】</b>预警中心只负责提示和留痕：<b>不自动取消货柜、不改写数量、不静默排除批次</b>。需要阻断的规则在具体业务操作点直接阻断（如：跨客户 / 跨目的地上架硬阻断、CBM 超限阻断发布执行表快照、每日上限阻断改期落位）。</p>
+        <p><b>【例外确认】</b>CBM 利用率不高于 85% 的低装载预警，经 SCM 人工「确认低装载」后允许发布且不再提示；空运待人工处理（ALT-T13）默认不主动弹窗，仅列表登记。</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>15 类预警清单</h2>
+<p>以下 15 类预警已完成业务确认（11 类确认采用、4 类修改后采用），编号、等级、触发条件、建议处置与关闭条件与《预警类型与案例确认清单》V1.1 对齐。</p>
+<table>
+  <thead><tr><th style="width:8%">编号</th><th style="width:11%">预警类型</th><th style="width:6%">等级</th><th style="width:23%">触发条件</th><th style="width:20%">建议处置</th><th style="width:20%">关闭条件</th><th style="width:12%">确认结果</th></tr></thead>
+  <tbody>
+    <tr><td>ALT-T01</td><td>需求预测未上传</td><td>动态</td><td>目标月份前一月 10 日前仍未出现目标月份有效预测版本</td><td>强预警提示预测负责人上传；不自动阻断计划</td><td>目标月份存在唯一有效预测版本</td><td>修改后采用（前一月 10 日前提示即可）</td></tr>
+    <tr><td>ALT-T02</td><td>需求预测变更</td><td>中</td><td>新启用版本与原预测或已排数量出现差异</td><td>保护式重新预排，确认缺口 / 盈余策略</td><td>所有差异行已确认并生成新计划快照</td><td>确认采用</td></tr>
+    <tr><td>ALT-T03</td><td>QC 未完成 / 晚于装柜</td><td>动态</td><td>QC 计划或实际放行晚于计划装柜，或装柜日仍未放行</td><td>换批、改期或补录权威 QC 放行结果</td><td>QC 不晚于门槛，或计划已调整</td><td>确认采用</td></tr>
+    <tr><td>ALT-T04</td><td>批次不可排 / 状态异常</td><td>高</td><td>批次非可排、可用量不足、冻结、销毁或过期</td><td>替换批次、释放占用或修复上游状态</td><td>批次恢复可排且可用量覆盖计划，或从计划移除</td><td>确认采用</td></tr>
+    <tr><td>ALT-T05</td><td>CBM 超限</td><td>高</td><td>货柜 CBM 合计超过柜型有效上限</td><td>整箱拆批、下架、换柜型或申请例外</td><td>CBM 回到上限内，或例外审批通过</td><td>确认采用</td></tr>
+    <tr><td>ALT-T06</td><td>CBM 低装载</td><td>中</td><td>0 &lt; CBM / 柜型上限 ≤ 85%</td><td>人工确认后不再提示，允许发布；未确认时提示补批或确认低装载</td><td>CBM 利用率回到 85% 以上，或 SCM 已完成人工确认</td><td>修改后采用（触发口径为利用率 ≤ 85%）</td></tr>
+    <tr><td>ALT-T07</td><td>周期不足 / T0 跨月</td><td>动态</td><td>日期链计算的 T0 跨月或超出需求预测对应的计划窗口</td><td>SCM 计划员手动调整装柜日期、运输方式或批次；系统展示计算结果和原因</td><td>SCM 已完成调整并记录原因，或确认接受跨月</td><td>修改后采用（暂无客户承诺到达日期，按预测数量手动调整）</td></tr>
+    <tr><td>ALT-T08</td><td>每日装柜超限</td><td>中</td><td>同一装柜日未取消货柜数超过日资源上限（默认 5 柜）</td><td>调整日期 / 时段、增加资源或申请例外</td><td>柜数回到上限内，或临时扩容已审批</td><td>确认采用</td></tr>
+    <tr><td>ALT-T09</td><td>混装规则冲突</td><td>动态</td><td>不兼容柜型、目的地、客户白名单、温控或法规组合进入同柜</td><td>拆柜、换批或完成白名单授权</td><td>符合兼容矩阵，或有效授权完成</td><td>确认采用</td></tr>
+    <tr><td>ALT-T10</td><td>SAP 库存或出库对账差异</td><td>高</td><td>SAP 可用量不足、实际出库与计划批次 / 数量不一致，或完成后发生冲销</td><td>刷新 SAP、核对替代批次、补录映射或回退完成状态</td><td>计划、实际批次和累计有效出库一致</td><td>确认采用</td></tr>
+    <tr><td>ALT-T11</td><td>主数据缺失或失效</td><td>动态</td><td>件装量、每件 CBM、柜型、客户 / 目的地、运输方式或周期缺失 / 停用</td><td>跳转主数据维护并重新校验</td><td>必填字段完整有效且已重算</td><td>确认采用</td></tr>
+    <tr><td>ALT-T12</td><td>特殊批次加工作日</td><td>中</td><td>PV / CV 等特殊批次未计入额外工作日，或因此造成 T0 延期</td><td>重算周期，必要时改装柜日 / 运输方式</td><td>加工作日已计入且 T0 风险已处理</td><td>确认采用</td></tr>
+    <tr><td>ALT-T13</td><td>空运待人工处理</td><td>低 / 信息</td><td>运输方式由 SCM 人工改为空运，且尚未完成空运计划</td><td>默认不提醒；仅在人工空运任务超过约定处理时限时提示</td><td>已建立空运计划，或完成取消 / 延期确认</td><td>修改后采用（默认不主动提醒，仅列表登记）</td></tr>
+    <tr><td>ALT-T14</td><td>执行信息缺失</td><td>动态</td><td>合同号、SO、船名、柜号、封条号等字段在规定节点仍为空</td><td>指定角色补录，记录来源和时间</td><td>当前节点要求字段完整且格式有效</td><td>确认采用</td></tr>
+    <tr><td>ALT-T15</td><td>海运提前装柜</td><td>低</td><td>海运装柜早于业务建议窗口，例如当月 26 日前</td><td>确认船期 / 仓储，接受时填写原因或调整日期</td><td>船期与仓储已确认，或装柜日进入建议窗口</td><td>确认采用</td></tr>
+  </tbody>
+</table>
+
+<h2>等级含义与默认处理</h2>
+<table>
+  <thead><tr><th>等级</th><th>含义</th><th>默认处理</th></tr></thead>
+  <tbody>
+    <tr><td>高</td><td>已影响质量、库存、执行、容量或客户承诺</td><td>工作台置顶；要求当日处理；必要时在操作点阻断</td></tr>
+    <tr><td>中</td><td>当前仍可执行，但可能导致延期、低装载或人工积压</td><td>在计划确认或装柜前处理</td></tr>
+    <tr><td>低</td><td>过程提醒或补充信息，不影响当前可行性</td><td>观察；临近关键节点可升级</td></tr>
+    <tr><td>动态</td><td>等级随距离装柜日、客户承诺、是否阻断而变化</td><td>系统显示升级原因和剩余时间</td></tr>
+  </tbody>
+</table>
+
+<h2>预警字段说明</h2>
+<table>
+  <thead><tr><th>字段</th><th>说明</th><th>来源</th><th>必填性</th></tr></thead>
+  <tbody>
+    <tr><td>预警编号 / 类型</td><td>ALT-T01～T15 风险分类与优先级</td><td>系统规则</td><td>必填</td></tr>
+    <tr><td>业务对象</td><td>关联货柜、SKU、批次或预测版本</td><td>系统关联</td><td>必填</td></tr>
+    <tr><td>风险说明</td><td>触发条件和影响</td><td>系统计算</td><td>只读</td></tr>
+    <tr><td>严重程度</td><td>高 / 中 / 低 / 动态</td><td>预警目录</td><td>必填</td></tr>
+    <tr><td>建议动作</td><td>推荐处理路径</td><td>系统规则</td><td>只读</td></tr>
+    <tr><td>处理状态 / 原因</td><td>已处理或暂不处理及说明</td><td>SCM 处置</td><td>暂不处理时原因必填</td></tr>
+  </tbody>
+</table>
+
+<h2>异常与边界</h2>
+<table>
+  <thead><tr><th>场景</th><th>处理</th></tr></thead>
+  <tbody>
+    <tr><td>暂不处理原因为空</td><td>提示「暂不处理必须填写原因」，状态不变、不落库</td></tr>
+    <tr><td>同一对象同一规则重复触发</td><td>按「预警编号 + 业务对象」去重，仅保留等级最高一条，不重复堆叠</td></tr>
+    <tr><td>预警自动改计划</td><td>禁止：预警只提示和留痕，不自动取消货柜或改写数量</td></tr>
+    <tr><td>空运批次</td><td>默认不主动弹窗提醒，仅列表登记；长期未完成空运安排才提示</td></tr>
+    <tr><td>低装载确认</td><td>CBM ≤ 85% 未确认时持续提示；人工确认后允许发布且不再提示</td></tr>
+    <tr><td>预测未上传</td><td>仅强提醒预测负责人，不自动阻断既有计划生成与执行</td></tr>
+    <tr><td>SAP 出库小于计划</td><td>生成对账差异预警（高），处置路径为刷新 SAP 或核对批次</td></tr>
+    <tr><td>修改后采用的 4 类（T01 / T06 / T07 / T13）</td><td>按页面提示执行；正式系统中需配置责任人、处理时限和审计字段后方可自动升级</td></tr>
+  </tbody>
+</table>
+
+<h2>数据埋点</h2>
+<table>
+  <thead><tr><th>事件名</th><th>触发时机</th><th>关键属性</th></tr></thead>
+  <tbody>
+    <tr><td>alert_list_query</td><td>点击查询筛选预警列表</td><td>类型、严重程度、处理状态、结果条数</td></tr>
+    <tr><td>alert_view_jump</td><td>点击「查看」跳转</td><td>预警编号、对象类型、目标模块</td></tr>
+    <tr><td>alert_resolve</td><td>处置为已处理</td><td>预警编号、对象、等级</td></tr>
+    <tr><td>alert_defer</td><td>处置为暂不处理</td><td>预警编号、对象、原因长度（不留存原文于埋点）</td></tr>
+    <tr><td>alert_defer_blocked</td><td>暂不处理原因为空被拦截</td><td>预警编号、对象</td></tr>
+    <tr><td>alert_generated</td><td>动态扫描生成新预警</td><td>预警编号、对象、等级、触发规则</td></tr>
+  </tbody>
+</table>
+
+<h2>上线计划</h2>
+<table>
+  <thead><tr><th>阶段</th><th>内容</th><th>时间</th></tr></thead>
+  <tbody>
+    <tr><td>一期</td><td>15 类预警目录与分级、生成与去重、列表与三维筛选、查看跳转、处置闭环（已处理 / 暂不处理原因必填）、操作日志留痕、待办联动</td><td>待确认</td></tr>
+    <tr><td>二期</td><td>责任人 / 处理时限 / 审计字段配置化、动态等级自动升级（距装柜日 / 客户承诺）、通知渠道接入、响应时长与误报率统计</td><td>待确认</td></tr>
+  </tbody>
+</table>
+
+<h2>附录</h2>
+<table>
+  <thead><tr><th>术语</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>预警编号</td><td>ALT-T01～T15，与《预警类型与案例确认清单》V1.1 一一对应</td></tr>
+    <tr><td>动态等级</td><td>等级随距离装柜日、客户承诺、是否阻断而变化的预警（T01 / T03 / T07 / T09 / T11 / T14）</td></tr>
+    <tr><td>去重键</td><td>「预警编号 + 业务对象」，同键仅保留等级最高一条</td></tr>
+    <tr><td>只提示不干预</td><td>预警中心不自动取消货柜、不改写数量；阻断类规则在具体业务操作点执行</td></tr>
+    <tr><td>操作点阻断</td><td>跨客户 / 跨目的地上架、CBM 超限发布、每日上限改期等在业务动作发生时直接拦截</td></tr>
+    <tr><td>保护式重新预排</td><td>预测版本变更后重排时保留既有货柜，只生成新增需求或缺口补量建议</td></tr>
+  </tbody>
+</table>
+</main>
+<script id="prdPages" type="application/json">[{"value": "list", "label": "P01 · 预警中心列表", "url": "../原型/supply-chain-prototype.html#alerts", "w": 1440, "h": 1000}, {"value": "catalog", "label": "P02 · 预警生成与目录", "url": "../原型/supply-chain-prototype.html#alerts", "w": 1440, "h": 1000}, {"value": "handled", "label": "P03 · 处置后列表", "url": "../原型/supply-chain-prototype.html#alerts", "w": 1440, "h": 1000}, {"value": "workbench", "label": "P04 · 装柜工作台（待办联动）", "url": "../原型/supply-chain-prototype.html#workspace", "w": 1440, "h": 900}]</script>
+<script>window.PM_RUNTIME = { readOnly: true };</script>
+<script>(function () {
+  'use strict';
+  const cfg = window.PM_RUNTIME || {};
+  const server = cfg.server, launcher = cfg.launcher;
+  const revisions = new Map();
+  let readyPromise = null, exporting = false;
+  const path = () => decodeURIComponent(location.pathname);
+  function configCheck() {
+    if (cfg.readOnly) throw new Error('当前为只读分享模式，请在本地项目执行此操作');
+    if (!server || !cfg.projectId || !cfg.token) throw new Error('项目配置缺失，请初始化项目并加载 pm-runtime-config.js');
+  }
+  async function request(url, payload) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 120000);
+    try {
+      const response = await fetch(url, {
+        method: payload === undefined ? 'GET' : 'POST',
+        headers: {'Content-Type':'application/json', 'X-PM-Project':cfg.projectId, 'X-PM-Token':cfg.token},
+        body: payload === undefined ? undefined : JSON.stringify(payload),
+        cache:'no-store', signal:controller.signal
+      });
+      const data = await response.json();
+      if (!response.ok || data.error) throw new Error(data.error || ('HTTP ' + response.status));
+      return data;
+    } finally { clearTimeout(timer); }
+  }
+  async function health() {
+    const response = await fetch(server + '/api/health', {cache:'no-store', signal:AbortSignal.timeout(3000)});
+    const state = await response.json();
+    if (state.project_id !== cfg.projectId) {
+      const error = new Error('连接到了其他项目，请检查项目配置和端口');
+      error.identity = true; throw error;
+    }
+    if (state.read_only) { const e = new Error('当前服务为只读模式'); e.identity = true; throw e; }
+    return state;
+  }
+  async function ensureReady() {
+    configCheck();
+    if (readyPromise) return readyPromise;
+    readyPromise = (async () => {
+      try { return await health(); } catch (e) { if (e.identity) throw e; }
+      let launch;
+      try { launch = await request(launcher + '/api/launch', {}); }
+      catch (e) { throw new Error('服务未启动。请运行 python3 scripts/start_service.py --serve。' + e.message); }
+      if (!launch.ok) throw new Error(launch.error || '启动失败');
+      const deadline = Date.now() + 45000;
+      while (Date.now() < deadline) {
+        try { return await health(); } catch (e) { if (e.identity) throw e; }
+        await new Promise(r => setTimeout(r, 600));
+      }
+      throw new Error('启动超时，请在终端执行 --check 查看具体依赖问题');
+    })().finally(() => { readyPromise = null; });
+    return readyPromise;
+  }
+  async function api(route, payload) {
+    await ensureReady();
+    return request(server + route, payload);
+  }
+  async function revision(file) {
+    const data = await api('/api/revision', {path:file || path()});
+    revisions.set(file || path(), data.revision);
+    return data.revision;
+  }
+  async function save(content, file) {
+    file = file || path();
+    if (!revisions.has(file)) throw new Error('尚未读取文件版本，请重新加载页面后再保存');
+    const data = await api('/api/save-html', {path:file, content, revision:revisions.get(file)});
+    revisions.set(file, data.revision);
+    return data;
+  }
+  async function snapshot(src, opts) {
+    opts = opts || {};
+    return api('/api/snapshot', {src, base:opts.base || path(), scale:opts.scale || 2,
+      viewport:opts.viewport, force:!!opts.force});
+  }
+  async function asset(src, opts) {
+    return api('/api/asset', {src, base:(opts || {}).base || path()});
+  }
+  async function exportAll(button) {
+    if (exporting) return;
+    exporting = true;
+    const previous = button && button.textContent;
+    if (button) {button.disabled = true; button.textContent = '正在连接导出服务…';}
+    try {
+      const job = await api('/api/screenshot', {path:path(), viewport:{width:innerWidth, height:innerHeight}});
+      if (!job.started) throw new Error('导出任务没有启动');
+      const deadline = Date.now() + 300000;
+      while (Date.now() < deadline) {
+        const state = await request(server + '/api/status');
+        if (state.job_id !== job.job_id) throw new Error('导出任务已切换，请重新确认结果');
+        if (button) button.textContent = '正在导出 ' + state.progress + '/' + state.total;
+        if (state.done) {
+          if (button) button.textContent = '已导出 ' + state.success_count + ' 张 PNG';
+          window.parent.postMessage('export-success', '*');
+          return state;
+        }
+        await new Promise(r => setTimeout(r, 700));
+      }
+      throw new Error('导出等待超时，请查看服务日志');
+    } catch (e) {
+      if (button) button.textContent = '导出失败';
+      window.alert(e.message);
+      window.parent.postMessage('export-error', '*');
+    } finally {
+      exporting = false;
+      if (button) {button.disabled = false; setTimeout(() => button.textContent = previous, 2500);}
+    }
+  }
+  document.addEventListener('click', event => {
+    const button = event.target.closest('#exportFab, .export-btn, .export-fab');
+    if (!button) return;
+    event.preventDefault(); event.stopImmediatePropagation();
+    exportAll(button);
+  }, true);
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || event.data !== 'trigger-export') return;
+    exportAll(document.querySelector('#exportFab, .export-btn, .export-fab'));
+  });
+  window.PMService = {revision, save, api, health};
+  window.exportPrototypeViaServer = exportAll;
+  window.snapshotPrototypeViaServer = snapshot;
+  window.inlineAssetViaServer = asset;
+  window.ensureExportServerReady = ensureReady;
+})();
+</script>
+<script>(function () {
+  'use strict';
+  if (window.PMDocument) return;
+  const originals = new WeakMap();
+  const ui = '[data-pm-ui]';
+  const styles = document.createElement('style');
+  styles.dataset.pmUi = 'style';
+  styles.textContent = [
+    'body{font-family:system-ui,sans-serif;color:#243530;margin:0;padding:28px;background:#f7f9f8}',
+    '#prdContent{max-width:1320px;margin:auto}table{border-collapse:collapse;table-layout:fixed;width:100%;margin:18px 0}th,td{border:1px solid #dce4e0;padding:12px;position:relative;vertical-align:top;overflow-wrap:anywhere}th{background:#eef4f1}.prototype-frame{width:100%;min-width:0}',
+    '.pm-controls{display:flex;gap:4px;position:absolute;left:0;bottom:0;opacity:0;z-index:3}tr:hover .pm-controls{opacity:1}.pm-controls button{font-size:11px;padding:1px 7px}',
+    '.pm-col{position:absolute;right:0;top:0;width:6px;height:100%;cursor:col-resize}.pm-row{position:absolute;left:0;bottom:0;height:5px;width:100%;cursor:row-resize}',
+    '.pm-edited{background:#e6f5ec}.pm-toolbar{position:fixed;bottom:18px;left:18px;display:flex;gap:8px;z-index:25;flex-wrap:wrap;max-width:90vw}',
+    '.pm-toolbar button,.pm-preview button{padding:9px 12px;border:1px solid #d5e5de;border-radius:8px;cursor:pointer;background:white;color:#21654f}',
+    '.pm-status{position:fixed;left:18px;bottom:68px;max-width:500px;padding:10px;border-radius:8px;background:#173d32;color:white;z-index:26;display:none}.pm-status.show{display:block}',
+    '.pm-preview{position:fixed;right:0;top:0;height:100vh;width:var(--pm-panel,480px);background:#182622;color:#fff;z-index:20;display:flex;flex-direction:column}.pm-preview[hidden]{display:none}',
+    '.pm-preview header{display:flex;gap:7px;align-items:center;padding:12px;flex-wrap:wrap}.pm-preview select{max-width:100%;padding:8px}.pm-shell{overflow:auto;padding:20px;flex:1;min-height:0}.pm-device{flex:0 0 auto}.pm-device iframe{border:0;transform-origin:top left}',
+    '.pm-panel-grip{position:absolute;left:0;top:0;bottom:0;width:5px;cursor:col-resize}.pm-dual{padding-right:calc(var(--pm-panel,480px) + 28px)}',
+    '@media(max-width:850px){.pm-preview{width:92vw}.pm-dual{padding-right:28px}.pm-toolbar{z-index:25}}',
+    '@media print{[data-pm-ui]{display:none!important}body.pm-dual{padding:0}}'
+  ].join('\n');
+  document.querySelectorAll(ui).forEach(e => e.remove());
+  document.head.append(styles);
+  const content = document.getElementById('prdContent');
+  if (!content) return;
+
+  function notify(text) {
+    const n = document.querySelector('.pm-status');
+    n.textContent = text; n.classList.add('show');
+  }
+  function clean(root) {
+    root.querySelectorAll(ui).forEach(e => e.remove());
+    root.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+    return root;
+  }
+  function matrix(section) {
+    // Build logical columns so rowspan/colspan mutations keep cells aligned.
+    const rows = Array.from(section.rows), grid = [];
+    rows.forEach((row, r) => {
+      grid[r] = grid[r] || [];
+      let c = 0;
+      Array.from(row.cells).forEach(cell => {
+        while (grid[r][c]) c++;
+        const rs = cell.rowSpan || (rows.length-r);
+        for (let y=r; y<r+rs; y++) {
+          grid[y] = grid[y] || [];
+          for (let x=c; x<c+cell.colSpan; x++) grid[y][x] = {cell, r, c};
+        }
+        c += cell.colSpan;
+      });
+    });
+    return {rows, grid};
+  }
+  function changeRow(row, remove) {
+    const section = row.parentElement, {rows, grid} = matrix(section);
+    const index = rows.indexOf(row);
+    if (remove && rows.length <= 1) return;
+    const seen = new Set();
+    if (remove) {
+      (grid[index] || []).forEach(entry => {
+        if (!entry || seen.has(entry.cell)) return;
+        const cell = entry.cell; seen.add(cell);
+        if (entry.r < index) cell.rowSpan = Math.max(1, cell.rowSpan - 1);
+        else if (cell.rowSpan > 1 && rows[index+1]) {
+          cell.rowSpan -= 1;
+          const nextEntries = grid[index+1] || [];
+          const following = Array.from(rows[index+1].cells).find(c =>
+            nextEntries.findIndex(e => e && e.cell === c) > entry.c);
+          rows[index+1].insertBefore(cell, following || null);
+        }
+      });
+      row.remove();
+    } else {
+      const created = document.createElement('tr'), insert = index + 1;
+      (grid[index] || []).forEach(entry => {
+        if (!entry || seen.has(entry.cell)) return;
+        const cell = entry.cell; seen.add(cell);
+        if (entry.r + cell.rowSpan > insert || cell.rowSpan === 0) {
+          if (cell.rowSpan !== 0) cell.rowSpan += 1;
+        } else {
+          const blank = document.createElement(cell.tagName);
+          blank.colSpan = cell.colSpan;
+          blank.innerHTML = '<br>';
+          created.append(blank);
+        }
+      });
+      row.after(created);
+    }
+    initEditing();
+  }
+  function initEditing() {
+    content.querySelectorAll(ui).forEach(e => e.remove());
+    content.querySelectorAll('table:not(.no-edit)').forEach(table => {
+      const first = table.rows[0];
+      if (!first) return;
+      if (!table.querySelector(':scope > colgroup')) {
+        const group = document.createElement('colgroup');
+        let count = Array.from(first.cells).reduce((n,c) => n + c.colSpan, 0);
+        while (count--) group.append(document.createElement('col'));
+        table.prepend(group);
+      }
+      let colIndex = 0;
+      Array.from(first.cells).forEach(cell => {
+        const grip = document.createElement('span');
+        grip.className = 'pm-col'; grip.dataset.pmUi = 'column'; grip.dataset.index = colIndex;
+        cell.append(grip); colIndex += cell.colSpan;
+      });
+      Array.from(table.tBodies).forEach(section => Array.from(section.rows).forEach(row => {
+        if (Array.from(row.cells).every(c => c.tagName === 'TH') || !row.cells[0]) return;
+        const controls = document.createElement('span');
+        controls.className = 'pm-controls'; controls.dataset.pmUi = 'rows'; controls.contentEditable = 'false';
+        controls.innerHTML = '<button type="button" data-pm-action="add-row" aria-label="下方插入一行">＋</button><button type="button" data-pm-action="delete-row" aria-label="删除本行">−</button>';
+        row.cells[0].append(controls);
+        const grip = document.createElement('span'); grip.className='pm-row'; grip.dataset.pmUi='row';
+        row.cells[0].append(grip);
+      }));
+    });
+    content.querySelectorAll('td,th,p,li,h1,h2,h3,h4,blockquote,dd,dt').forEach(el => {
+      if (el.closest(ui + ',.no-edit') || el.querySelector('iframe,img,table,video,canvas,pre')) return;
+      el.contentEditable = 'true';
+      if (!originals.has(el)) originals.set(el, el.textContent);
+    });
+    scaleEmbeds();
+  }
+  function scaleEmbeds(width) {
+    content.querySelectorAll('.prototype-frame').forEach(outer => {
+      const iframe=outer.querySelector('iframe');if(!iframe)return;
+      const w=Number(outer.dataset.pw)||390,h=Number(outer.dataset.ph)||844;
+      if(width)outer.style.width=width+'px';
+      const visible=outer.clientWidth||320;
+      outer.style.position='relative';outer.style.height=Math.round(h*visible/w)+'px';outer.style.overflow='hidden';
+      iframe.style.cssText='position:absolute;left:0;top:0;border:0;transform-origin:top left;width:'+w+'px;height:'+h+'px;transform:scale('+visible/w+')';
+      if(!outer.querySelector('.pm-proto-grip')&&!window.PM_RUNTIME?.readOnly){
+        const grip=document.createElement('span');grip.dataset.pmUi='proto-size';grip.className='pm-proto-grip';grip.title='拖拽缩放原型';
+        grip.style.cssText='position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;background:#2c876d80';outer.append(grip);
+      }
+    });
+  }
+  document.addEventListener('focusout', e => {
+    if (originals.has(e.target) && originals.get(e.target) !== e.target.textContent) e.target.classList.add('pm-edited');
+  });
+  let catalog = [];
+  try { catalog = JSON.parse(document.getElementById('prdPages')?.textContent || '[]'); } catch (e) { notify(e.message); }
+  let current = catalog[0]?.value, zoom = null, lockUntil = 0;
+  const toolbar = document.createElement('div');
+  toolbar.className='pm-toolbar'; toolbar.dataset.pmUi='toolbar';
+  toolbar.innerHTML='<button data-pm-action="copy">一键复制全文</button><button data-pm-action="refresh-copy">重新生成图片并复制</button><button data-pm-action="preview">双栏预览</button><button data-pm-action="save">保存</button><button data-pm-action="download">下载副本</button>';
+  const status = document.createElement('div'); status.className='pm-status'; status.dataset.pmUi='status'; status.role='status';
+  document.body.append(toolbar,status);
+  const panel=document.createElement('aside'); panel.className='pm-preview'; panel.dataset.pmUi='preview';
+  panel.innerHTML='<div class="pm-panel-grip"></div><header><select aria-label="原型页面"></select><button data-pm-action="minus">－</button><span class="pm-zoom"></span><button data-pm-action="plus">＋</button><button data-pm-action="fit">适配</button><button data-pm-action="preview">关闭</button></header><div class="pm-shell"><div class="pm-device"><iframe title="交互原型预览"></iframe></div></div>';
+  document.body.append(panel);
+  const select=panel.querySelector('select'), frame=panel.querySelector('iframe'), wrap=panel.querySelector('.pm-device');
+  catalog.forEach(item => {const o=document.createElement('option'); o.value=item.value;o.textContent=item.label;select.append(o);});
+  function scale() {
+    const item=catalog.find(c=>c.value===current);
+    if (!item) return;
+    const factor=zoom===null ? Math.max(100,panel.querySelector('.pm-shell').clientWidth-40)/item.w : zoom;
+    frame.style.width=item.w+'px'; frame.style.height=item.h+'px'; frame.style.transform='scale('+factor+')';
+    wrap.style.width=item.w*factor+'px';wrap.style.height=item.h*factor+'px';
+    panel.querySelector('.pm-zoom').textContent=Math.round(factor*100)+'%';
+  }
+  function showPage(value) {
+    const item=catalog.find(c=>c.value===value);
+    if (!item) return;
+    current=value; select.value=value; frame.src=item.url; requestAnimationFrame(scale);
+  }
+  function togglePreview() {panel.hidden=!panel.hidden;document.body.classList.toggle('pm-dual',!panel.hidden);requestAnimationFrame(()=>{scale();scaleEmbeds();});}
+  select.addEventListener('change',()=>{lockUntil=Date.now()+4000;showPage(select.value);});
+  addEventListener('resize',()=>{scale();scaleEmbeds();});
+  addEventListener('message',e=>{
+    if(e.source!==frame.contentWindow||e.data?.type!=='page-changed')return;
+    if(catalog.some(c=>c.value===e.data.page)){current=e.data.page;select.value=current;lockUntil=Date.now()+4000;scale();}
+  });
+  addEventListener('scroll',()=>{
+    if(panel.hidden||Date.now()<lockUntil)return;
+    let node;
+    content.querySelectorAll('[data-preview]').forEach(n=>{if(n.getBoundingClientRect().top<=innerHeight*.35)node=n;});
+    if(node && node.dataset.preview!==current) showPage(node.dataset.preview);
+  },{passive:true});
+  document.addEventListener('pointerdown',e=>{
+    const grip=e.target.closest('.pm-col,.pm-row,.pm-panel-grip,.pm-proto-grip');
+    if(!grip)return;e.preventDefault();
+    const x=e.clientX,y=e.clientY, cell=grip.closest('th,td');
+    const table=cell?.closest('table'),row=cell?.parentElement;
+    const width=cell?.getBoundingClientRect().width,height=row?.getBoundingClientRect().height,panelWidth=panel.offsetWidth;
+    const protoWidth=grip.closest('.prototype-frame')?.clientWidth;
+    function move(ev){
+      if(grip.classList.contains('pm-proto-grip')){
+        scaleEmbeds(Math.max(160,Math.min(1200,protoWidth+ev.clientX-x)));
+      }else if(grip.classList.contains('pm-col')){
+        const col=table.querySelectorAll('colgroup col')[Number(grip.dataset.index)];
+        if(col)col.style.width=Math.max(48,width+ev.clientX-x)+'px';scaleEmbeds();
+      }else if(grip.classList.contains('pm-row'))row.style.height=Math.max(24,height+ev.clientY-y)+'px';
+      else {document.body.style.setProperty('--pm-panel',Math.max(320,Math.min(innerWidth-200,panelWidth+x-ev.clientX))+'px');scale();scaleEmbeds();}
+    }
+    function up(){document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);}
+    document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);
+  });
+  async function writeClipboard(html,text) {
+    try {
+      if(!navigator.clipboard||!window.ClipboardItem)throw Error('fallback');
+      await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})]);
+    }catch(e){
+      const el=document.createElement('div');el.contentEditable='true';el.style.cssText='position:fixed;left:-99999px';el.innerHTML=html;document.body.append(el);
+      const range=document.createRange();range.selectNodeContents(el);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);
+      const ok=document.execCommand('copy');selection.removeAllRanges();el.remove();if(!ok)throw Error('浏览器拒绝复制');
+    }
+  }
+  async function shrink(data) {
+    return new Promise(resolve=>{
+      const im=new Image(); im.onload=()=>{
+        if(im.width<=2000){resolve(data);return;}
+        try{const c=document.createElement('canvas');c.width=2000;c.height=Math.round(im.height*2000/im.width);const ctx=c.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.9));}catch(e){resolve(data);}
+      };im.onerror=()=>resolve(data);im.src=data;
+    });
+  }
+  let copying=false;
+  async function copyAll(force) {
+    if(copying)return;copying=true;
+    try {
+      const clone=clean(content.cloneNode(true));
+      const live=content.querySelectorAll('img,iframe'), images=clone.querySelectorAll('img,iframe');
+      live.forEach((n,i)=>{if(images[i]){images[i].style.width=Math.round(n.getBoundingClientRect().width)+'px';images[i].style.maxWidth='100%';}});
+      const cache=new Map();let ok=0,failed=0;
+      for(const el of Array.from(images)){
+        const src=el.getAttribute('src');if(!src)continue;
+        if(src.startsWith('data:')){ok++;continue;}
+        notify('正在处理图片 '+(ok+failed+1)+'/'+images.length);
+        try{
+          const key=el.tagName+src;
+          if(!cache.has(key)){
+            const data=el.tagName==='IFRAME'?await window.snapshotPrototypeViaServer(src,{force}):await window.inlineAssetViaServer(src,{});
+            cache.set(key,await shrink(data.dataUrl));
+          }
+          const im=document.createElement('img');im.src=cache.get(key);im.alt=el.getAttribute('title')||el.getAttribute('alt')||'原型图';
+          im.style.cssText=el.style.cssText+';height:auto;transform:none;position:static';
+          const outer=el.closest('.prototype-frame');
+          if(outer){outer.style.cssText='height:auto;overflow:visible';}
+          el.replaceWith(im);ok++;
+        }catch(e){
+          const fallback=document.createElement('p');fallback.textContent='[图片未复制：'+(el.title||el.alt||src)+']';el.replaceWith(fallback);failed++;
+        }
+      }
+      clone.querySelectorAll('.pm-edited').forEach(e=>e.classList.remove('pm-edited'));
+      clone.querySelectorAll('table').forEach(t=>t.style.cssText+=';border-collapse:collapse;width:100%');
+      clone.querySelectorAll('th,td').forEach(c=>c.style.cssText+=';border:1px solid #ccc;padding:8px;vertical-align:top');
+      clone.querySelectorAll('button,script').forEach(e=>e.remove());
+      await writeClipboard('<meta charset="utf-8">'+clone.innerHTML,clone.textContent);
+      notify('已复制，包含 '+ok+' 张图'+(failed?'，'+failed+' 张缺失，已标注位置':'。目标文档首次粘贴请确认图片显示正常'));
+      return {ok,failed};
+    }finally{copying=false;}
+  }
+  function serialize(){
+    const clone=clean(document.documentElement.cloneNode(true));
+    clone.querySelector('body').classList.remove('pm-dual');
+    return '<!doctype html>\n'+clone.outerHTML;
+  }
+  document.addEventListener('click',async e=>{
+    const button=e.target.closest('[data-pm-action]');if(!button)return;
+    e.preventDefault();
+    try{
+      const action=button.dataset.pmAction;
+      if(action==='add-row'||action==='delete-row')changeRow(button.closest('tr'),action==='delete-row');
+      if(action==='preview')togglePreview();
+      if(action==='fit'){zoom=null;scale();}
+      if(action==='plus'||action==='minus'){
+        const now=parseFloat(panel.querySelector('.pm-zoom').textContent)/100;
+        const steps=[.25,.5,.75,1,1.25,1.5,2,3];
+        zoom=(action==='plus'?steps.find(s=>s>now+.001):steps.reverse().find(s=>s<now-.001))||now;scale();
+      }
+      if(action==='copy'||action==='refresh-copy')await copyAll(action==='refresh-copy');
+      if(action==='save'){
+        button.disabled=true;
+        const result=await window.PMService.save(serialize());
+        notify('已保存并备份。请让 AI 读取文件以同步相关产物');
+        window.dispatchEvent(new CustomEvent('pm-saved',{detail:result}));
+      }
+      if(action==='download'){
+        const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([serialize()],{type:'text/html'}));a.download=decodeURIComponent(location.pathname.split('/').pop()||'PRD.html');a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+        notify('已下载副本，原文件未被覆盖');
+      }
+    }catch(error){notify(error.message);}finally{button.disabled=false;}
+  });
+  if(!window.PM_RUNTIME?.readOnly)initEditing();else scaleEmbeds();
+  panel.hidden=!catalog.length;
+  document.body.classList.toggle('pm-dual',!!catalog.length);
+  if(catalog.length)showPage(current);
+  requestAnimationFrame(()=>scaleEmbeds());
+  if(window.ResizeObserver)new ResizeObserver(()=>scaleEmbeds()).observe(content);
+  window.PMDocument={initEditing,serialize,copyAll,matrix};
+  if(window.PM_RUNTIME?.readOnly)notify('只读分享模式，可浏览或下载副本');
+  else window.PMService?.revision().catch(e=>notify('保存尚未就绪：'+e.message));
+})();
+</script>
+</body>
+</html>
