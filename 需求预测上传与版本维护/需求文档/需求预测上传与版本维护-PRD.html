@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="IM2nLohGZ94MsjHVRHPm8f">
+<head data-page-node-id="h3gX67YQ5aSXJrS6A9KIh8">
+<meta charset="utf-8" data-page-node-id="yfIitcVGrTimsZJuMLZPbU">
+<meta name="viewport" content="width=device-width,initial-scale=1" data-page-node-id="0P4MjxyuGynaHxcNp4EoAd">
+<title>产品需求文档</title>
+</head>
+<body data-page-node-id="JtdHpHG7F5YWzsdoPIabHB">
+<main id="prdContent" data-page-node-id="ZlWcaGIeVpE0N6fZWWCMHy"><h1 data-page-node-id="EPdZA5s4otDwRZb87pgHDf">需求预测上传与版本维护</h1>
+
+<h2 data-page-node-id="VnLFooUqL0Mb2ZesYog9Qd">项目信息</h2>
+<table data-page-node-id="8l7VYIWwkbjnoFnEAGaRRP">
+  <tbody data-page-node-id="AZJGvFl0pEOlWwg92cWsRN">
+    <tr data-page-node-id="DMRr6AKIWwbWUndXJip5GS"><th data-page-node-id="HTFoDzrh1zN87pVEBdHtFJ">项目名称</th><td data-page-node-id="hrVyrnvMafDaW7dlSO08Jx">供应链协同平台</td><th data-page-node-id="59oYOynEup5kpiWSN2AvwT">模块</th><td data-page-node-id="vRuYqqYKUATMPYGT2Qtcrx">需求预测管理</td></tr>
+    <tr data-page-node-id="aYPxb2qB3hxCvlmyvn6Q8A"><th data-page-node-id="CRavCIEIUTw0XVCVpJRoME">需求名称</th><td data-page-node-id="pujNfgsoCp8QFDMm5oORs1">需求预测上传与版本维护</td><th data-page-node-id="aXBDA8JvBVxKECi7KXoTUV">负责人</th><td data-page-node-id="OuOAhAGkxDO9mLNO4Ebdjm">SCM 产品线</td></tr>
+    <tr data-page-node-id="6wYRPdrHrq39xbnpztwFKf"><th data-page-node-id="W7SpQ2kXlgMTpTwt2saGTF">文档版本</th><td data-page-node-id="3ZQTSorLTlZaWt74IQVUEw">V1.0</td><th data-page-node-id="93gLUgxz2ie1dZ8Wpi3Wk2">状态</th><td data-page-node-id="won3Xhh53FkjxEyEWb0JAp">已确认</td></tr>
+    <tr data-page-node-id="4X6GH2eFxyK1fGyOa5NtxG"><th data-page-node-id="BOCEwJnTXVZyDKpWVoPjIV">更新日期</th><td data-page-node-id="H53P65TiGMxRD1XLVolx29">2026-09-08</td><th data-page-node-id="R5CME1kv15uoHBE0edZBXA">关联原型</th><td data-page-node-id="eXwemscJisAbO7Tx2xZUGA">supply-chain-prototype.html（需求预测页）</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="hEZ90YKZaL0ysHOMINQTuu">版本记录</h2>
+<table data-page-node-id="Vx1zZSdGnATcRyfGJWEFNI">
+  <thead data-page-node-id="EgLs7y92lL8G2kS1sg1OJ7"><tr data-page-node-id="PHD7nKcj6D5HBjRrh9JGRF"><th data-page-node-id="A5fRPpb3EjVb6WkRaEiGuq">版本</th><th data-page-node-id="OwqnhjnUCOH2pCEudEEzh1">日期</th><th data-page-node-id="y9amBJ60Fsx8MVLWl7cfEI">变更说明</th><th data-page-node-id="EWnLfLRLTfUa8jkDDMK5PS">作者</th></tr></thead>
+  <tbody data-page-node-id="414n6jZnIBEXj4hQHpNBYY">
+    <tr data-page-node-id="QbdRL8AEVB6QsW516EwS5W"><td data-page-node-id="dcv1wRHnbf18bYEsUzaIOn">V1.0</td><td data-page-node-id="yxqqqSyPwQcjke3GwzWL2l">2026-09-08</td><td data-page-node-id="8NZRXAUIk4FbLFHITH7fsC">初版：预测双类型上传、矩阵模板解析、版本替换、数量 0 合法</td><td data-page-node-id="TpDd8Fbs9zF3Ihb5DZFClU">SCM 产品线</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="CTEtLk3sgq8cUDigJoTn18">需求背景</h2>
+<p data-page-node-id="H4dTXabo6JJxH5fqsROEEI">需求预测是排柜计划的源头。原流程中预测模板为「产品编码 × 月份列」矩阵，一次上传含 N 到 N+6 共 7 个月；预测分「常规预测」与「客户订单维护」两种类型，客户订单维护按订单下单预测，分类型上传维护。当前存在三点待收敛：预测数量需要支持 0（0 表示该产品本月不预排，便于用户自行管理）；已确认月份不得重复导入，未确认月份导入需以最新导入为准（清除旧草稿）；上传模板的月份列与类型需与系统版本模型对齐。</p>
+
+<h2 data-page-node-id="R6utlLuzwqGwuebHsHKnW1">需求目标</h2>
+<ul data-page-node-id="hjesTuYFIJQ9UP6rXwtsfX">
+  <li data-page-node-id="G8pwEcZJ5TJDMJ5Jczqpd5">按「预测类型 + 需求月份」双维度建立预测版本，两类预测独立上传、独立确认。</li>
+  <li data-page-node-id="BKCTpnaa6YqXEaTs1wRrke">对接真实「产品编码 × 月份列」模板，按所选月份精确提取该列生成草稿版本。</li>
+  <li data-page-node-id="wZJPihCCKn8TWWOBnmo5EX">数量允许 0；0 与「-」视为合法值，仅负数报错，0 值产品不参与自动预排。</li>
+  <li data-page-node-id="EtvGGNkSFwEMLWEwgBVOor">已确认月份拒绝导入；未确认月份导入时清除旧草稿，以最新导入为准。</li>
+  <li data-page-node-id="X1T8hChy37xW5sJSfWdA5j">每月 5-10 日提醒确认下月预测版本（ALT-T01）。</li>
+</ul>
+
+<h2 data-page-node-id="bcAZb72RkIxVE9MHzsrx2F">业务流程图</h2>
+<p data-page-node-id="BRpVxIGoWZnpL1BygZcKgP">需求预测上传与版本维护的端到端流程见下方流程图（独立文件），关键分支为「已确认月份拒绝导入」「数量校验（负数阻断 / 0 合法）」「旧草稿清除替换」。</p>
+<iframe src="../流程图/需求预测上传与版本维护-flow.html" style="width:100%;height:640px;border:1px solid #e3e8ef;border-radius:8px" title="业务流程图" data-page-node-id="2AKsf6Sa9JukctaiMfTso4"></iframe>
+
+<h2 data-page-node-id="ZtQhCCWvi33xhsLSDI0XX2">界面截图</h2>
+<p data-page-node-id="gocPGJV57uyPY3z8zFcMoM">下图为现有系统「需求预测」页面的真实运行截图（供应链数字化平台）。</p>
+<img src="images/demandForecast.png" alt="需求预测页面截图" style="width:100%;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="xpepXKc4UuCItyEHV9PLGa" />
+
+<h2 data-page-node-id="f64xP7u4y9i9dzkVyTuAup">详细方案</h2>
+<table data-page-node-id="LymFlU80xdRMhLoUwwV4Gm">
+  <colgroup data-page-node-id="022EtRzc4hoE6zlpkP1I6d"><col style="width:14%" data-page-node-id="Z2NiLTwWPkv9sT0stl5rjs"><col style="width:15%" data-page-node-id="J0ltSLh2nBi8x3FL8vwDJc"><col style="width:30%" data-page-node-id="ACavbhUFd2B5guaNtpI3AH"><col style="width:41%" data-page-node-id="t7oEnymQsJ4HClaEEXhzmj"></colgroup>
+  <thead data-page-node-id="BQKtFGeoZoZGQndLTUPk7l">
+    <tr data-page-node-id="8yADDcJKkt5Zzqb87osJit"><th data-page-node-id="E1j0XKo8YDT8bSeIR6REkX">一级模块</th><th data-page-node-id="HPHFEch5y0GYXVaHtHG2S2">二级功能</th><th data-page-node-id="K3akruTIbJs0LxxCnJfiOI">原型</th><th data-page-node-id="LuKHyRMB5AHTAWaj9jpwOD">描述</th></tr>
+  </thead>
+  <tbody data-page-node-id="HcddFGfUKZhpJOXeAs3xHE">
+    <tr data-preview="list" data-page-node-id="gibrd3tHSerT992ikWnxm5">
+      <td rowspan="4" data-page-node-id="R85sbRtGicEAOvEKznl4to">需求预测管理</td>
+      <td data-page-node-id="dyMXupsyXqthkT9K4TrWj6">预测上传</td>
+      <td data-page-node-id="dYZdgdBfp72fdm1ieUHrGK"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="kJ9iClwGACt5MXBsmp3z4R"><img src="images/demandForecast.png" alt="预测列表页" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="ZVlJoGLHmX8Vzhg4mscHcY" /></div></td>
+      <td data-page-node-id="Wryko9nHtq2Zrtu8p2ub8x">
+        <p data-page-node-id="oDm6xqyKN5EQGsvyUs2Dlk"><b data-page-node-id="mM6ajbFutLhwGpbMFoquNL">【页面元素】</b>顶部为「预测类型」下拉（常规预测 / 客户订单维护）、「需求月份」下拉、文件选择框与「读取并校验」按钮；下方为版本列表卡片，展示版本号、月份、状态、类型、行数与更新时间。</p>
+        <p data-page-node-id="Q3efgaQ44ZuUrhai7CPfwj"><b data-page-node-id="w0gBXp2uKJKICMGnAPqnYS">【交互说明】</b>切换预测类型 → 月份下拉按类型重载（常规预测 N~N+6 共 7 个月、客户订单维护当年 1-12 月）；选择文件后点「读取并校验」→ 解析模板并进入导入校验页。</p>
+        <p data-page-node-id="nvdOhjlx1qOT5601VuUOZd"><b data-page-node-id="W4YBosbDz93kAgdJ89MKVO">【功能逻辑】</b>预测类型决定读取的工作表：常规预测读「需求预测」sheet，客户订单维护读「客户订单」sheet；月份下拉由当前日期动态生成。</p>
+        <p data-page-node-id="Kj8aQ1DPekR6urmBronpf8"><b data-page-node-id="WwSaxM0iVgKPtu5G8Eor9O">【数据与内容规则】</b>模板首列为产品编码，列头为月份；客户与目的地按 SKU 从产品主数据带出。</p>
+      </td>
+    </tr>
+    <tr data-preview="import" data-page-node-id="EyF1TE5fIaaI9JCfuTwtyz">
+      <td data-page-node-id="meaJkKLQm6T2DymvAN1lE0">导入校验与版本替换</td>
+      <td data-page-node-id="6dszTm1WQyrrKfpnsNAjER"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="n1mtGgUB7AQRBh4qqGUJ4m"><img src="images/demandForecast.png" alt="导入校验页" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="s3YedwZRM16mTa7Wxda5Dy" /></div></td>
+      <td data-page-node-id="RRtHyTub3p8aFPwpn6frUr">
+        <p data-page-node-id="nXgwf6InMRGn2MlVAG4kpb"><b data-page-node-id="5ELtRiTsFKC9iQCL8B6myV">【页面元素】</b>顶部提示条说明替换结果；草稿预览表展示产品编码、产品名称、客户、目的地、预测数量与来源；底部「取消」「确认导入」按钮。</p>
+        <p data-page-node-id="OsxtMzbchkhBwDKxfWaC8a"><b data-page-node-id="1A82y0IruHkUzZuTgWGy4l">【交互说明】</b>点「确认导入」→ 创建草稿版本并提示结果；点「取消」→ 返回列表页。</p>
+        <p data-page-node-id="xbgNwB9TEYocoCC7toiE1N"><b data-page-node-id="eTUJOeFoBw0nSHX0ISHPsY">【功能逻辑】</b>已确认月份：拒绝导入并提示走升级流程；未确认月份：删除该月该类型旧草稿，以本次导入为唯一草稿。</p>
+        <p data-page-node-id="8qeCcAsLGJz2uwq549VHfN"><b data-page-node-id="ArnjUsT6hrr8mA2DgoIroS">【边界说明】</b>数量为负数 → 报错并阻止导入；数量为 0 或「-」→ 合法，标「不参与预排」；模板缺少所选月份列 → 回退长表格式并提示。</p>
+      </td>
+    </tr>
+    <tr data-preview="detail" data-page-node-id="WGti4F6tH2w3iwtXwFTwbx">
+      <td data-page-node-id="GAr3BhoHBYKYoYMG1WyUo8">版本维护</td>
+      <td data-page-node-id="tc2KyYkr4x9xJisxvafSoX"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="XDx8FiXgAsD1YKq1HvBl3n"><img src="images/demandForecast.png" alt="明细编辑页" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="0IDE2yfuhwXHoT55HQxphH" /></div></td>
+      <td data-page-node-id="iC7GAJy3Vp3iGQlX6irEsg">
+        <p data-page-node-id="y4qJIVBlbJKjNyphlPOy87"><b data-page-node-id="S02IOBhAVGzpOxzEgCUAcm">【页面元素】</b>明细表展示产品编码、产品名称、客户、目的地、可编辑的预测数量与备注；底部「返回」「保存草稿」「启用版本」按钮。</p>
+        <p data-page-node-id="s9gXGiUOfDO6yZRzRYQER6"><b data-page-node-id="DDchbb29IBnwoaeIIFPY3f">【交互说明】</b>草稿数量可编辑；点「启用版本」→ 密码再认证 → 启用后旧已确认版本转旧版。</p>
+        <p data-page-node-id="U9vdApy0Cav8Lcwy4AT5mp"><b data-page-node-id="7jlz9HXoCIScxpa9Q0o6fx">【功能逻辑】</b>同一月份同一类型仅一个已确认版本；升级时生成 V+1 草稿并沿用基础版本数据。</p>
+        <p data-page-node-id="tJkGh9jAIHv6ZxTwncTcaZ"><b data-page-node-id="C9WoxqzBzUUcz15laI78EC">【前置条件与权限】</b>仅 SCM 可启用版本；启用需非空密码再认证。</p>
+      </td>
+    </tr>
+    <tr data-preview="detail" data-page-node-id="czm2tlBBPmGOinJ839xwBA">
+      <td data-page-node-id="BcfgAvDrpWg7m1DDtO8lOI">数量 0 与预排关联</td>
+      <td data-page-node-id="6T8ypDlu4YxY5KBVGJHglI"><div class="prototype-frame" data-pw="1440" data-ph="900" data-page-node-id="AbzabOHnXXUC5k8eBDSzsr"><img src="images/demandForecast.png" alt="数量0明细" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" data-page-node-id="yH4Xtsu0nFaZ5XMMx2rfo1" /></div></td>
+      <td data-page-node-id="cyqDH14GQXofBTyqgXYbxO">
+        <p data-page-node-id="ExefWVorfsDCl3BaSZsLA4"><b data-page-node-id="slBeHHlgVlv5WC2K4qwnK6">【功能逻辑】</b>数量为 0 的 SKU 在明细中标注「预测为 0，不参与预排」；自动预排需求 = 常规预测 + 客户订单维护两类已确认版本按 SKU 合并，0 值不进入需求缺口。</p>
+        <p data-page-node-id="mfEa2rhuPX0Lb7HxFQtgdD"><b data-page-node-id="t1ixMXqlogfGW32EckI8fR">【文案规范】</b>「预测为 0，不参与预排」为统一提示文案。</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="Jtdm6GK8jZde8mnEziDo2e">异常与边界</h2>
+<table data-page-node-id="CDDa9O1b0F5wfq1fYloc4N">
+  <thead data-page-node-id="UzUOklRIKuHH2UL3v1XlVE"><tr data-page-node-id="2EZ1k53LEAUuxMG0L46N44"><th data-page-node-id="53N9gaIgCtrqlwQukjcVOh">场景</th><th data-page-node-id="94goTUAKTBfFRrfgN68Ot7">处理</th></tr></thead>
+  <tbody data-page-node-id="GT3EWhnZeHnOXTzmIAM4A0">
+    <tr data-page-node-id="pWGJGAujHMzjN7o2VMkzRV"><td data-page-node-id="epya6vd247XQRhH7cKdf8e">已确认月份重复导入</td><td data-page-node-id="VCEhTwnPRimVkFF4CqE2Us">拒绝导入，提示「该月该类型已存在已确认版本，不支持导入；如需变更请走升级流程」</td></tr>
+    <tr data-page-node-id="EFammMkyAvV7w3V4wTCWXH"><td data-page-node-id="eDAwAXKlkPphAATlXGTO3h">数量为负数</td><td data-page-node-id="6OudMoJJgjWGdzhIuKoZH7">校验报错，阻止创建草稿</td></tr>
+    <tr data-page-node-id="N4FxSAP35IIipca6ckjEQX"><td data-page-node-id="azCH68p4oiOBT8xxOnm2Iz">模板缺少所选月份列</td><td data-page-node-id="bZhAK0rXQ5ieYn3M9mKNxZ">回退长表格式解析，并提示使用列头匹配失败</td></tr>
+    <tr data-page-node-id="GlXdv38qn6KECGnCgTZrJS"><td data-page-node-id="fgfC7tNzKgGIPSYuRFfzbd">SKU 主数据缺失</td><td data-page-node-id="fNnsJWP7FN0PH8JtcZ2oTy">标记校验错误，无法带出客户 / 目的地，需先维护主数据</td></tr>
+    <tr data-page-node-id="nO1tAB6onFpse1G0xm45x3"><td data-page-node-id="9t5llhKsm7BOwsdDxcaqUt">客户订单维护未到上传窗口</td><td data-page-node-id="yv39kQyCpaErVZuSsTV2Dh">提示「每年 12 月可上传下一年度订单」</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="QpvzdCMAM9EBPkf07iVaTX">数据埋点</h2>
+<table data-page-node-id="Djbey8uDIpNGw8fDDVNn5H">
+  <thead data-page-node-id="of4m1svd2WDZuLYNdwg765"><tr data-page-node-id="8I2UY0FN5eCihDsoqCE7o0"><th data-page-node-id="cHnEypvI88yRRqwSbTBovg">事件名</th><th data-page-node-id="13VjlQqU6JVjQTHIillB85">触发时机</th><th data-page-node-id="Zb49LIo5RETBBYfvYZmwXE">关键属性</th></tr></thead>
+  <tbody data-page-node-id="taFFVoiJrzS1ddus0vsuJq">
+    <tr data-page-node-id="KejiWH0mRcXDxGLHco2vMu"><td data-page-node-id="qdloFYrALydEhhrYHO2On1">forecast_upload</td><td data-page-node-id="G5B4BWNaEqeq5TcERnBQJu">点击「确认导入」</td><td data-page-node-id="eyNXbZmiW9AFRwPfSS68gz">类型、月份、行数、来源文件</td></tr>
+    <tr data-page-node-id="aSz9yF5CyIuxcWE5EqY2Bk"><td data-page-node-id="zdBk02gRGOyeUkzrT1Msib">forecast_version_activate</td><td data-page-node-id="E9kEClskGYIrp6MyYGgNzw">点击「启用版本」</td><td data-page-node-id="QCGTZ4qHG7QDHJ41GCaTSD">版本号、月份、类型</td></tr>
+    <tr data-page-node-id="VzcNXOryb6CBy4Cj1vBBDM"><td data-page-node-id="phybsQDkhgS3XMzLuQjH8L">forecast_import_blocked</td><td data-page-node-id="WSG67ErihxvvRC9Y1eqAw5">已确认月份导入被拒</td><td data-page-node-id="SB4AydnYtIAEXEHtk1BTAE">月份、类型</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="8wiWhAB2j8ELnOt5RPdWei">上线计划</h2>
+<table data-page-node-id="glc9bqIwRjXzVVD8Gto6ux">
+  <thead data-page-node-id="MbtolNP98z78CzFFNQATpC"><tr data-page-node-id="d46tFISjifgxgcrnbovLmv"><th data-page-node-id="hR7NUl3tdCFVxrAyEwxSqE">阶段</th><th data-page-node-id="H6dkHrLqJ4eZS6AWUA5RjB">内容</th><th data-page-node-id="JFtGQSxaYKwXmVU6gHCzAQ">时间</th></tr></thead>
+  <tbody data-page-node-id="p9DYt3yaRsTqGYgJADmZ56">
+    <tr data-page-node-id="dvfXFMQzk6YM0DxgOkydcJ"><td data-page-node-id="DTDxmIX4R03eYbhoEwNB0X">一期</td><td data-page-node-id="h9FxlPEcU0qGFwSlkpQHO7">预测双类型上传、矩阵解析、版本替换、数量 0 合法</td><td data-page-node-id="ZHYhcmGG5AgAvBGaBixbGk">待确认</td></tr>
+    <tr data-page-node-id="knAMfMWvz5DcrHo5YVHo4U"><td data-page-node-id="d7t78QQuvW89x8A2ryqtfC">二期</td><td data-page-node-id="P42V1BlRVpSWgzdOC5uwQ4">版本对比、批量导入、预测达成率自动回写</td><td data-page-node-id="76PYLwFdYdFJKMJdyvSoXQ">待确认</td></tr>
+  </tbody>
+</table>
+
+<h2 data-page-node-id="BQQ10JyebP3OT2ChYEELmR">附录</h2>
+<table data-page-node-id="cIbr9mWUQyq92N8GPFEYcx">
+  <thead data-page-node-id="5HeJvEW0ENx4vk0qg7Q24X"><tr data-page-node-id="Auqs1LcNA4CMm0qSb0BTrH"><th data-page-node-id="A2M9AJDAeKnMHXHQH13jj7">术语</th><th data-page-node-id="QsebwH5zOdgiGtwTSBR8fS">说明</th></tr></thead>
+  <tbody data-page-node-id="3FuAWxH0FWs1a9yKaWXrIL">
+    <tr data-page-node-id="sdbb9CQ0rErKIHp47om4Fo"><td data-page-node-id="f12jBmtR14pGCRUj0Lsz2v">预测类型</td><td data-page-node-id="WRjE9sGGcVdVASoh5aGt4Y">常规预测 / 客户订单维护</td></tr>
+    <tr data-page-node-id="Btlfz7HaWNYXsTFip1l1Wo"><td data-page-node-id="MT8uyN2l4MJJEDWJR4cKRS">版本状态</td><td data-page-node-id="PjyqYGESiWDczj3uIQBUxk">草稿 / 已确认 / 旧版</td></tr>
+    <tr data-page-node-id="Vxqi41n0YfP9eNTjejkHVt"><td data-page-node-id="JomS5QJe8HMXJtgWwsJzzV">N~N+6</td><td data-page-node-id="zu4dum0ibPMB1sVIHtJQCo">当月及其后 6 个月，共 7 个月</td></tr>
+    <tr data-page-node-id="ew4y9ZnN9pgVSDsshpXCwB"><td data-page-node-id="dy3LPoHclQ1MmNY0QYeeaQ">ALT-T01</td><td data-page-node-id="QwRwLZt4djlSv6VZBWitxA">需求预测未上传预警（每月 5-10 日提醒）</td></tr>
+  </tbody>
+</table>
+</main>
+<script id="prdPages" type="application/json">[{"value": "list", "label": "P01 · 预测列表", "url": "../原型/supply-chain-prototype.html#demandForecast", "w": 1440, "h": 900}, {"value": "import", "label": "P02 · 导入校验", "url": "../原型/supply-chain-prototype.html#demandForecast", "w": 1440, "h": 900}, {"value": "detail", "label": "P03 · 明细编辑", "url": "../原型/supply-chain-prototype.html#demandForecast", "w": 1440, "h": 900}]</script>
+<script>window.PM_RUNTIME = { readOnly: true };</script>
+<script>(function () {
+  'use strict';
+  const cfg = window.PM_RUNTIME || {};
+  const server = cfg.server, launcher = cfg.launcher;
+  const revisions = new Map();
+  let readyPromise = null, exporting = false;
+  const path = () => decodeURIComponent(location.pathname);
+  function configCheck() {
+    if (cfg.readOnly) throw new Error('当前为只读分享模式，请在本地项目执行此操作');
+    if (!server || !cfg.projectId || !cfg.token) throw new Error('项目配置缺失，请初始化项目并加载 pm-runtime-config.js');
+  }
+  async function request(url, payload) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 120000);
+    try {
+      const response = await fetch(url, {
+        method: payload === undefined ? 'GET' : 'POST',
+        headers: {'Content-Type':'application/json', 'X-PM-Project':cfg.projectId, 'X-PM-Token':cfg.token},
+        body: payload === undefined ? undefined : JSON.stringify(payload),
+        cache:'no-store', signal:controller.signal
+      });
+      const data = await response.json();
+      if (!response.ok || data.error) throw new Error(data.error || ('HTTP ' + response.status));
+      return data;
+    } finally { clearTimeout(timer); }
+  }
+  async function health() {
+    const response = await fetch(server + '/api/health', {cache:'no-store', signal:AbortSignal.timeout(3000)});
+    const state = await response.json();
+    if (state.project_id !== cfg.projectId) {
+      const error = new Error('连接到了其他项目，请检查项目配置和端口');
+      error.identity = true; throw error;
+    }
+    if (state.read_only) { const e = new Error('当前服务为只读模式'); e.identity = true; throw e; }
+    return state;
+  }
+  async function ensureReady() {
+    configCheck();
+    if (readyPromise) return readyPromise;
+    readyPromise = (async () => {
+      try { return await health(); } catch (e) { if (e.identity) throw e; }
+      let launch;
+      try { launch = await request(launcher + '/api/launch', {}); }
+      catch (e) { throw new Error('服务未启动。请运行 python3 scripts/start_service.py --serve。' + e.message); }
+      if (!launch.ok) throw new Error(launch.error || '启动失败');
+      const deadline = Date.now() + 45000;
+      while (Date.now() < deadline) {
+        try { return await health(); } catch (e) { if (e.identity) throw e; }
+        await new Promise(r => setTimeout(r, 600));
+      }
+      throw new Error('启动超时，请在终端执行 --check 查看具体依赖问题');
+    })().finally(() => { readyPromise = null; });
+    return readyPromise;
+  }
+  async function api(route, payload) {
+    await ensureReady();
+    return request(server + route, payload);
+  }
+  async function revision(file) {
+    const data = await api('/api/revision', {path:file || path()});
+    revisions.set(file || path(), data.revision);
+    return data.revision;
+  }
+  async function save(content, file) {
+    file = file || path();
+    if (!revisions.has(file)) throw new Error('尚未读取文件版本，请重新加载页面后再保存');
+    const data = await api('/api/save-html', {path:file, content, revision:revisions.get(file)});
+    revisions.set(file, data.revision);
+    return data;
+  }
+  async function snapshot(src, opts) {
+    opts = opts || {};
+    return api('/api/snapshot', {src, base:opts.base || path(), scale:opts.scale || 2,
+      viewport:opts.viewport, force:!!opts.force});
+  }
+  async function asset(src, opts) {
+    return api('/api/asset', {src, base:(opts || {}).base || path()});
+  }
+  async function exportAll(button) {
+    if (exporting) return;
+    exporting = true;
+    const previous = button && button.textContent;
+    if (button) {button.disabled = true; button.textContent = '正在连接导出服务…';}
+    try {
+      const job = await api('/api/screenshot', {path:path(), viewport:{width:innerWidth, height:innerHeight}});
+      if (!job.started) throw new Error('导出任务没有启动');
+      const deadline = Date.now() + 300000;
+      while (Date.now() < deadline) {
+        const state = await request(server + '/api/status');
+        if (state.job_id !== job.job_id) throw new Error('导出任务已切换，请重新确认结果');
+        if (button) button.textContent = '正在导出 ' + state.progress + '/' + state.total;
+        if (state.done) {
+          if (button) button.textContent = '已导出 ' + state.success_count + ' 张 PNG';
+          window.parent.postMessage('export-success', '*');
+          return state;
+        }
+        await new Promise(r => setTimeout(r, 700));
+      }
+      throw new Error('导出等待超时，请查看服务日志');
+    } catch (e) {
+      if (button) button.textContent = '导出失败';
+      window.alert(e.message);
+      window.parent.postMessage('export-error', '*');
+    } finally {
+      exporting = false;
+      if (button) {button.disabled = false; setTimeout(() => button.textContent = previous, 2500);}
+    }
+  }
+  document.addEventListener('click', event => {
+    const button = event.target.closest('#exportFab, .export-btn, .export-fab');
+    if (!button) return;
+    event.preventDefault(); event.stopImmediatePropagation();
+    exportAll(button);
+  }, true);
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || event.data !== 'trigger-export') return;
+    exportAll(document.querySelector('#exportFab, .export-btn, .export-fab'));
+  });
+  window.PMService = {revision, save, api, health};
+  window.exportPrototypeViaServer = exportAll;
+  window.snapshotPrototypeViaServer = snapshot;
+  window.inlineAssetViaServer = asset;
+  window.ensureExportServerReady = ensureReady;
+})();
+</script>
+<script>(function () {
+  'use strict';
+  if (window.PMDocument) return;
+  const originals = new WeakMap();
+  const ui = '[data-pm-ui]';
+  const styles = document.createElement('style');
+  styles.dataset.pmUi = 'style';
+  styles.textContent = [
+    'body{font-family:system-ui,sans-serif;color:#243530;margin:0;padding:28px;background:#f7f9f8}',
+    '#prdContent{max-width:1320px;margin:auto}table{border-collapse:collapse;table-layout:fixed;width:100%;margin:18px 0}th,td{border:1px solid #dce4e0;padding:12px;position:relative;vertical-align:top;overflow-wrap:anywhere}th{background:#eef4f1}.prototype-frame{width:100%;min-width:0}',
+    '.pm-controls{display:flex;gap:4px;position:absolute;left:0;bottom:0;opacity:0;z-index:3}tr:hover .pm-controls{opacity:1}.pm-controls button{font-size:11px;padding:1px 7px}',
+    '.pm-col{position:absolute;right:0;top:0;width:6px;height:100%;cursor:col-resize}.pm-row{position:absolute;left:0;bottom:0;height:5px;width:100%;cursor:row-resize}',
+    '.pm-edited{background:#e6f5ec}.pm-toolbar{position:fixed;bottom:18px;left:18px;display:flex;gap:8px;z-index:25;flex-wrap:wrap;max-width:90vw}',
+    '.pm-toolbar button,.pm-preview button{padding:9px 12px;border:1px solid #d5e5de;border-radius:8px;cursor:pointer;background:white;color:#21654f}',
+    '.pm-status{position:fixed;left:18px;bottom:68px;max-width:500px;padding:10px;border-radius:8px;background:#173d32;color:white;z-index:26;display:none}.pm-status.show{display:block}',
+    '.pm-preview{position:fixed;right:0;top:0;height:100vh;width:var(--pm-panel,480px);background:#182622;color:#fff;z-index:20;display:flex;flex-direction:column}.pm-preview[hidden]{display:none}',
+    '.pm-preview header{display:flex;gap:7px;align-items:center;padding:12px;flex-wrap:wrap}.pm-preview select{max-width:100%;padding:8px}.pm-shell{overflow:auto;padding:20px;flex:1;min-height:0}.pm-device{flex:0 0 auto}.pm-device iframe{border:0;transform-origin:top left}',
+    '.pm-panel-grip{position:absolute;left:0;top:0;bottom:0;width:5px;cursor:col-resize}.pm-dual{padding-right:calc(var(--pm-panel,480px) + 28px)}',
+    '@media(max-width:850px){.pm-preview{width:92vw}.pm-dual{padding-right:28px}.pm-toolbar{z-index:25}}',
+    '@media print{[data-pm-ui]{display:none!important}body.pm-dual{padding:0}}'
+  ].join('\n');
+  document.querySelectorAll(ui).forEach(e => e.remove());
+  document.head.append(styles);
+  const content = document.getElementById('prdContent');
+  if (!content) return;
+
+  function notify(text) {
+    const n = document.querySelector('.pm-status');
+    n.textContent = text; n.classList.add('show');
+  }
+  function clean(root) {
+    root.querySelectorAll(ui).forEach(e => e.remove());
+    root.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+    return root;
+  }
+  function matrix(section) {
+    // Build logical columns so rowspan/colspan mutations keep cells aligned.
+    const rows = Array.from(section.rows), grid = [];
+    rows.forEach((row, r) => {
+      grid[r] = grid[r] || [];
+      let c = 0;
+      Array.from(row.cells).forEach(cell => {
+        while (grid[r][c]) c++;
+        const rs = cell.rowSpan || (rows.length-r);
+        for (let y=r; y<r+rs; y++) {
+          grid[y] = grid[y] || [];
+          for (let x=c; x<c+cell.colSpan; x++) grid[y][x] = {cell, r, c};
+        }
+        c += cell.colSpan;
+      });
+    });
+    return {rows, grid};
+  }
+  function changeRow(row, remove) {
+    const section = row.parentElement, {rows, grid} = matrix(section);
+    const index = rows.indexOf(row);
+    if (remove && rows.length <= 1) return;
+    const seen = new Set();
+    if (remove) {
+      (grid[index] || []).forEach(entry => {
+        if (!entry || seen.has(entry.cell)) return;
+        const cell = entry.cell; seen.add(cell);
+        if (entry.r < index) cell.rowSpan = Math.max(1, cell.rowSpan - 1);
+        else if (cell.rowSpan > 1 && rows[index+1]) {
+          cell.rowSpan -= 1;
+          const nextEntries = grid[index+1] || [];
+          const following = Array.from(rows[index+1].cells).find(c =>
+            nextEntries.findIndex(e => e && e.cell === c) > entry.c);
+          rows[index+1].insertBefore(cell, following || null);
+        }
+      });
+      row.remove();
+    } else {
+      const created = document.createElement('tr'), insert = index + 1;
+      (grid[index] || []).forEach(entry => {
+        if (!entry || seen.has(entry.cell)) return;
+        const cell = entry.cell; seen.add(cell);
+        if (entry.r + cell.rowSpan > insert || cell.rowSpan === 0) {
+          if (cell.rowSpan !== 0) cell.rowSpan += 1;
+        } else {
+          const blank = document.createElement(cell.tagName);
+          blank.colSpan = cell.colSpan;
+          blank.innerHTML = '<br>';
+          created.append(blank);
+        }
+      });
+      row.after(created);
+    }
+    initEditing();
+  }
+  function initEditing() {
+    content.querySelectorAll(ui).forEach(e => e.remove());
+    content.querySelectorAll('table:not(.no-edit)').forEach(table => {
+      const first = table.rows[0];
+      if (!first) return;
+      if (!table.querySelector(':scope > colgroup')) {
+        const group = document.createElement('colgroup');
+        let count = Array.from(first.cells).reduce((n,c) => n + c.colSpan, 0);
+        while (count--) group.append(document.createElement('col'));
+        table.prepend(group);
+      }
+      let colIndex = 0;
+      Array.from(first.cells).forEach(cell => {
+        const grip = document.createElement('span');
+        grip.className = 'pm-col'; grip.dataset.pmUi = 'column'; grip.dataset.index = colIndex;
+        cell.append(grip); colIndex += cell.colSpan;
+      });
+      Array.from(table.tBodies).forEach(section => Array.from(section.rows).forEach(row => {
+        if (Array.from(row.cells).every(c => c.tagName === 'TH') || !row.cells[0]) return;
+        const controls = document.createElement('span');
+        controls.className = 'pm-controls'; controls.dataset.pmUi = 'rows'; controls.contentEditable = 'false';
+        controls.innerHTML = '<button type="button" data-pm-action="add-row" aria-label="下方插入一行">＋</button><button type="button" data-pm-action="delete-row" aria-label="删除本行">−</button>';
+        row.cells[0].append(controls);
+        const grip = document.createElement('span'); grip.className='pm-row'; grip.dataset.pmUi='row';
+        row.cells[0].append(grip);
+      }));
+    });
+    content.querySelectorAll('td,th,p,li,h1,h2,h3,h4,blockquote,dd,dt').forEach(el => {
+      if (el.closest(ui + ',.no-edit') || el.querySelector('iframe,img,table,video,canvas,pre')) return;
+      el.contentEditable = 'true';
+      if (!originals.has(el)) originals.set(el, el.textContent);
+    });
+    scaleEmbeds();
+  }
+  function scaleEmbeds(width) {
+    content.querySelectorAll('.prototype-frame').forEach(outer => {
+      const iframe=outer.querySelector('iframe');if(!iframe)return;
+      const w=Number(outer.dataset.pw)||390,h=Number(outer.dataset.ph)||844;
+      if(width)outer.style.width=width+'px';
+      const visible=outer.clientWidth||320;
+      outer.style.position='relative';outer.style.height=Math.round(h*visible/w)+'px';outer.style.overflow='hidden';
+      iframe.style.cssText='position:absolute;left:0;top:0;border:0;transform-origin:top left;width:'+w+'px;height:'+h+'px;transform:scale('+visible/w+')';
+      if(!outer.querySelector('.pm-proto-grip')&&!window.PM_RUNTIME?.readOnly){
+        const grip=document.createElement('span');grip.dataset.pmUi='proto-size';grip.className='pm-proto-grip';grip.title='拖拽缩放原型';
+        grip.style.cssText='position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;background:#2c876d80';outer.append(grip);
+      }
+    });
+  }
+  document.addEventListener('focusout', e => {
+    if (originals.has(e.target) && originals.get(e.target) !== e.target.textContent) e.target.classList.add('pm-edited');
+  });
+  let catalog = [];
+  try { catalog = JSON.parse(document.getElementById('prdPages')?.textContent || '[]'); } catch (e) { notify(e.message); }
+  let current = catalog[0]?.value, zoom = null, lockUntil = 0;
+  const toolbar = document.createElement('div');
+  toolbar.className='pm-toolbar'; toolbar.dataset.pmUi='toolbar';
+  toolbar.innerHTML='<button data-pm-action="copy">一键复制全文</button>';
+  const status = document.createElement('div'); status.className='pm-status'; status.dataset.pmUi='status'; status.role='status';
+  document.body.append(toolbar,status);
+  const panel=document.createElement('aside'); panel.className='pm-preview'; panel.dataset.pmUi='preview';
+  panel.innerHTML='<div class="pm-panel-grip"></div><header><select aria-label="原型页面"></select><button data-pm-action="minus">－</button><span class="pm-zoom"></span><button data-pm-action="plus">＋</button><button data-pm-action="fit">适配</button><button data-pm-action="preview">关闭</button></header><div class="pm-shell"><div class="pm-device"><iframe title="交互原型预览"></iframe></div></div>';
+  document.body.append(panel);
+  const select=panel.querySelector('select'), frame=panel.querySelector('iframe'), wrap=panel.querySelector('.pm-device');
+  catalog.forEach(item => {const o=document.createElement('option'); o.value=item.value;o.textContent=item.label;select.append(o);});
+  function scale() {
+    const item=catalog.find(c=>c.value===current);
+    if (!item) return;
+    const factor=zoom===null ? Math.max(100,panel.querySelector('.pm-shell').clientWidth-40)/item.w : zoom;
+    frame.style.width=item.w+'px'; frame.style.height=item.h+'px'; frame.style.transform='scale('+factor+')';
+    wrap.style.width=item.w*factor+'px';wrap.style.height=item.h*factor+'px';
+    panel.querySelector('.pm-zoom').textContent=Math.round(factor*100)+'%';
+  }
+  function showPage(value) {
+    const item=catalog.find(c=>c.value===value);
+    if (!item) return;
+    current=value; select.value=value; frame.src=item.url; requestAnimationFrame(scale);
+  }
+  function togglePreview() {panel.hidden=!panel.hidden;document.body.classList.toggle('pm-dual',!panel.hidden);requestAnimationFrame(()=>{scale();scaleEmbeds();});}
+  select.addEventListener('change',()=>{lockUntil=Date.now()+4000;showPage(select.value);});
+  addEventListener('resize',()=>{scale();scaleEmbeds();});
+  addEventListener('message',e=>{
+    if(e.source!==frame.contentWindow||e.data?.type!=='page-changed')return;
+    if(catalog.some(c=>c.value===e.data.page)){current=e.data.page;select.value=current;lockUntil=Date.now()+4000;scale();}
+  });
+  addEventListener('scroll',()=>{
+    if(panel.hidden||Date.now()<lockUntil)return;
+    let node;
+    content.querySelectorAll('[data-preview]').forEach(n=>{if(n.getBoundingClientRect().top<=innerHeight*.35)node=n;});
+    if(node && node.dataset.preview!==current) showPage(node.dataset.preview);
+  },{passive:true});
+  document.addEventListener('pointerdown',e=>{
+    const grip=e.target.closest('.pm-col,.pm-row,.pm-panel-grip,.pm-proto-grip');
+    if(!grip)return;e.preventDefault();
+    const x=e.clientX,y=e.clientY, cell=grip.closest('th,td');
+    const table=cell?.closest('table'),row=cell?.parentElement;
+    const width=cell?.getBoundingClientRect().width,height=row?.getBoundingClientRect().height,panelWidth=panel.offsetWidth;
+    const protoWidth=grip.closest('.prototype-frame')?.clientWidth;
+    function move(ev){
+      if(grip.classList.contains('pm-proto-grip')){
+        scaleEmbeds(Math.max(160,Math.min(1200,protoWidth+ev.clientX-x)));
+      }else if(grip.classList.contains('pm-col')){
+        const col=table.querySelectorAll('colgroup col')[Number(grip.dataset.index)];
+        if(col)col.style.width=Math.max(48,width+ev.clientX-x)+'px';scaleEmbeds();
+      }else if(grip.classList.contains('pm-row'))row.style.height=Math.max(24,height+ev.clientY-y)+'px';
+      else {document.body.style.setProperty('--pm-panel',Math.max(320,Math.min(innerWidth-200,panelWidth+x-ev.clientX))+'px');scale();scaleEmbeds();}
+    }
+    function up(){document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);}
+    document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);
+  });
+  async function writeClipboard(html,text) {
+    try {
+      if(!navigator.clipboard||!window.ClipboardItem)throw Error('fallback');
+      await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})]);
+    }catch(e){
+      const el=document.createElement('div');el.contentEditable='true';el.style.cssText='position:fixed;left:-99999px';el.innerHTML=html;document.body.append(el);
+      const range=document.createRange();range.selectNodeContents(el);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);
+      const ok=document.execCommand('copy');selection.removeAllRanges();el.remove();if(!ok)throw Error('浏览器拒绝复制');
+    }
+  }
+  async function shrink(data) {
+    return new Promise(resolve=>{
+      const im=new Image(); im.onload=()=>{
+        if(im.width<=2000){resolve(data);return;}
+        try{const c=document.createElement('canvas');c.width=2000;c.height=Math.round(im.height*2000/im.width);const ctx=c.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.9));}catch(e){resolve(data);}
+      };im.onerror=()=>resolve(data);im.src=data;
+    });
+  }
+  let copying=false;
+  async function copyAll(force) {
+    if(copying)return;copying=true;
+    try {
+      const clone=clean(content.cloneNode(true));
+      const live=content.querySelectorAll('img,iframe'), images=clone.querySelectorAll('img,iframe');
+      live.forEach((n,i)=>{if(images[i]){images[i].style.width=Math.round(n.getBoundingClientRect().width)+'px';images[i].style.maxWidth='100%';}});
+      const cache=new Map();let ok=0,failed=0;
+      for(const el of Array.from(images)){
+        const src=el.getAttribute('src');if(!src)continue;
+        if(src.startsWith('data:')){ok++;continue;}
+        notify('正在处理图片 '+(ok+failed+1)+'/'+images.length);
+        try{
+          const key=el.tagName+src;
+          if(!cache.has(key)){
+            const data=el.tagName==='IFRAME'?await window.snapshotPrototypeViaServer(src,{force}):await window.inlineAssetViaServer(src,{});
+            cache.set(key,await shrink(data.dataUrl));
+          }
+          const im=document.createElement('img');im.src=cache.get(key);im.alt=el.getAttribute('title')||el.getAttribute('alt')||'原型图';
+          im.style.cssText=el.style.cssText+';height:auto;transform:none;position:static';
+          const outer=el.closest('.prototype-frame');
+          if(outer){outer.style.cssText='height:auto;overflow:visible';}
+          el.replaceWith(im);ok++;
+        }catch(e){
+          const fallback=document.createElement('p');fallback.textContent='[图片未复制：'+(el.title||el.alt||src)+']';el.replaceWith(fallback);failed++;
+        }
+      }
+      clone.querySelectorAll('.pm-edited').forEach(e=>e.classList.remove('pm-edited'));
+      clone.querySelectorAll('table').forEach(t=>t.style.cssText+=';border-collapse:collapse;width:100%');
+      clone.querySelectorAll('th,td').forEach(c=>c.style.cssText+=';border:1px solid #ccc;padding:8px;vertical-align:top');
+      clone.querySelectorAll('button,script').forEach(e=>e.remove());
+      await writeClipboard('<meta charset="utf-8">'+clone.innerHTML,clone.textContent);
+      notify('已复制，包含 '+ok+' 张图'+(failed?'，'+failed+' 张缺失，已标注位置':'。目标文档首次粘贴请确认图片显示正常'));
+      return {ok,failed};
+    }finally{copying=false;}
+  }
+  function serialize(){
+    const clone=clean(document.documentElement.cloneNode(true));
+    clone.querySelector('body').classList.remove('pm-dual');
+    return '<!doctype html>\n'+clone.outerHTML;
+  }
+  document.addEventListener('click',async e=>{
+    const button=e.target.closest('[data-pm-action]');if(!button)return;
+    e.preventDefault();
+    try{
+      const action=button.dataset.pmAction;
+      if(action==='add-row'||action==='delete-row')changeRow(button.closest('tr'),action==='delete-row');
+      if(action==='fit'){zoom=null;scale();}
+      if(action==='plus'||action==='minus'){
+        const now=parseFloat(panel.querySelector('.pm-zoom').textContent)/100;
+        const steps=[.25,.5,.75,1,1.25,1.5,2,3];
+        zoom=(action==='plus'?steps.find(s=>s>now+.001):steps.reverse().find(s=>s<now-.001))||now;scale();
+      }
+      if(action==='copy')await copyAll(false);
+    }catch(error){notify(error.message);}finally{button.disabled=false;}
+  });
+  if(!window.PM_RUNTIME?.readOnly)initEditing();else scaleEmbeds();
+  panel.hidden=true;
+  document.body.classList.toggle('pm-dual',false);
+  requestAnimationFrame(()=>scaleEmbeds());
+  if(window.ResizeObserver)new ResizeObserver(()=>scaleEmbeds()).observe(content);
+  window.PMDocument={initEditing,serialize,copyAll,matrix};
+  notify('只读评审模式，仅供浏览');
+})();
+</script>
+</body>
+</html>
