@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="H5TSepUGRiuL9BiIQAzgZx">
+<head data-page-node-id="7fFhpC9A8kL6unqWSbfAzv">
+<meta charset="utf-8" data-page-node-id="lWK9L4bo5Xl4uhisALUtDF">
+<meta name="viewport" content="width=device-width,initial-scale=1" data-page-node-id="CR2KlGelkqfW6EhL3HFfXe">
+<title>预警中心 · 业务流程图</title>
+<style>
+  :root{--bg:#eef1f5;--card:#fff;--line:#d8dfe8;--text:#1f2937;--muted:#6b7280;
+        --step:#2563eb;--decision:#d97706;--yes:#ef4444;--no:#16a34a;--end:#9ca3af}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);padding:28px 16px}
+  .chart-container{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 22px 30px;max-width:880px;margin:0 auto}
+  .chart-title{font-size:17px;font-weight:700;margin:0 0 4px}
+  .chart-note{font-size:12px;color:var(--muted);margin:0 0 22px}
+  .flow{display:flex;flex-direction:column;align-items:center}
+  .node{width:100%;max-width:560px;background:#fff;border:1.5px solid var(--step);border-radius:10px;padding:12px 16px;font-size:14px;line-height:1.5;text-align:center;position:relative}
+  .node .num{display:inline-block;min-width:22px;height:22px;line-height:22px;border-radius:11px;background:var(--step);color:#fff;font-size:12px;font-weight:700;margin-right:8px;text-align:center}
+  .arrow{width:2px;height:26px;background:var(--line);position:relative;margin:0}
+  .arrow::after{content:"";position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--muted);border-bottom:0}
+  .branch-row{width:100%;max-width:760px;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;margin:4px 0}
+  .decision-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+  .decision{background:#fff;border:1.5px solid var(--decision);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;text-align:center;width:100%;max-width:420px;position:relative}
+  .decision .num{background:var(--decision)}
+  .decision .d-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--decision);border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:middle}
+  .side{display:flex;flex-direction:column;justify-content:center;gap:8px}
+  .side .case{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px}
+  .case .lbl{flex:0 0 auto;font-weight:700;font-size:12px;border-radius:5px;padding:2px 9px;color:#fff}
+  .case .lbl.yes{background:var(--yes)}
+  .case .lbl.no{background:var(--no)}
+  .case .term{flex:1 1 auto;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;color:#991b1b;font-size:13px;text-align:center}
+  .case .term.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+  .case .term.muted{background:#f3f4f6;border-color:#e5e7eb;color:#4b5563}
+  .no-branch{align-self:center;font-size:12px;font-weight:700;color:var(--no);background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 12px;margin-top:2px}
+  .connector-note{align-self:center;font-size:12px;color:var(--muted);margin:2px 0 6px}
+  .end{background:#f0fdf4;border-color:#22c55e}
+  .end .num{background:#22c55e}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:24px;padding-top:16px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+  .lg-step i{background:#fff;border:1.5px solid var(--step)}
+  .lg-decision i{background:#fff;border:1.5px solid var(--decision)}
+  .lg-warn i{background:#fef2f2;border:1px solid #fecaca}
+  .lg-end i{background:#f0fdf4;border:1px solid #86efac}
+  .principle{max-width:640px;margin:22px auto 0;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:13px;color:#92400e;text-align:center}
+  .principle b{color:#78350f}
+</style>
+</head>
+<body data-page-node-id="1dD2NrjonGXmaxsOih4gzv">
+<div class="chart-container" data-page-node-id="45Ay35aUWu7vWbul1fLv2Q">
+  <h1 class="chart-title" data-page-node-id="vwj7EsFjn50bVQPaXGLiaf">预警中心 · 端到端业务流程</h1>
+  <p class="chart-note" data-page-node-id="p6FhJzdQbO0ALEpqNikOh6">供应链协同平台 · 装柜计划模块 M06｜覆盖 15 类预警（ALT-T01～T15）的生成、去重、展示、跳转与处置闭环</p>
+
+  <div class="flow" data-page-node-id="HNj0A1QxOUYINUkJIu8uMY">
+    <div class="node" data-page-node-id="B203Zmovc4VIZuw3FqVB91"><span class="num" data-page-node-id="aeUMyij1SA9lyHHHLSblFa">1</span><b data-page-node-id="ijophGIv7Zr1wpJ084JpmG">业务事件发生</b>：预测未上传、QC 晚于装柜、CBM 超限 / 低装载、每日超限、SAP 出库差异、批次不可排、混装冲突等（15 类规则）</div>
+    <div class="arrow" data-page-node-id="B4C6430UWb7r0dIRnGzf2p"></div>
+
+    <div class="node" data-page-node-id="SlNTWGNKkU3aIbVFe2n6iA"><span class="num" data-page-node-id="xDbfvH4SsBB1j7WdsPHPEg">2</span><b data-page-node-id="C61243F9nLHuE5VdVHcqOR">系统按规则生成预警</b>：种子预警 + 动态扫描（预测版本检查、按日柜数统计、柜内目的地集合、SAP 出库对账、空运批次登记）</div>
+    <div class="arrow" data-page-node-id="8ukJcUbAja5xFgWjEID9T3"></div>
+
+    <div class="node" data-page-node-id="sdApPfAgPAIm4NLtuADWJx"><span class="num" data-page-node-id="yqSTkhHGvdRVGukmpAOGCo">3</span><b data-page-node-id="Z2XXaMrDRjA1QQ6GafmIAp">去重合并</b>：同一「预警编号 + 业务对象」仅保留一条；同键多条时保留<b data-page-node-id="iTiEFmcAcdAUoTDCojGCHs">等级最高</b>的一条，不重复堆叠</div>
+    <div class="arrow" data-page-node-id="fLZKA07t2WQJMjg46gu7zS"></div>
+
+    <div class="node" data-page-node-id="FF38jdW9CThz1Abl9EQ9SM"><span class="num" data-page-node-id="rgVydMx5uE517oBNujQHAP">4</span><b data-page-node-id="hSHnDZEuHtZnq6sWWa5EJH">预警中心列表展示</b>：类型（编号）｜严重程度（高 / 中 / 低 / 动态）｜业务对象｜风险说明｜建议动作｜处理状态（未处理 / 暂不处理 / 已处理）</div>
+    <div class="arrow" data-page-node-id="KMKA826fJwPrYWVfYFAbkl"></div>
+
+    <div class="node" data-page-node-id="Tc14TDkMxZSprxr5942mA7"><span class="num" data-page-node-id="KuIiD3E8ZMzNLoTViSN2Iw">5</span><b data-page-node-id="TIW39O4lBzvhuvI34YQBXR">SCM 筛选定位</b>：按预警类型、严重程度、处理状态组合筛选后逐条处理；未处理数联动工作台「今日优先处理」与导航角标</div>
+    <div class="arrow" data-page-node-id="VOByRlfzgGQAKWwjPTxRnC"></div>
+
+    <div class="branch-row" data-page-node-id="FjbKEFvo8aXHeTw6fdRZRS">
+      <div class="side" data-page-node-id="vBPqRUIfjFfFUXckem0Eqz">
+        <div class="case" data-page-node-id="SyYLBmq2EzgJlGuAAdUwz7"><span class="lbl yes" style="background:#2563eb" data-page-node-id="xDFDsswGgi1hcVXJ9p3WZc">查看</span><span class="term muted" style="background:#eff6ff;border-color:#bfdbfe;color:#1e40af" data-page-node-id="TSpu1mv8IwOItPhMC1DQaC">按对象类型跳转到对应模块</span></div>
+        <div class="case" data-page-node-id="Xcr7trsa112XnmTkph20JH"><span class="term muted" data-page-node-id="HzA7COtmOGl37Iuk03cGaq">货柜类 → 货柜编辑抽屉（排程视图）</span></div>
+        <div class="case" data-page-node-id="CWFzeUeTd48Oz238o08b5J"><span class="term muted" data-page-node-id="GTQSTkoCkcQRrc4ewhbYlD">批次类 → SKU 待分配批次池</span></div>
+        <div class="case" data-page-node-id="XGw7yOQAXmtqOigbGspUR9"><span class="term muted" data-page-node-id="kbvKg6hKZauUBppil4MHk9">预测类 → 需求预测</span></div>
+        <div class="case" data-page-node-id="FF2RPp7ClWCNFcwYFuNezc"><span class="term muted" data-page-node-id="a3fQBa9wMnRAHCrMQTtIXz">主数据类 → 主数据维护</span></div>
+      </div>
+      <div class="side" data-page-node-id="nNz00kWDtB8OPKwz9YlnbH">
+        <div class="decision" style="max-width:none" data-page-node-id="j7S6MhA7K3mJXG1PRNJkGS"><span class="d-tag" data-page-node-id="DYDc5xuTW8ZPWpuNOaynxM">分支</span><b data-page-node-id="RoVXXdLNvu6AxIESsiU6gu">处置确认弹窗</b>：「是否将该预警标记为已处理？」</div>
+        <div class="case" data-page-node-id="KqqBb9PdLN1Mu25xW2btLX"><span class="lbl" style="background:#16a34a" data-page-node-id="yo1mGsPEXhrwiWtmHjh5kC">确认</span><span class="term ok" data-page-node-id="cH2MHBK4sWFBQ0DjyK8WbC">状态 → 已处理</span></div>
+        <div class="case" data-page-node-id="CQTTEFMq7oQfswcXun03Uf"><span class="lbl no" data-page-node-id="ya6WrTWyhEIGCZjQKCqHFe">取消</span><span class="term" data-page-node-id="AagskeFRnpK0KlKE3uBwBf">弹出「请输入暂不处理原因」</span></div>
+        <div class="case" data-page-node-id="qYFMi7uiFo6CpxNlgqv7Wk"><span class="lbl" style="background:#d97706" data-page-node-id="MwpvJGTzK2FGTVSgDYfUAb">原因为空</span><span class="term muted" data-page-node-id="CgV4TjRhmTWPEAwzIYh47n">提示「暂不处理必须填写原因」，不落库</span></div>
+        <div class="case" data-page-node-id="tAkcwPLXEqU9lGHpTdd0Gb"><span class="term ok" style="margin-top:4px" data-page-node-id="StiZ85vMWz5WuLnMfkwD8B">原因已填 → 状态 = 暂不处理 + 原因留痕</span></div>
+      </div>
+    </div>
+    <div class="arrow" data-page-node-id="oFCfvQ50LXUNdJOIX3JpBy"></div>
+
+    <div class="node end" data-page-node-id="ZoNzDkB3VR2UAP6PTm07FV"><span class="num" data-page-node-id="EVUJXCaVy9Aq5vBq7mJwC1">6</span><b data-page-node-id="YM3g5e3dAYN1qzrwRbGnD2">留痕与联动</b>：处理动作写入操作日志（对象 / 编号 / 原因）；刷新列表与待处理计数；同一对象同一规则不重复产生</div>
+  </div>
+
+  <div class="principle" data-page-node-id="ChYMorlcEtA55yFOAdEqD4"><b data-page-node-id="yRclID4efXqWsXNfi7BDcS">铁律：预警只提示和留痕，不自动取消货柜、不改写数量。</b>需要阻断的规则（如跨客户 / 跨目的地混装、CBM 超限发布、每日上限）在具体业务操作点直接阻断；CBM 利用率不高于 85% 经 SCM 人工确认后允许发布且不再提示。</div>
+
+  <div class="legend" data-page-node-id="2U0myi1VK8bGeV8zNQ1YrG">
+    <span class="lg-step" data-page-node-id="wcewj0y4H05IzKIlNacOV2"><i data-page-node-id="FiZEhREybMW3PwfwCixNje"></i>处理步骤</span>
+    <span class="lg-decision" data-page-node-id="69H5QGfJFL3cFDhcpqJVNm"><i data-page-node-id="GcxMOXQycAFf3aof5G0TLP"></i>分支 / 确认</span>
+    <span class="lg-warn" data-page-node-id="MK6KosSmTlQCu4epxqnIkS"><i data-page-node-id="07XlLqnZyF2Q3yIQV3BFRZ"></i>阻断 / 原因必填</span>
+    <span class="lg-end" data-page-node-id="vAY06kgEpBrye8jEbkAz2k"><i data-page-node-id="Y3qCBbW7Bf418109asQxyc"></i>闭环 / 留痕</span>
+  </div>
+</div>
+</body>
+</html>
