@@ -1,0 +1,325 @@
+<h1>排程视图</h1>
+
+<h2>项目信息</h2>
+<table>
+  <tbody>
+    <tr><th>项目名称</th><td>供应链协同平台</td><th>模块</th><td>装柜排程</td></tr>
+    <tr><th>需求名称</th><td>排程视图（含货柜编辑与上下架）</td><th>负责人</th><td>SCM 产品线</td></tr>
+    <tr><th>文档版本</th><td>V1.1</td><th>状态</th><td>已确认</td></tr>
+    <tr><th>更新日期</th><td>2026-09-08</td><th>关联原型</th><td>supply-chain-prototype.html（排程视图页 / 货柜编辑抽屉）</td></tr>
+  </tbody>
+</table>
+
+<h2>版本记录</h2>
+<table>
+  <thead><tr><th>版本</th><th>日期</th><th>变更说明</th><th>作者</th></tr></thead>
+  <tbody>
+    <tr><td>V1.0</td><td>2026-09-08</td><td>初版：月/周/日三视图、跨周拖动改期、每日装柜上限、未保存调整管理、日期链与香港工作天规则</td><td>SCM 产品线</td></tr>
+    <tr><td>V1.1</td><td>2026-09-08</td><td>补充编辑层：当日编辑链路、货柜详情抽屉（字段/操作/执行信息）、上架/下架/替换、拆批、装柜明细预览与下载、货柜状态机与权限矩阵、上下架业务规则</td><td>SCM 产品线</td></tr>
+  </tbody>
+</table>
+
+<h2>需求背景</h2>
+<p>排程视图是 SCM 计划员在装柜计划里「把货柜排到具体日期与时段」的核心工作台。原流程中排程调整分散在不同入口，缺少统一的三视图视角与未保存调整管理。当前需收敛四点：月/周/日三视图各司其职（日视图处理执行与 QC 风险，周视图核对排柜顺序，月视图跨周拖动改期）；每日装柜数量受上限约束（默认 5 柜，可配置）；所有排程调整统一进入未保存状态，支持撤销与批量保存；日期链按香港工作天顺推，PV/CV 特殊批次默认加 3 个工作日。</p>
+<p>视图层之外，货柜的高频编辑动作（改日期、上下架批次、拆批、替换、明细导出）收敛在「货柜编辑抽屉」完成。核心原则：<b>装柜数量不能直接输入</b>，只能通过上架、拆批、替换和下架改变；跨客户、跨目的地混装在操作点直接阻断，而非事后预警。</p>
+
+<h2>需求目标</h2>
+<ul>
+  <li>提供月 / 周 / 日三视图，默认进入日视图，视图间可快速切换。</li>
+  <li>月视图支持跨周拖动货柜改期，周末不排柜；周视图按「时间段 × 工作日」矩阵核对排柜顺序。</li>
+  <li>每日装柜数量受上限约束，超限的日期在月视图中标识并阻止改期落位。</li>
+  <li>拖拽、改期等调整统一进入未保存状态，支持撤销与批量保存。</li>
+  <li>货柜日期链按「最晚 QC → 装柜 → ETD → ETA → T0」顺推，香港工作天，PV/CV +3 工作日。</li>
+  <li>点击日视图货柜卡片进入货柜编辑抽屉，完成上下架、拆批、替换、执行信息维护与明细导出。</li>
+  <li>上架仅允许同客户、同目的地批次；跨客户、跨目的地在操作点硬阻断。</li>
+  <li>货柜按「计划中 → 执行中 → 已完成 / 已取消」生命周期流转，计划结构字段随装柜日闸门锁定，按角色控制可编辑范围。</li>
+</ul>
+
+<h2>业务流程图</h2>
+<p>排程视图的端到端流程见下方流程图（独立文件），关键分支为「视图选择」「每日上限校验」「周末/权限拦截」「保存校验」。</p>
+<iframe src="../流程图/排程视图-flow.html" style="width:100%;height:640px;border:1px solid #e3e8ef;border-radius:8px" title="业务流程图"></iframe>
+
+<h2>界面截图</h2>
+<p>下图为现有系统「排程视图」页面的真实运行截图（供应链数字化平台），依次为日视图、周视图、月视图。</p>
+<img src="images/schedule-day.png" alt="排程视图日视图" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<img src="images/schedule-week.png" alt="排程视图周视图" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<img src="images/schedule-month.png" alt="排程视图月视图" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<p>点击日视图货柜卡片后打开的「货柜编辑抽屉」（含操作栏、SKU 明细、货柜与执行信息、货柜时间轴）：</p>
+<img src="images/drawer-detail.png" alt="货柜编辑抽屉" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<p>抽屉内「上架批次」打开的可用批次池（同目的地、同 SKU 优先排序，跨目的地禁止上架）：</p>
+<img src="images/shelf-pool.png" alt="可用批次池上架弹窗" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<p>「拆分批次」弹窗（整箱为最小单位，CBM 超限时给出最少移出建议）：</p>
+<img src="images/split-batch.png" alt="拆分批次弹窗" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<p>「预览明细」弹窗（装柜明细 26 列实时预览，支持下载 Excel 与打印）：</p>
+<img src="images/detail-preview.png" alt="装柜明细预览" style="width:100%;border:1px solid #e3e8ef;border-radius:8px" />
+
+<h2>详细方案</h2>
+<table>
+  <colgroup><col style="width:14%"><col style="width:15%"><col style="width:30%"><col style="width:41%"></colgroup>
+  <thead>
+    <tr><th>一级模块</th><th>二级功能</th><th>原型</th><th>描述</th></tr>
+  </thead>
+  <tbody>
+    <tr data-preview="day">
+      <td rowspan="10">装柜排程</td>
+      <td>视图切换</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/schedule-day.png" alt="视图切换" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>顶部工具栏含「月视图 / 周视图 / 日视图」三个 Tab（默认日视图）；月视图显示「‹ 2026年9月 ›」周期切换器，周视图显示「‹ 第36周 ›」，日视图显示「前一天 / 09/01 周二 / 后一天」切换器；右侧为「撤销未保存」「批量保存」按钮。</p>
+        <p><b>【交互说明】</b>点月/周/日 Tab → 对应视图显示，周期切换器随视图联动显隐；月视图用 ‹› 按月翻页，周视图按周翻页，日视图按天翻页。</p>
+        <p><b>【功能逻辑】</b>三视图共用同一份货柜数据，切换仅改变展示维度；日视图为唯一提供货柜编辑入口的视图，月/周视图用于浏览与拖动。</p>
+        <p><b>【数据与内容规则】</b>日期范围覆盖当月起 30 天；时段固定为 09:00-10:30、10:30-12:00、13:00-14:30、14:30-16:00、16:00-17:30。</p>
+      </td>
+    </tr>
+    <tr data-preview="day">
+      <td>日视图</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/schedule-day.png" alt="日视图" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>按时段纵向列出当日各时段的货柜卡片；货柜卡片展示货柜编号、客户、目的地、运输方式、SKU 数量、CBM、QC 摘要与预计 T0。</p>
+        <p><b>【交互说明】</b>点击货柜卡片 → 打开货柜编辑抽屉；前后一天切换 → 刷新当日时段列表与工作台。</p>
+        <p><b>【功能逻辑】</b>日视图是 SCM 处理货柜的主入口，用于查看执行情况与 QC 风险；QC 未完成或晚于装柜的货柜以预警标识提示。</p>
+        <p><b>【边界说明】</b>某时段无货柜时显示「空时段」占位；周末日期不排柜。</p>
+      </td>
+    </tr>
+    <tr data-preview="week">
+      <td>周视图</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/schedule-week.png" alt="周视图" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>「时间段 × 工作日」矩阵：首列为时段，其余列为周一至周五（共 5 个工作日），交叉单元格放置对应日期与时段的货柜。</p>
+        <p><b>【交互说明】</b>拖拽货柜到目标日期/时段单元格 → 完成改期；按周翻页查看不同周的排柜。</p>
+        <p><b>【功能逻辑】</b>周视图用于核对排柜顺序与负载分布，不提供货柜编辑入口；拖动同样进入未保存状态。</p>
+        <p><b>【数据与内容规则】</b>工作日以周一至周五为列；周末不显示在周矩阵中。</p>
+      </td>
+    </tr>
+    <tr data-preview="month">
+      <td>月视图（跨周拖动）</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/schedule-month.png" alt="月视图" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>月历网格：每个日期格显示「日期 + 星期 + 已排数/上限」，下方放置当日货柜卡片；周末格有「周末不排柜」占位。</p>
+        <p><b>【交互说明】</b>拖拽货柜卡片到目标日期格 → 跨周改期；拖到周末格不响应；超限日期格以红框标识。</p>
+        <p><b>【功能逻辑】</b>月视图用于跨周调整装柜节奏；日期格头部实时显示「已排货柜数/每日上限」，超过上限显示超限样式。</p>
+        <p><b>【边界说明】</b>月视图为浏览与拖动视图，不提供货柜内容编辑；空日期格显示「可放置货柜」。</p>
+      </td>
+    </tr>
+    <tr data-preview="month">
+      <td>拖拽改期与每日上限</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/schedule-month.png" alt="拖拽改期" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【功能逻辑】</b>拖拽落位时写入新日期/时段并标记未保存；改期后校验每日装柜上限（默认 5 柜），超过则提示「当日已排 N 柜，超过每日上限 5 柜，请改期或申请扩容」。</p>
+        <p><b>【边界说明】</b>周末落位被阻止；无权限（非 SCM 计划员或计划已锁定）时拖拽不响应并提示。</p>
+        <p><b>【前置条件与权限】</b>每日上限由装柜日程主数据配置，默认 5 柜，修改后对后续排程生效。</p>
+      </td>
+    </tr>
+    <tr data-preview="day">
+      <td>未保存调整管理</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/schedule-day.png" alt="未保存调整" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>存在未保存调整时顶部显示「你有 N 项未保存调整」提示条，含「撤销」「批量保存」按钮。</p>
+        <p><b>【交互说明】</b>点「批量保存」→ 校验每日上限、CBM、QC 完成时间与工作日规则后落库；点「撤销」→ 回退未保存调整。</p>
+        <p><b>【功能逻辑】</b>所有排程调整统一进入未保存状态，保存前不写入正式计划；保存时逐项校验，命中异常时给出对应提示。</p>
+        <p><b>【文案规范】</b>「撤销未保存」「批量保存」「你有 N 项未保存调整」为统一提示文案。</p>
+      </td>
+    </tr>
+    <tr data-preview="drawer">
+      <td>当日编辑</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/drawer-detail.png" alt="当日编辑入口" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【编辑链路】</b>日切换（前一天/后一天）定位目标日期 → 时段内点击货柜卡片 → 打开货柜编辑抽屉 → 在抽屉内完成调整日期、上下架、拆批、替换、执行信息维护 → 关闭抽屉 → 工具栏「批量保存」统一落库。</p>
+        <p><b>【页面元素】</b>日视图时段卡片含：货柜编号、客户 · 目的地 · 运输方式 · 柜型、生命周期标签（计划中/执行中/已完成/已取消）、SKU 摘要、三个日期芯片（检验完成日期 / 装柜日期 / T0 到达日期）、CBM 利用率进度条。</p>
+        <p><b>【功能逻辑】</b>当日编辑入口收敛在日视图（点击卡片进抽屉）与月/周视图（拖拽改期）两条路径；月/周视图不提供货柜内容编辑入口。所有编辑动作（拖拽、改期、上下架、拆批、替换）统一进入未保存状态，由「批量保存」统一校验落库。</p>
+        <p><b>【前置条件与权限】</b>仅 SCM 计划员 / SCM 主管可编辑计划内容；已执行或已取消的货柜不可编辑；已到装柜日（闸门关闭）的货柜需 SCM 主管「授权变更」后方可编辑。</p>
+      </td>
+    </tr>
+    <tr data-preview="shelf">
+      <td>上架 / 下架 / 替换</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/shelf-pool.png" alt="可用批次池" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>抽屉操作栏「上架批次 / 替换 / 下架」三个入口。「上架批次 / 替换」打开「可用批次池」弹窗：搜索框（SKU / 批次号 / 品名 / 目的地模糊搜索）、状态筛选（默认「可排」）、客户筛选、SKU 筛选、「显示跨目的地批次（仅查看，不可上架）」勾选框、分页控件；池表格列：批次号、SKU / 产品名称（带优先级标签）、客户、目的地、数量、箱数、CBM（带风险标签）、QC、状态、操作（上架 / 禁止上架）。</p>
+        <p><b>【交互说明】</b>上架 → 从批次池点「上架」将批次加入当前货柜；替换 → 先在抽屉 SKU 明细中单选柜内批次，再从批次池选择可上架批次按位替换；下架 → 在抽屉 SKU 明细中单选批次 → 点「下架」→ 二次确认后批次回到批次池。</p>
+        <p><b>【排序规则】</b>批次池按「同目的地优先，其次同 SKU 优先」排序；优先级标签：同 SKU、同目的地混装、不同客户·禁止同柜、不同目的地·禁止同柜；风险标签：人工改运（空运）、不同客户·禁止同柜、不同目的地·禁止同柜、尾箱不足50%、CBM偏高、可上架。</p>
+        <p><b>【数据与内容规则】</b>上架成功后批次状态置为「已分配」，货柜重算 CBM 并刷新排程 / 报表 / 执行表；下架、替换、取消货柜后原批次状态一律回「可排」回到待分配批次池；跨目的地批次默认不展示，勾选后仅查看、按钮置灰「禁止上架」。</p>
+        <p><b>【文案规范】</b>阻断提示「不同客户，不能放置统一货柜」「不同目的地不允许同柜，请拆为两个货柜」；下架确认「确认下架批次 X？下架后数量会回到批次池。」；成功提示「已下架，回到待分配批次池」。</p>
+      </td>
+    </tr>
+    <tr data-preview="split">
+      <td>拆批</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/split-batch.png" alt="拆分批次" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>「拆分批次」弹窗：拆出箱数（默认带出系统建议值）、对应产品数量（按件装量自动换算、只读）、调整原因（选填）、剩余量提示条、「取消 / 确认拆分」按钮。</p>
+        <p><b>【交互说明】</b>在抽屉 SKU 明细单选批次 → 点「拆批」或在批次池点「拆分批次」→ 输入拆出箱数（整箱为最小单位）→ 确认拆分 → 拆出数量回到批次池，剩余量留在当前货柜。</p>
+        <p><b>【功能逻辑】</b>仅「可排」状态批次可拆批（单 SKU 单批次）；拆出数量必须大于 0 且小于批次剩余数量；CBM 超限时系统按「最少整箱移出」给出建议拆出箱数并显示预计释放的 CBM；拆出记录沿用原 SAP 批号（批号不变，以内部拆分序号追溯），状态回「可排」并标注「可排·人工拆批」；拆批后 CBM 按数量比例重算并刷新达成率与预警。</p>
+        <p><b>【文案规范】</b>「请先选择一个可拆分批次」「仅可对可排批次执行单 SKU 拆批」「拆分数量必须大于 0 且小于剩余数量」。</p>
+      </td>
+    </tr>
+    <tr data-preview="preview">
+      <td>明细预览与下载</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="1000"><img src="images/detail-preview.png" alt="装柜明细预览" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>「装柜明细预览」弹窗：标题（货柜编号）、说明文案（随计划实时生成，可随时预览、下载与打印，用于线下仓库按执行表单独装柜）、26 列装柜明细表格（货柜编号、计划装柜日期、产品编码、中文货名、批次号、拆分标识、拆分序号、出货数量、运输方式（SAP）、每件 CBM、件装量、箱数、每批 CBM 等，可横向滚动）、底部「下载 Excel」「打印」按钮。</p>
+        <p><b>【交互说明】</b>点「预览明细」→ 实时展示当前货柜装柜明细；点「下载明细」→ 生成《装柜执行表》Excel 文件（14 列中文表头：货柜编号、计划装柜日期、产品编码、中文货名、批次号、拆分标识、拆分序号、出货数量、箱数、每批 CBM、客户、目的地、货柜名称、计划 T0 入库日期）。</p>
+        <p><b>【功能逻辑】</b>明细与计划数据实时同步，不生成静态副本；浏览器 Excel 组件未加载时自动降级生成带 BOM 的 CSV 备用文件；预览与下载动作均写入货柜操作日志留痕。</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>货柜详情抽屉</h2>
+<p>点击日视图货柜卡片打开「货柜编辑抽屉」，从上到下五个区域：① 状态栏（QC 最晚完成 / 计划装柜 / CBM 利用率与预计 T0）；② 装柜产品 SKU 明细（含操作栏）；③ 货柜与执行信息；④ 货柜时间轴（计划路径：最晚 QC → 计划装柜日 → 计划离港日 → 计划到港日 → T0 入库日期）；⑤ 操作日志。抽屉标题即货柜名称，点击可直接修改，保存后生效。</p>
+
+<h3>SKU 明细字段</h3>
+<table>
+  <thead><tr><th>列名</th><th>说明</th><th>来源</th><th>是否可编辑</th></tr></thead>
+  <tbody>
+    <tr><td>单选</td><td>选中柜内批次，供拆批 / 下架 / 替换操作定位</td><td>页面控件</td><td>—</td></tr>
+    <tr><td>SKU / 产品名称</td><td>产品编码与中文货名</td><td>批次池同步</td><td>只读</td></tr>
+    <tr><td>批次号</td><td>SAP 批号，拆批子记录共用同一批号</td><td>批次池同步</td><td>只读</td></tr>
+    <tr><td>装柜数量</td><td>批次在本柜的装载数量</td><td>系统计算</td><td>不可直接输入，仅通过上架 / 拆批 / 替换 / 下架改变</td></tr>
+    <tr><td>件装量 / 箱数</td><td>每件数量与整箱数（向上取整）</td><td>主数据 / 系统计算</td><td>只读</td></tr>
+    <tr><td>每件 CBM / 每批 CBM</td><td>单件体积与批次合计体积</td><td>主数据 / 系统计算</td><td>只读</td></tr>
+    <tr><td>生产完成 / QC 完成</td><td>生产完工日期与 QC 放行节点</td><td>排程、QC 同步</td><td>只读</td></tr>
+    <tr><td>当月达成率</td><td>该 SKU 当月预计装柜量 / 预测数量</td><td>系统计算</td><td>只读</td></tr>
+    <tr><td>状态</td><td>可排 / 预警标识（QC 风险、CBM 异常等）</td><td>系统计算</td><td>只读</td></tr>
+    <tr><td>操作（拆批）</td><td>对该批次发起拆批</td><td>页面控件</td><td>受计划可编辑权限控制</td></tr>
+  </tbody>
+</table>
+
+<h3>货柜与执行信息字段</h3>
+<table>
+  <thead><tr><th>字段</th><th>说明</th><th>维护角色</th><th>可编辑条件</th></tr></thead>
+  <tbody>
+    <tr><td>货柜名称（计划标识）</td><td>按货柜类型、周数、序号等规则生成，用于排程、执行表与计划明细关联</td><td>系统 / SCM</td><td>计划可编辑时</td></tr>
+    <tr><td>客户 / 目的地</td><td>影响上架推荐与混装预警</td><td>主数据带出</td><td>计划可编辑时调整</td></tr>
+    <tr><td>货柜类型 / 运输方式</td><td>40'RF / 40'HQ / 20'RF / 20'GP；陆运 / 海运 / 空运</td><td>SCM</td><td>计划可编辑时</td></tr>
+    <tr><td>合同号 / 销售订单号 / 船名</td><td>业务与物流字段（页面标注 SCM/SN 维护，当前版本按计划内容字段受装柜日闸门控制）</td><td>SCM / SN</td><td>计划可编辑时</td></tr>
+    <tr><td>直清</td><td>勾选 / 不勾选</td><td>SCM</td><td>页面开放</td></tr>
+    <tr><td>周数</td><td>装柜所属周数</td><td>系统计算</td><td>可手改</td></tr>
+    <tr><td>TT-字母 / TT-序号</td><td>发运后的 TT 编码</td><td>SCM</td><td><b>仅发运后</b>（SAP 出库覆盖全部计划批次）由 SCM / SCM 主管补录</td></tr>
+    <tr><td>柜号</td><td>实际物流柜号</td><td>SCM / SN</td><td>SCM / SCM 主管 / 仓库；<b>发运后仍可补录</b></td></tr>
+    <tr><td>封条号</td><td>仓库实际操作后的封条号</td><td>仓库</td><td>仓库 / SCM / SCM 主管</td></tr>
+  </tbody>
+</table>
+<p>保存按钮文案随权限变化：计划内容可编辑时为「保存货柜与执行信息」，计划锁定时为「保存执行信息」（仅保存柜号 / 封条号等执行字段）。</p>
+
+<h3>操作按钮矩阵</h3>
+<table>
+  <thead><tr><th>按钮</th><th>触发条件与权限</th><th>结果</th></tr></thead>
+  <tbody>
+    <tr><td>发布执行表快照</td><td>SCM 计划员 / SCM 主管；货柜未执行且未取消；CBM 超限时阻断</td><td>生成执行表快照，<b>不改变货柜生命周期状态</b>（仍为「计划中」）</td></tr>
+    <tr><td>授权变更</td><td>仅 SCM 主管；已到装柜日（闸门关闭）、未执行、未取消；<b>必填变更原因</b></td><td>解锁该货柜计划内容编辑，操作写入日志</td></tr>
+    <tr><td>确认低装载</td><td>CBM 利用率 ≤ 85% 且未确认时出现；计划可编辑</td><td>确认后允许发布且不再提示；关联 CBM 预警置为「已处理」</td></tr>
+    <tr><td>调整日期</td><td>计划可编辑</td><td>依次校验：日期在排程范围内（MM/DD）→ 非周末 → 每日上限（同日未取消货柜数 +1 ≤ 上限）→ 周频规则（非广州同客户同目的地每周仅一个出船日期）；通过后改期并进入未保存状态</td></tr>
+    <tr><td>上架批次</td><td>计划可编辑</td><td>打开可用批次池（上架模式）</td></tr>
+    <tr><td>拆分批次</td><td>计划可编辑；已选中批次</td><td>打开拆批弹窗</td></tr>
+    <tr><td>替换</td><td>计划可编辑；已选中批次</td><td>打开批次池（替换模式），新批次按位替换选中批次，原批次回池</td></tr>
+    <tr><td>下架</td><td>计划可编辑；已选中批次</td><td>二次确认后批次状态回「可排」，从货柜移除并重算 CBM</td></tr>
+    <tr><td>取消货柜</td><td>计划可编辑</td><td>二次确认后柜内全部批次回「可排」，货柜从计划移除，抽屉关闭</td></tr>
+    <tr><td>预览明细 / 下载明细</td><td>无权限限制（已取消货柜除外）</td><td>打开装柜明细预览 / 下载《装柜执行表》</td></tr>
+    <tr><td>交互说明</td><td>无限制</td><td>打开本模块（货柜编辑页）字段 / 交互 / 异常帮助说明</td></tr>
+  </tbody>
+</table>
+
+<h2>货柜状态机与权限矩阵</h2>
+<h3>状态流转</h3>
+<table>
+  <thead><tr><th>当前状态</th><th>触发事件</th><th>目标状态</th><th>计划内容可编辑性</th></tr></thead>
+  <tbody>
+    <tr><td>计划中</td><td>货柜创建 / 预排生成</td><td>计划中</td><td>SCM 计划员 / SCM 主管可编辑</td></tr>
+    <tr><td>计划中</td><td>到达计划装柜日（闸门关闭）</td><td>执行中</td><td>计划结构字段锁定；柜号 / 封条号按角色补录</td></tr>
+    <tr><td>执行中</td><td>SCM 主管「授权变更」（必填原因）</td><td>执行中（已解锁）</td><td>该货柜计划内容恢复可编辑</td></tr>
+    <tr><td>执行中</td><td>SAP 出库覆盖全部计划批次</td><td>已完成</td><td>只读；TT 字母 / 序号可由 SCM 补录</td></tr>
+    <tr><td>计划中 / 执行中</td><td>「取消货柜」（柜内批次全部回池）</td><td>已取消</td><td>全部字段禁用</td></tr>
+  </tbody>
+</table>
+
+<h3>角色 × 可编辑矩阵</h3>
+<table>
+  <thead><tr><th>操作 / 字段</th><th>SCM 计划员</th><th>SCM 主管</th><th>仓库</th></tr></thead>
+  <tbody>
+    <tr><td>计划内容（日期、时段、SKU 明细、上下架、拆批、替换）</td><td>装柜日前可编辑</td><td>装柜日前可编辑；装柜日后可授权变更</td><td>不可</td></tr>
+    <tr><td>柜号</td><td>可补录（发运后仍可）</td><td>可补录（发运后仍可）</td><td>可补录</td></tr>
+    <tr><td>封条号</td><td>可补录</td><td>可补录</td><td>可补录（主责）</td></tr>
+    <tr><td>TT-字母 / TT-序号</td><td>仅发运后</td><td>仅发运后</td><td>不可</td></tr>
+    <tr><td>发布执行表快照</td><td>可</td><td>可</td><td>不可</td></tr>
+    <tr><td>装柜日后授权变更</td><td>不可</td><td>可（必填原因）</td><td>不可</td></tr>
+  </tbody>
+</table>
+
+<h2>上下架业务规则</h2>
+<table>
+  <thead><tr><th>规则类型</th><th>规则</th><th>提示 / 处理文案</th></tr></thead>
+  <tbody>
+    <tr><td>允许上架</td><td>同客户且同目的地的「可排」状态批次</td><td>按钮「上架」可点</td></tr>
+    <tr><td>排序优先</td><td>同目的地优先（权重 10），其次同 SKU 优先（权重 1）</td><td>标签「同 SKU」「同目的地混装」</td></tr>
+    <tr><td>硬阻断 ①</td><td>不同客户批次禁止同柜</td><td>「不同客户，不能放置统一货柜」</td></tr>
+    <tr><td>硬阻断 ②</td><td>不同目的地批次禁止同柜</td><td>「不同目的地不允许同柜，请拆为两个货柜」</td></tr>
+    <tr><td>仅查看</td><td>跨目的地批次默认不展示；勾选「显示跨目的地批次」后可见但不可上架</td><td>按钮置灰「禁止上架」</td></tr>
+    <tr><td>风险提示（不阻断）</td><td>尾箱不足 50%、单批 CBM 偏高（&gt;18）、空运批次</td><td>标签「尾箱不足50%」「CBM偏高」「人工改运」</td></tr>
+    <tr><td>回池规则 ①</td><td>下架：批次状态回「可排」，从货柜移除</td><td>「已下架，回到待分配批次池」</td></tr>
+    <tr><td>回池规则 ②</td><td>替换：新批次「已分配」入柜，被替换批次回「可排」</td><td>「批次 X 已替换到当前货柜」</td></tr>
+    <tr><td>回池规则 ③</td><td>取消货柜：柜内全部批次回「可排」，货柜移除</td><td>「货柜已取消，柜内批次已回到待分配批次池」</td></tr>
+    <tr><td>数量不可直改</td><td>装柜数量不能直接输入，只能通过上架、拆批、替换、下架四条路径改变</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<h2>异常与边界</h2>
+<table>
+  <thead><tr><th>场景</th><th>处理</th></tr></thead>
+  <tbody>
+    <tr><td>周末落位</td><td>月视图周末格禁止拖放，提示「周末不排柜」</td></tr>
+    <tr><td>每日装柜超限</td><td>月视图超限日期格标识；改期落位校验并阻止，提示改期或申请扩容</td></tr>
+    <tr><td>无权限调整</td><td>非 SCM 计划员或计划已锁定，拖拽不响应并提示「当前角色不可调整计划内容，或需装柜日后授权变更」</td></tr>
+    <tr><td>空时段 / 空日期</td><td>日视图显示「空时段」，月视图显示「可放置货柜」</td></tr>
+    <tr><td>QC 未完成或晚于装柜</td><td>货柜卡片以预警标识提示，不自动修改计划</td></tr>
+    <tr><td>不同客户 / 不同目的地同柜</td><td>上架操作点硬阻断，提示「不同客户，不能放置统一货柜」/「不同目的地不允许同柜，请拆为两个货柜」</td></tr>
+    <tr><td>下架未选批次</td><td>提示「请选择货柜内批次后再下架」</td></tr>
+    <tr><td>拆批数量非法</td><td>提示「拆分数量必须大于 0 且小于剩余数量」；非可排批次提示「仅可对可排批次执行单 SKU 拆批」</td></tr>
+    <tr><td>调整日期非法</td><td>不在排程范围提示按 MM/DD 格式重输；周末提示「周末默认不排柜，请选择工作日」；超每日上限提示「当日已排 N 柜，超过每日上限 X 柜，请改期或申请扩容」；周频冲突提示与冲突货柜编号</td></tr>
+    <tr><td>CBM 超限发布</td><td>阻断「发布执行表快照」；超限时拆批弹窗给出最少整箱移出建议</td></tr>
+    <tr><td>低装载（CBM ≤ 85%）</td><td>需 SCM 人工「确认低装载」后方可发布，确认后不再重复提示</td></tr>
+    <tr><td>已取消货柜</td><td>全部字段与操作按钮禁用</td></tr>
+  </tbody>
+</table>
+
+<h2>数据埋点</h2>
+<table>
+  <thead><tr><th>事件名</th><th>触发时机</th><th>关键属性</th></tr></thead>
+  <tbody>
+    <tr><td>schedule_view_switch</td><td>切换月/周/日视图</td><td>视图类型、当前周期</td></tr>
+    <tr><td>schedule_drag_change</td><td>拖拽货柜改期落位</td><td>货柜编号、原日期、新日期、新时段</td></tr>
+    <tr><td>schedule_limit_blocked</td><td>改期触发每日上限拦截</td><td>日期、当日已排数、上限</td></tr>
+    <tr><td>schedule_batch_save</td><td>点击批量保存</td><td>未保存项数、校验通过/异常数</td></tr>
+    <tr><td>drawer_open</td><td>打开货柜编辑抽屉</td><td>货柜编号、生命周期状态、角色</td></tr>
+    <tr><td>shelf_pool_open</td><td>打开可用批次池</td><td>货柜编号、模式（上架/替换）、池内批次数</td></tr>
+    <tr><td>shelf_batch_add</td><td>上架批次成功</td><td>货柜编号、批次号、是否同 SKU、上架后 CBM</td></tr>
+    <tr><td>shelf_batch_remove</td><td>下架批次成功</td><td>货柜编号、批次号</td></tr>
+    <tr><td>shelf_batch_replace</td><td>替换批次成功</td><td>货柜编号、原批次号、新批次号</td></tr>
+    <tr><td>shelf_blocked</td><td>上架被硬阻断</td><td>货柜编号、批次号、阻断原因（客户/目的地）</td></tr>
+    <tr><td>split_confirm</td><td>确认拆分</td><td>批次号、拆出箱数、拆出数量、是否超限建议</td></tr>
+    <tr><td>detail_download</td><td>下载装柜执行表</td><td>货柜编号、格式（Excel/CSV）</td></tr>
+  </tbody>
+</table>
+
+<h2>上线计划</h2>
+<table>
+  <thead><tr><th>阶段</th><th>内容</th><th>时间</th></tr></thead>
+  <tbody>
+    <tr><td>一期</td><td>月/周/日三视图、跨周拖动改期、每日上限、未保存调整管理、日期链；货柜编辑抽屉、上下架与替换、拆批、装柜明细预览与下载、状态机与权限控制</td><td>待确认</td></tr>
+    <tr><td>二期</td><td>排程冲突自动重排建议、跨月批量调整、QC 风险一键重排</td><td>待确认</td></tr>
+  </tbody>
+</table>
+
+<h2>附录</h2>
+<table>
+  <thead><tr><th>术语</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>三视图</td><td>月视图（跨周拖动）/ 周视图（时间段矩阵）/ 日视图（执行与 QC 风险）</td></tr>
+    <tr><td>每日上限</td><td>单日可排货柜数，由装柜日程主数据配置，默认 5 柜</td></tr>
+    <tr><td>日期链</td><td>最晚 QC → 装柜 → ETD → ETA → T0，按香港工作天顺推</td></tr>
+    <tr><td>PV / CV</td><td>特殊批次标识，涉及日期链时默认加 3 个工作日</td></tr>
+    <tr><td>批次池</td><td>汇集排程系统可用批次的待分配池，供预排、拆批回池和货柜上架使用；剩余量 = 原始可用量 − 已排量，并受 SAP 出库和销毁校正</td></tr>
+    <tr><td>上架 / 下架</td><td>把批次池中的可排批次加入货柜 / 把柜内批次退回批次池；跨客户、跨目的地均禁止同柜</td></tr>
+    <tr><td>拆批</td><td>对单个可排批次按整箱拆分，拆出量回批次池；沿用原 SAP 批号，以拆分序号追溯</td></tr>
+    <tr><td>装柜日闸门</td><td>到达计划装柜日后计划结构字段自动锁定的控制机制，解锁需 SCM 主管授权变更</td></tr>
+    <tr><td>执行表快照</td><td>发布时生成的装柜执行表快照，供仓库线下执行；不改变货柜生命周期状态</td></tr>
+  </tbody>
+</table>
