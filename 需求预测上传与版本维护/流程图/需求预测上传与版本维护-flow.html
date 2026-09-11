@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="EScX3CUX1ltTdlsEIGDH9A">
+<head data-page-node-id="YW8W9wlzbAWgJflzM53YTO">
+<meta charset="utf-8" data-page-node-id="b6WKSe04IaXiL0vfDoCsjE">
+<meta name="viewport" content="width=device-width,initial-scale=1" data-page-node-id="DBHpM97oBTX1LJK21QyfgB">
+<title>需求预测上传与版本维护 · 业务流程图</title>
+<style>
+  :root{--bg:#eef1f5;--card:#fff;--line:#d8dfe8;--text:#1f2937;--muted:#6b7280;
+        --step:#2563eb;--decision:#d97706;--yes:#ef4444;--no:#16a34a;--end:#9ca3af}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);padding:28px 16px}
+  .chart-container{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 22px 30px;max-width:880px;margin:0 auto}
+  .chart-title{font-size:17px;font-weight:700;margin:0 0 4px}
+  .chart-note{font-size:12px;color:var(--muted);margin:0 0 22px}
+  .flow{display:flex;flex-direction:column;align-items:center}
+  .node{width:100%;max-width:560px;background:#fff;border:1.5px solid var(--step);border-radius:10px;padding:12px 16px;font-size:14px;line-height:1.5;text-align:center;position:relative}
+  .node .num{display:inline-block;min-width:22px;height:22px;line-height:22px;border-radius:11px;background:var(--step);color:#fff;font-size:12px;font-weight:700;margin-right:8px;text-align:center}
+  .arrow{width:2px;height:26px;background:var(--line);position:relative;margin:0}
+  .arrow::after{content:"";position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--muted);border-bottom:0}
+  .branch-row{width:100%;max-width:760px;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;margin:4px 0}
+  .decision-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+  .decision{background:#fff;border:1.5px solid var(--decision);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;text-align:center;width:100%;max-width:420px;position:relative}
+  .decision .num{background:var(--decision)}
+  .decision .d-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--decision);border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:middle}
+  .side{display:flex;flex-direction:column;justify-content:center;gap:8px}
+  .side .case{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px}
+  .case .lbl{flex:0 0 auto;font-weight:700;font-size:12px;border-radius:5px;padding:2px 9px;color:#fff}
+  .case .lbl.yes{background:var(--yes)}
+  .case .lbl.no{background:var(--no)}
+  .case .term{flex:1 1 auto;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;color:#991b1b;font-size:13px;text-align:center}
+  .case .term.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+  .case .term.muted{background:#f3f4f6;border-color:#e5e7eb;color:#4b5563}
+  .no-branch{align-self:center;font-size:12px;font-weight:700;color:var(--no);background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 12px;margin-top:2px}
+  .connector-note{align-self:center;font-size:12px;color:var(--muted);margin:2px 0 6px}
+  .end{background:#f0fdf4;border-color:#22c55e}
+  .end .num{background:#22c55e}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:24px;padding-top:16px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+  .lg-step i{background:#fff;border:1.5px solid var(--step)}
+  .lg-decision i{background:#fff;border:1.5px solid var(--decision)}
+  .lg-term i{background:#fef2f2;border:1px solid #fecaca}
+  .lg-end i{background:#f0fdf4;border:1.5px solid #22c55e}
+</style>
+</head>
+<body data-page-node-id="zxpD50kSDI4tr6vrRnwykS">
+<div class="chart-container" data-page-node-id="7gV0uD5Muls6w8v8onZUvj">
+  <div class="chart-title" data-page-node-id="gSwWYKX6vh1sc6nPXxewy9">需求预测上传与版本维护 · 业务流程图</div>
+  <div class="chart-note" data-page-node-id="zslpRF8Cio8uJT42A9zFXc">流程说明：预测分「常规预测」与「客户订单维护」两类，按「类型 + 月份」双维度管理版本；关键分支为已确认拦截、数量校验、旧草稿清除替换。</div>
+
+  <div class="flow" data-page-node-id="EObgHTIlIejbeC7IWtybAh">
+    <div class="node" data-page-node-id="PhZf97GTyQgV3w143n5dsP"><span class="num" data-page-node-id="RtFpZDvNijpsGg5GWKXFdz">1</span>每月 5-10 日提醒确认下月需求预测版本（ALT-T01）</div>
+    <div class="arrow" data-page-node-id="7RrVR89P5Sz1ZXoJOC5EQI"></div>
+    <div class="node" data-page-node-id="bSEyqeOCeHozCzutGHcAYD"><span class="num" data-page-node-id="5fQNKwhq2u8kQpq7l5LNpt">2</span>选择预测类型（常规预测 / 客户订单维护）+ 需求月份</div>
+    <div class="arrow" data-page-node-id="Qf2sXOlzMOHYdpTe4IQ8OX"></div>
+    <div class="node" data-page-node-id="NMSMkWA2THoExr8jT96ACi"><span class="num" data-page-node-id="Hlr0Xr8pqEtaqobfydxLWW">3</span>上传模板 Excel（产品编码 × 月份列）</div>
+    <div class="arrow" data-page-node-id="Lwn6bmrWCo5xlvvVQkgtE5"></div>
+
+    <div class="branch-row" data-page-node-id="iqZVfFiX07M6hsI3E0E4GS">
+      <div class="decision-wrap" data-page-node-id="tAi2fBPdHt4SSPJ97y7PY5">
+        <div class="decision" data-page-node-id="xsfon1IHD0QulSXLBUDZBm"><span class="d-tag" data-page-node-id="sfR2d9818aY1W2PQwr13cs">判断①</span>该月该类型是否已确认？</div>
+      </div>
+      <div class="side" data-page-node-id="5meLvRSMUqBooHYFF6JAlb">
+        <div class="case" data-page-node-id="nMPkoJ83yhRoiwF9ouNUfp"><span class="lbl yes" data-page-node-id="9mMkmHM2TwI9xtWvGzF9BA">是</span><span class="term" data-page-node-id="GEkLrKzA1lDYqvHilbuoWb">拒绝导入，提示走升级流程</span></div>
+        <div class="case" data-page-node-id="g9liY0c9kYvoh1C2SniVlq"><span class="lbl no" data-page-node-id="807F6EwxI9hjDxz0lx2MSO">否</span><span class="term ok" data-page-node-id="Jdm53jUYlYWnEDpQz6dCj0">继续解析</span></div>
+      </div>
+    </div>
+    <div class="arrow" data-page-node-id="Cae4Pm6S1VAx3gde22s6Au"></div>
+
+    <div class="node" data-page-node-id="RvRrRBDdCVO35UP36HRMtM"><span class="num" data-page-node-id="xkt9xaSrpv4gSXF1abhMep">4</span>解析矩阵，按所选月份提取该列</div>
+    <div class="arrow" data-page-node-id="2XUKapxenzEGKhmtKqjsfi"></div>
+    <div class="node" data-page-node-id="BgPo1r23rClTjzLtHheRWz"><span class="num" data-page-node-id="7zUcOnrjYY4EVRhcL5t3Ue">5</span>客户 / 目的地按 SKU 从产品主数据带出</div>
+    <div class="arrow" data-page-node-id="BJGdhgwl5wLandaYlFWaLY"></div>
+
+    <div class="branch-row" data-page-node-id="RHjDKsKXcsYFhPykoFJFgm">
+      <div class="decision-wrap" data-page-node-id="7o60rYYO01XoiikLF55CUD">
+        <div class="decision" data-page-node-id="oKVV7KS3IF6fV5aKz3Q21o"><span class="d-tag" data-page-node-id="48wFEOiFuu3gjamYTggEoZ">判断②</span>数量校验</div>
+      </div>
+      <div class="side" data-page-node-id="3hTmgHoNgFctKKRRqHmTSN">
+        <div class="case" data-page-node-id="t8udupXTr4d2SBOgQnEGdh"><span class="lbl yes" data-page-node-id="w1uXsfV0CGM7uBSGjAzmTQ">负数</span><span class="term" data-page-node-id="qyBXgeIogOLpRGm9CtrsfP">报错，阻止导入</span></div>
+        <div class="case" data-page-node-id="oIm99sv5PAY99zizL1qnQ9"><span class="lbl no" data-page-node-id="lWo3IxDX1hHTxO8wfl7vxW">0 或正数</span><span class="term ok" data-page-node-id="QmWHkZkXREvuCVreAuOTMj">0 合法，继续</span></div>
+      </div>
+    </div>
+    <div class="arrow" data-page-node-id="V32HnidLwJqwOQ2jpxOhlo"></div>
+
+    <div class="node" data-page-node-id="uQHGhQO5aA5boEV2WHzS9C"><span class="num" data-page-node-id="G2jMIIPQ0mwufBHzGaVUrC">6</span>清除该月该类型旧草稿，新建唯一草稿版本</div>
+    <div class="arrow" data-page-node-id="IJ0IeN070SVT2i8WVc9uK3"></div>
+
+    <div class="branch-row" data-page-node-id="pAXCx5FxCdgvu2nILx4kTv">
+      <div class="decision-wrap" data-page-node-id="5vlaqFY7oiigngOVarznLO">
+        <div class="decision" data-page-node-id="4r0Gb4ac32uBatWw2eXwYo"><span class="d-tag" data-page-node-id="mRG1N2i2GtFXRGT98ep8iv">判断③</span>校验是否通过？</div>
+      </div>
+      <div class="side" data-page-node-id="oSAtL8W9pGXjZEafw3qO7T">
+        <div class="case" data-page-node-id="EwrX7btFa7N6f2qZ4ZSF5c"><span class="lbl yes" data-page-node-id="jSM5YWuBeuCz5gii4c7E6l">否</span><span class="term" data-page-node-id="9ZsvWtBMzDAU26TbUZwako">草稿保留，待处理校验项</span></div>
+        <div class="case" data-page-node-id="dd4BjKrAFsZloLdURGjDhs"><span class="lbl no" data-page-node-id="VX3vWWFri3bIcoCfJeVdgB">是</span><span class="term ok" data-page-node-id="ddi5l4W1JCEFTkempgwgO8">SCM 启用版本（密码再认证）</span></div>
+      </div>
+    </div>
+    <div class="arrow" data-page-node-id="bUZqDD4s04khBTYq3H9nGK"></div>
+
+    <div class="node" data-page-node-id="Dl4DclL0EWqvdhguCalgZq"><span class="num" data-page-node-id="6X3w8s13R4idhrPDWnySY7">7</span>旧已确认版本转旧版，新版本成为唯一已确认版本</div>
+    <div class="arrow" data-page-node-id="u4PFDUAZ8zBpQbZwZtd7Kv"></div>
+    <div class="node end" data-page-node-id="RozPyigTwO3R7Nz0jByDrI"><span class="num" data-page-node-id="muCDFG8Rbw4BTLRu4Hasmf">8</span>自动预排：常规 + 客户订单合并，数量 0 的 SKU 不参与预排</div>
+  </div>
+
+  <div class="legend" data-page-node-id="RKML2VTK50u4QfkHJvSx9E">
+    <span class="lg-step" data-page-node-id="HM2PNdysOkC3xG3wWxnYaW"><i data-page-node-id="ftp4TvnGbtmwzrm13VjVRf"></i>流程步骤</span>
+    <span class="lg-decision" data-page-node-id="1GDdUINbPYHa4OjovxBulT"><i data-page-node-id="5mf7GC1DdENuqHEji63Roe"></i>判断分支</span>
+    <span class="lg-term" data-page-node-id="WuNzQoGTysR5hhvjKOMApY"><i data-page-node-id="zbbbRuOB03HYBhHn2NFcxA"></i>阻断 / 异常出口</span>
+    <span class="lg-end" data-page-node-id="rNz1Noz86yWMZGCWW901tY"><i data-page-node-id="cuAGrhMC9cFPGRGG1PR9t9"></i>正常结束</span>
+  </div>
+</div>
+</body>
+</html>
