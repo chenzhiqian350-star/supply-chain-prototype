@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>装柜计划执行表 · 产品需求文档</title>
+</head>
+<body>
+<main id="prdContent">
+<h1>装柜计划执行表</h1>
+
+<h2>项目信息</h2>
+<table>
+  <tbody>
+    <tr><th>项目名称</th><td>供应链协同平台</td><th>模块</th><td>装柜计划执行表</td></tr>
+    <tr><th>需求名称</th><td>装柜计划执行表（仓库按日执行）</td><th>负责人</th><td>SCM 产品线</td></tr>
+    <tr><th>文档版本</th><td>V1.0</td><th>状态</th><td>已确认</td></tr>
+    <tr><th>更新日期</th><td>2026-09-11</td><th>关联原型</th><td>supply-chain-prototype.html（装柜计划执行表页）</td></tr>
+  </tbody>
+</table>
+
+<h2>版本记录</h2>
+<table>
+  <thead><tr><th>版本</th><th>日期</th><th>变更说明</th><th>作者</th></tr></thead>
+  <tbody>
+    <tr><td>V1.0</td><td>2026-09-11</td><td>初版：装柜日筛选、14 列执行表、柜号与封条号补录权限、计划有更新的时效展示、SAP 对账差异、导出与打印、已取消货柜不可见</td><td>SCM 产品线</td></tr>
+  </tbody>
+</table>
+
+<h2>需求背景</h2>
+<p>装柜计划执行表是仓库按日执行装柜计划的在线表单，用于<b>替代线下 Excel 计划表</b>。此前仓库拿到的是一份静态 Excel，计划发生调整后无法感知，且实际柜号、封条号靠线下记录后回传，形成信息断层。</p>
+<p>本模块的定位是<b>执行层</b>：仓库只需看清「今天装哪些柜、装什么、装多少」，并把实际执行信息（柜号、封条号）就地补录。计划数据本身由 SCM 在排程视图维护，执行表只读展示，不提供计划编辑能力。与排程视图的边界是：排程视图负责「计划怎么定」，执行表负责「今天怎么执行」。</p>
+
+<h2>需求目标</h2>
+<ul>
+  <li>提供按装柜日筛选的执行表，支持固定表头、横向滚动、在线预览、导出与打印。</li>
+  <li>14 列覆盖仓库执行所需信息：货柜编号、客户、目的地、运输方式、计划时段、SKU 批次数、箱数、CBM、QC 摘要、预计 T0、柜号、封条号、状态、计划有更新。</li>
+  <li><b>已取消货柜不在执行表中展示</b>——避免仓库按已作废计划执行。</li>
+  <li>仓库仅维护柜号与封条号；SKU、批次、数量、计划日期一律只读。</li>
+  <li>计划发生变更时以「计划有更新」列提示：24 小时内高亮，此后转灰，条目永久保留并可悬浮查看全量更新时间。</li>
+  <li>执行日后仍未匹配 SAP 出库时显示 SAP 对账差异预警；CBM 超限进入执行时显示高优先级对账风险。</li>
+  <li>执行表可随时在线预览、下载与打印，不依赖人工确认动作。</li>
+</ul>
+
+<h2>业务流程图</h2>
+<p>装柜计划执行表的端到端流程见下方流程图（独立文件），关键分支为「装柜日筛选」「已取消货柜过滤」「字段可编辑性判定（柜号 / 封条号）」「执行后 SAP 对账」。</p>
+<iframe src="../流程图/装柜计划执行表-flow.html" style="width:100%;height:640px;border:1px solid #e3e8ef;border-radius:8px" title="业务流程图"></iframe>
+
+<h2>界面截图</h2>
+<p>下图为现有系统「装柜计划执行表」页面的真实运行截图。顶部为装柜日筛选与可见状态说明标签：</p>
+<img src="images/execution-overview.png" alt="执行表总览" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
+<p>执行表 14 列（含柜号、封条号的可补录输入框，未补录时以「待补录」占位）：</p>
+<img src="images/execution-table.png" alt="执行表" style="width:100%;border:1px solid #e3e8ef;border-radius:8px" />
+
+<h2>详细方案</h2>
+<table>
+  <colgroup><col style="width:14%"><col style="width:15%"><col style="width:30%"><col style="width:41%"></colgroup>
+  <thead>
+    <tr><th>一级模块</th><th>二级功能</th><th>原型</th><th>描述</th></tr>
+  </thead>
+  <tbody>
+    <tr data-preview="overview">
+      <td rowspan="6">装柜计划执行表</td>
+      <td>装柜日筛选与可见状态</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-overview.png" alt="装柜日筛选" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>顶部装柜日筛选（日期选择器，默认今日）；右侧两个状态说明标签：「显示计划中 / 执行中 / 已完成」与「已取消货柜不可见」。</p>
+        <p><b>【交互说明】</b>切换装柜日 → 表格按该日刷新；标签为常驻说明，不作交互。</p>
+        <p><b>【功能逻辑】</b>展示范围 = 所选装柜日下、生命周期状态为计划中 / 执行中 / 已完成的货柜；<b>已取消货柜一律过滤不展示</b>。</p>
+        <p><b>【数据与内容规则】</b>装柜日以货柜计划的计划装柜日为准；跨日货柜按计划装柜日归属单日。</p>
+      </td>
+    </tr>
+    <tr data-preview="table">
+      <td>执行表（14 列）</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-table.png" alt="执行表" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>14 列：货柜编号、客户、目的地、运输方式、计划时段、SKU 批次数、箱数、CBM、QC 摘要、预计 T0、柜号、封条号、状态、计划有更新。表头固定，内容区横向滚动。</p>
+        <p><b>【交互说明】</b>点击货柜编号 → 进入货柜详情查看完整明细；列宽自适应内容，窄屏下横向滚动不重叠。</p>
+        <p><b>【功能逻辑】</b>箱数、CBM、SKU 批次数为装柜明细的实时汇总；QC 摘要展示最晚 QC 节点与风险标记；状态取货柜生命周期状态。</p>
+        <p><b>【数据与内容规则】</b>客户列展示简称（去除「股份有限公司 / 有限公司 / 有限责任公司 / 集团公司 / 公司」后缀）；CBM 展示批次合计值。</p>
+      </td>
+    </tr>
+    <tr data-preview="table">
+      <td>柜号 / 封条号补录</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-table.png" alt="柜号封条号补录" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>柜号、封条号单元格为就地输入框；未补录时显示「待补录」占位灰字。</p>
+        <p><b>【交互说明】</b>点击单元格 → 就地编辑 → 失焦或回车即保存并写入操作日志；无权限角色点击提示「当前角色无权维护该执行字段」。</p>
+        <p><b>【功能逻辑】</b>仓库仅维护柜号与封条号；<b>SKU、批次、数量、计划日期一律只读</b>，不提供任何编辑入口。</p>
+        <p><b>【前置条件与权限】</b>柜号：SCM / SCM 主管 / 仓库可补录；封条号：仓库为主责，SCM / SCM 主管亦可补录。已取消货柜不展示，故无编辑场景。</p>
+      </td>
+    </tr>
+    <tr data-preview="table">
+      <td>计划有更新提示</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-table.png" alt="计划有更新" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>「计划有更新」列展示该货柜计划内容的最近一次更新时间与相对时间（如「2 小时前」）。</p>
+        <p><b>【交互说明】</b><b>24 小时内的更新以高亮样式展示</b>，超过 24 小时后转为灰色；条目<b>永久保留</b>，鼠标悬浮可查看该货柜的全量更新时间列表。</p>
+        <p><b>【功能逻辑】</b>每次计划内容变更（日期、批次、上下架、拆批等）刷新该货柜的更新时间；无变更记录的货柜显示「—」。</p>
+        <p><b>【文案规范】</b>「计划有更新」为统一列名；悬浮面板标题为「更新时间记录」。</p>
+      </td>
+    </tr>
+    <tr data-preview="table">
+      <td>SAP 对账差异与 CBM 风险</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-table.png" alt="对账差异" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【功能逻辑】</b>执行日之后仍未匹配到 SAP 出库的货柜，在状态列或独立标识位显示 <b>SAP 对账差异预警</b>；CBM 超限仍进入执行的货柜显示<b>实际装柜高优先级对账风险</b>。</p>
+        <p><b>【边界说明】</b>上述标识<b>只提示，不阻断执行表的查看与补录</b>；风险的处理在预警中心完成。</p>
+        <p><b>【前置条件与权限】</b>对账差异由 SAP 出库回传结果驱动；未回传期间显示等待状态。</p>
+      </td>
+    </tr>
+    <tr data-preview="overview">
+      <td>导出与打印</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/execution-overview.png" alt="导出与打印" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>页面右上角「导出」与「打印」按钮。</p>
+        <p><b>【交互说明】</b>点「导出」→ 下载当日执行表 CSV / Excel，文件名格式为「装柜计划执行表-YYYYMMDD.csv」（14 列中文表头，带 BOM 以兼容 Excel 中文）；点「打印」→ 调用浏览器打印，按横向布局输出。</p>
+        <p><b>【功能逻辑】</b>导出范围为当前筛选装柜日下的全部可见货柜（已取消货柜不包含）；导出与打印动作均写入操作日志留痕。</p>
+        <p><b>【边界说明】</b>执行表<b>可随时在线预览、下载和打印</b>，不依赖「发布快照」等人工确认动作。</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>字段可编辑性矩阵</h2>
+<table>
+  <thead><tr><th>字段</th><th>仓库</th><th>SCM 计划员</th><th>SCM 主管</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>货柜编号 / 客户 / 目的地 / 运输方式 / 计划时段</td><td>只读</td><td>只读</td><td>只读</td><td>计划数据，由排程视图维护</td></tr>
+    <tr><td>SKU 批次数 / 箱数 / CBM / QC 摘要 / 预计 T0</td><td>只读</td><td>只读</td><td>只读</td><td>系统汇总计算</td></tr>
+    <tr><td>柜号</td><td>可补录</td><td>可补录（发运后仍可）</td><td>可补录（发运后仍可）</td><td>实际物流柜号</td></tr>
+    <tr><td>封条号</td><td>可补录（主责）</td><td>可补录</td><td>可补录</td><td>仓库实际操作后补录</td></tr>
+    <tr><td>状态 / 计划有更新</td><td>只读</td><td>只读</td><td>只读</td><td>系统计算与日志</td></tr>
+  </tbody>
+</table>
+
+<h2>异常与边界</h2>
+<table>
+  <thead><tr><th>场景</th><th>处理</th></tr></thead>
+  <tbody>
+    <tr><td>已取消货柜</td><td>不在执行表中展示；标签常驻说明「已取消货柜不可见」</td></tr>
+    <tr><td>当日无货柜</td><td>表格显示空态占位，提示「当日无装柜计划」</td></tr>
+    <tr><td>无权限补录</td><td>点击单元格提示「当前角色无权维护该执行字段」</td></tr>
+    <tr><td>执行日后未匹配 SAP 出库</td><td>显示 SAP 对账差异预警；不阻断查看与补录</td></tr>
+    <tr><td>CBM 超限进入执行</td><td>显示实际装柜高优先级对账风险</td></tr>
+    <tr><td>窄屏浏览</td><td>表头固定、内容区横向滚动，列之间不重叠</td></tr>
+    <tr><td>导出时 Excel 组件未加载</td><td>降级生成带 BOM 的 CSV 备用文件</td></tr>
+  </tbody>
+</table>
+
+<h2>数据埋点</h2>
+<table>
+  <thead><tr><th>事件名</th><th>触发时机</th><th>关键属性</th></tr></thead>
+  <tbody>
+    <tr><td>exec_date_change</td><td>切换装柜日</td><td>日期、货柜数</td></tr>
+    <tr><td>exec_row_open</td><td>点击货柜编号查看详情</td><td>货柜编号、状态</td></tr>
+    <tr><td>exec_field_edit</td><td>补录柜号 / 封条号</td><td>货柜编号、字段名、角色</td></tr>
+    <tr><td>exec_field_blocked</td><td>无权限编辑被拦截</td><td>货柜编号、字段名、角色</td></tr>
+    <tr><td>exec_update_hover</td><td>悬浮查看计划更新时间全量</td><td>货柜编号、记录条数</td></tr>
+    <tr><td>exec_export</td><td>导出执行表</td><td>日期、货柜数、格式（CSV/Excel）</td></tr>
+    <tr><td>exec_print</td><td>打印执行表</td><td>日期、货柜数</td></tr>
+  </tbody>
+</table>
+
+<h2>上线计划</h2>
+<table>
+  <thead><tr><th>阶段</th><th>内容</th><th>时间</th></tr></thead>
+  <tbody>
+    <tr><td>一期</td><td>装柜日筛选、14 列执行表、柜号与封条号补录、计划有更新时效、SAP 对账差异、导出与打印、已取消货柜过滤</td><td>待确认</td></tr>
+    <tr><td>二期</td><td>批量补录、执行进度看板、按客户的执行清单打印模板</td><td>待确认</td></tr>
+  </tbody>
+</table>
+
+<h2>附录</h2>
+<table>
+  <thead><tr><th>术语</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>执行表</td><td>仓库按日执行装柜计划的在线表单，替代线下 Excel 计划表</td></tr>
+    <tr><td>计划有更新</td><td>货柜计划内容最近一次变更时间的提示标识；24 小时内高亮，之后转灰，永久保留</td></tr>
+    <tr><td>SAP 对账差异</td><td>执行日后仍未匹配到 SAP 出库的货柜所触发的差异预警</td></tr>
+    <tr><td>柜号</td><td>实际物流柜号，可由 SCM / 仓库补录，发运后仍可</td></tr>
+    <tr><td>封条号</td><td>仓库实际操作后补录或修正的封条编号，仓库为主责</td></tr>
+    <tr><td>生命周期状态</td><td>计划中 → 执行中 → 已完成 / 已取消；已取消货柜不在执行表展示</td></tr>
+  </tbody>
+</table>
+</main>
+<script id="prdPages" type="application/json">[{"value":"overview","label":"P01 · 执行表总览","url":"../原型/supply-chain-prototype.html#executionBoard","w":1440,"h":900}, {"value":"table","label":"P02 · 执行表","url":"../原型/supply-chain-prototype.html#executionBoard","w":1440,"h":900}]</script>
+<script>window.PM_RUNTIME = { readOnly: true };</script>
+<script>(function () {
+  'use strict';
+  const cfg = window.PM_RUNTIME || {};
+  const server = cfg.server, launcher = cfg.launcher;
+  const revisions = new Map();
+  let readyPromise = null, exporting = false;
+  const path = () => decodeURIComponent(location.pathname);
+  function configCheck() {
+    if (cfg.readOnly) throw new Error('当前为只读分享模式，请在本地项目执行此操作');
+    if (!server || !cfg.projectId || !cfg.token) throw new Error('项目配置缺失，请初始化项目并加载 pm-runtime-config.js');
+  }
+  async function request(url, payload) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 120000);
+    try {
+      const response = await fetch(url, {
+        method: payload === undefined ? 'GET' : 'POST',
+        headers: {'Content-Type':'application/json', 'X-PM-Project':cfg.projectId, 'X-PM-Token':cfg.token},
+        body: payload === undefined ? undefined : JSON.stringify(payload),
+        cache:'no-store', signal:controller.signal
+      });
+      const data = await response.json();
+      if (!response.ok || data.error) throw new Error(data.error || ('HTTP ' + response.status));
+      return data;
+    } finally { clearTimeout(timer); }
+  }
+  async function health() {
+    const response = await fetch(server + '/api/health', {cache:'no-store', signal:AbortSignal.timeout(3000)});
+    const state = await response.json();
+    if (state.project_id !== cfg.projectId) {
+      const error = new Error('连接到了其他项目，请检查项目配置和端口');
+      error.identity = true; throw error;
+    }
+    if (state.read_only) { const e = new Error('当前服务为只读模式'); e.identity = true; throw e; }
+    return state;
+  }
+  async function ensureReady() {
+    configCheck();
+    if (readyPromise) return readyPromise;
+    readyPromise = (async () => {
+      try { return await health(); } catch (e) { if (e.identity) throw e; }
+      let launch;
+      try { launch = await request(launcher + '/api/launch', {}); }
+      catch (e) { throw new Error('服务未启动。请运行 python3 scripts/start_service.py --serve。' + e.message); }
+      if (!launch.ok) throw new Error(launch.error || '启动失败');
+      const deadline = Date.now() + 45000;
+      while (Date.now() < deadline) {
+        try { return await health(); } catch (e) { if (e.identity) throw e; }
+        await new Promise(r => setTimeout(r, 600));
+      }
+      throw new Error('启动超时，请在终端执行 --check 查看具体依赖问题');
+    })().finally(() => { readyPromise = null; });
+    return readyPromise;
+  }
+  async function api(route, payload) {
+    await ensureReady();
+    return request(server + route, payload);
+  }
+  async function revision(file) {
+    const data = await api('/api/revision', {path:file || path()});
+    revisions.set(file || path(), data.revision);
+    return data.revision;
+  }
+  async function save(content, file) {
+    file = file || path();
+    if (!revisions.has(file)) throw new Error('尚未读取文件版本，请重新加载页面后再保存');
+    const data = await api('/api/save-html', {path:file, content, revision:revisions.get(file)});
+    revisions.set(file, data.revision);
+    return data;
+  }
+  async function snapshot(src, opts) {
+    opts = opts || {};
+    return api('/api/snapshot', {src, base:opts.base || path(), scale:opts.scale || 2,
+      viewport:opts.viewport, force:!!opts.force});
+  }
+  async function asset(src, opts) {
+    return api('/api/asset', {src, base:(opts || {}).base || path()});
+  }
+  async function exportAll(button) {
+    if (exporting) return;
+    exporting = true;
+    const previous = button && button.textContent;
+    if (button) {button.disabled = true; button.textContent = '正在连接导出服务…';}
+    try {
+      const job = await api('/api/screenshot', {path:path(), viewport:{width:innerWidth, height:innerHeight}});
+      if (!job.started) throw new Error('导出任务没有启动');
+      const deadline = Date.now() + 300000;
+      while (Date.now() < deadline) {
+        const state = await request(server + '/api/status');
+        if (state.job_id !== job.job_id) throw new Error('导出任务已切换，请重新确认结果');
+        if (button) button.textContent = '正在导出 ' + state.progress + '/' + state.total;
+        if (state.done) {
+          if (button) button.textContent = '已导出 ' + state.success_count + ' 张 PNG';
+          window.parent.postMessage('export-success', '*');
+          return state;
+        }
+        await new Promise(r => setTimeout(r, 700));
+      }
+      throw new Error('导出等待超时，请查看服务日志');
+    } catch (e) {
+      if (button) button.textContent = '导出失败';
+      window.alert(e.message);
+      window.parent.postMessage('export-error', '*');
+    } finally {
+      exporting = false;
+      if (button) {button.disabled = false; setTimeout(() => button.textContent = previous, 2500);}
+    }
+  }
+  document.addEventListener('click', event => {
+    const button = event.target.closest('#exportFab, .export-btn, .export-fab');
+    if (!button) return;
+    event.preventDefault(); event.stopImmediatePropagation();
+    exportAll(button);
+  }, true);
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || event.data !== 'trigger-export') return;
+    exportAll(document.querySelector('#exportFab, .export-btn, .export-fab'));
+  });
+  window.PMService = {revision, save, api, health};
+  window.exportPrototypeViaServer = exportAll;
+  window.snapshotPrototypeViaServer = snapshot;
+  window.inlineAssetViaServer = asset;
+  window.ensureExportServerReady = ensureReady;
+})();
+</script>
+<script>(function () {
+  'use strict';
+  if (window.PMDocument) return;
+  const originals = new WeakMap();
+  const ui = '[data-pm-ui]';
+  const styles = document.createElement('style');
+  styles.dataset.pmUi = 'style';
+  styles.textContent = [
+    'body{font-family:system-ui,sans-serif;color:#243530;margin:0;padding:28px;background:#f7f9f8}',
+    '#prdContent{max-width:1320px;margin:auto}table{border-collapse:collapse;table-layout:fixed;width:100%;margin:18px 0}th,td{border:1px solid #dce4e0;padding:12px;position:relative;vertical-align:top;overflow-wrap:anywhere}th{background:#eef4f1}.prototype-frame{width:100%;min-width:0}',
+    '.pm-controls{display:flex;gap:4px;position:absolute;left:0;bottom:0;opacity:0;z-index:3}tr:hover .pm-controls{opacity:1}.pm-controls button{font-size:11px;padding:1px 7px}',
+    '.pm-col{position:absolute;right:0;top:0;width:6px;height:100%;cursor:col-resize}.pm-row{position:absolute;left:0;bottom:0;height:5px;width:100%;cursor:row-resize}',
+    '.pm-edited{background:#e6f5ec}.pm-toolbar{position:fixed;bottom:18px;left:18px;display:flex;gap:8px;z-index:25;flex-wrap:wrap;max-width:90vw}',
+    '.pm-toolbar button,.pm-preview button{padding:9px 12px;border:1px solid #d5e5de;border-radius:8px;cursor:pointer;background:white;color:#21654f}',
+    '.pm-status{position:fixed;left:18px;bottom:68px;max-width:500px;padding:10px;border-radius:8px;background:#173d32;color:white;z-index:26;display:none}.pm-status.show{display:block}',
+    '.pm-preview{position:fixed;right:0;top:0;height:100vh;width:var(--pm-panel,480px);background:#182622;color:#fff;z-index:20;display:flex;flex-direction:column}.pm-preview[hidden]{display:none}',
+    '.pm-preview header{display:flex;gap:7px;align-items:center;padding:12px;flex-wrap:wrap}.pm-preview select{max-width:100%;padding:8px}.pm-shell{overflow:auto;padding:20px;flex:1;min-height:0}.pm-device{flex:0 0 auto}.pm-device iframe{border:0;transform-origin:top left}',
+    '.pm-panel-grip{position:absolute;left:0;top:0;bottom:0;width:5px;cursor:col-resize}.pm-dual{padding-right:calc(var(--pm-panel,480px) + 28px)}',
+    '@media(max-width:850px){.pm-preview{width:92vw}.pm-dual{padding-right:28px}.pm-toolbar{z-index:25}}',
+    '@media print{[data-pm-ui]{display:none!important}body.pm-dual{padding:0}}'
+  ].join('\n');
+  document.querySelectorAll(ui).forEach(e => e.remove());
+  document.head.append(styles);
+  const content = document.getElementById('prdContent');
+  if (!content) return;
+
+  function notify(text) {
+    const n = document.querySelector('.pm-status');
+    n.textContent = text; n.classList.add('show');
+  }
+  function clean(root) {
+    root.querySelectorAll(ui).forEach(e => e.remove());
+    root.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+    return root;
+  }
+  function matrix(section) {
+    // Build logical columns so rowspan/colspan mutations keep cells aligned.
+    const rows = Array.from(section.rows), grid = [];
+    rows.forEach((row, r) => {
+      grid[r] = grid[r] || [];
+      let c = 0;
+      Array.from(row.cells).forEach(cell => {
+        while (grid[r][c]) c++;
+        const rs = cell.rowSpan || (rows.length-r);
+        for (let y=r; y<r+rs; y++) {
+          grid[y] = grid[y] || [];
+          for (let x=c; x<c+cell.colSpan; x++) grid[y][x] = {cell, r, c};
+        }
+        c += cell.colSpan;
+      });
+    });
+    return {rows, grid};
+  }
+  function changeRow(row, remove) {
+    const section = row.parentElement, {rows, grid} = matrix(section);
+    const index = rows.indexOf(row);
+    if (remove && rows.length <= 1) return;
+    const seen = new Set();
+    if (remove) {
+      (grid[index] || []).forEach(entry => {
+        if (!entry || seen.has(entry.cell)) return;
+        const cell = entry.cell; seen.add(cell);
+        if (entry.r < index) cell.rowSpan = Math.max(1, cell.rowSpan - 1);
+        else if (cell.rowSpan > 1 && rows[index+1]) {
+          cell.rowSpan -= 1;
+          const nextEntries = grid[index+1] || [];
+          const following = Array.from(rows[index+1].cells).find(c =>
+            nextEntries.findIndex(e => e && e.cell === c) > entry.c);
+          rows[index+1].insertBefore(cell, following || null);
+        }
+      });
+      row.remove();
+    } else {
+      const created = document.createElement('tr'), insert = index + 1;
+      (grid[index] || []).forEach(entry => {
+        if (!entry || seen.has(entry.cell)) return;
+        const cell = entry.cell; seen.add(cell);
+        if (entry.r + cell.rowSpan > insert || cell.rowSpan === 0) {
+          if (cell.rowSpan !== 0) cell.rowSpan += 1;
+        } else {
+          const blank = document.createElement(cell.tagName);
+          blank.colSpan = cell.colSpan;
+          blank.innerHTML = '<br>';
+          created.append(blank);
+        }
+      });
+      row.after(created);
+    }
+    initEditing();
+  }
+  function initEditing() {
+    content.querySelectorAll(ui).forEach(e => e.remove());
+    content.querySelectorAll('table:not(.no-edit)').forEach(table => {
+      const first = table.rows[0];
+      if (!first) return;
+      if (!table.querySelector(':scope > colgroup')) {
+        const group = document.createElement('colgroup');
+        let count = Array.from(first.cells).reduce((n,c) => n + c.colSpan, 0);
+        while (count--) group.append(document.createElement('col'));
+        table.prepend(group);
+      }
+      let colIndex = 0;
+      Array.from(first.cells).forEach(cell => {
+        const grip = document.createElement('span');
+        grip.className = 'pm-col'; grip.dataset.pmUi = 'column'; grip.dataset.index = colIndex;
+        cell.append(grip); colIndex += cell.colSpan;
+      });
+      Array.from(table.tBodies).forEach(section => Array.from(section.rows).forEach(row => {
+        if (Array.from(row.cells).every(c => c.tagName === 'TH') || !row.cells[0]) return;
+        const controls = document.createElement('span');
+        controls.className = 'pm-controls'; controls.dataset.pmUi = 'rows'; controls.contentEditable = 'false';
+        controls.innerHTML = '<button type="button" data-pm-action="add-row" aria-label="下方插入一行">＋</button><button type="button" data-pm-action="delete-row" aria-label="删除本行">−</button>';
+        row.cells[0].append(controls);
+        const grip = document.createElement('span'); grip.className='pm-row'; grip.dataset.pmUi='row';
+        row.cells[0].append(grip);
+      }));
+    });
+    content.querySelectorAll('td,th,p,li,h1,h2,h3,h4,blockquote,dd,dt').forEach(el => {
+      if (el.closest(ui + ',.no-edit') || el.querySelector('iframe,img,table,video,canvas,pre')) return;
+      el.contentEditable = 'true';
+      if (!originals.has(el)) originals.set(el, el.textContent);
+    });
+    scaleEmbeds();
+  }
+  function scaleEmbeds(width) {
+    content.querySelectorAll('.prototype-frame').forEach(outer => {
+      const iframe=outer.querySelector('iframe');if(!iframe)return;
+      const w=Number(outer.dataset.pw)||390,h=Number(outer.dataset.ph)||844;
+      if(width)outer.style.width=width+'px';
+      const visible=outer.clientWidth||320;
+      outer.style.position='relative';outer.style.height=Math.round(h*visible/w)+'px';outer.style.overflow='hidden';
+      iframe.style.cssText='position:absolute;left:0;top:0;border:0;transform-origin:top left;width:'+w+'px;height:'+h+'px;transform:scale('+visible/w+')';
+      if(!outer.querySelector('.pm-proto-grip')&&!window.PM_RUNTIME?.readOnly){
+        const grip=document.createElement('span');grip.dataset.pmUi='proto-size';grip.className='pm-proto-grip';grip.title='拖拽缩放原型';
+        grip.style.cssText='position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;background:#2c876d80';outer.append(grip);
+      }
+    });
+  }
+  document.addEventListener('focusout', e => {
+    if (originals.has(e.target) && originals.get(e.target) !== e.target.textContent) e.target.classList.add('pm-edited');
+  });
+  let catalog = [];
+  try { catalog = JSON.parse(document.getElementById('prdPages')?.textContent || '[]'); } catch (e) { notify(e.message); }
+  let current = catalog[0]?.value, zoom = null, lockUntil = 0;
+  const toolbar = document.createElement('div');
+  toolbar.className='pm-toolbar'; toolbar.dataset.pmUi='toolbar';
+  toolbar.innerHTML='<button data-pm-action="copy">一键复制全文</button><button data-pm-action="refresh-copy">重新生成图片并复制</button><button data-pm-action="preview">双栏预览</button><button data-pm-action="save">保存</button><button data-pm-action="download">下载副本</button>';
+  const status = document.createElement('div'); status.className='pm-status'; status.dataset.pmUi='status'; status.role='status';
+  document.body.append(toolbar,status);
+  const panel=document.createElement('aside'); panel.className='pm-preview'; panel.dataset.pmUi='preview';
+  panel.innerHTML='<div class="pm-panel-grip"></div><header><select aria-label="原型页面"></select><button data-pm-action="minus">－</button><span class="pm-zoom"></span><button data-pm-action="plus">＋</button><button data-pm-action="fit">适配</button><button data-pm-action="preview">关闭</button></header><div class="pm-shell"><div class="pm-device"><iframe title="交互原型预览"></iframe></div></div>';
+  document.body.append(panel);
+  const select=panel.querySelector('select'), frame=panel.querySelector('iframe'), wrap=panel.querySelector('.pm-device');
+  catalog.forEach(item => {const o=document.createElement('option'); o.value=item.value;o.textContent=item.label;select.append(o);});
+  function scale() {
+    const item=catalog.find(c=>c.value===current);
+    if (!item) return;
+    const factor=zoom===null ? Math.max(100,panel.querySelector('.pm-shell').clientWidth-40)/item.w : zoom;
+    frame.style.width=item.w+'px'; frame.style.height=item.h+'px'; frame.style.transform='scale('+factor+')';
+    wrap.style.width=item.w*factor+'px';wrap.style.height=item.h*factor+'px';
+    panel.querySelector('.pm-zoom').textContent=Math.round(factor*100)+'%';
+  }
+  function showPage(value) {
+    const item=catalog.find(c=>c.value===value);
+    if (!item) return;
+    current=value; select.value=value; frame.src=item.url; requestAnimationFrame(scale);
+  }
+  function togglePreview() {panel.hidden=!panel.hidden;document.body.classList.toggle('pm-dual',!panel.hidden);requestAnimationFrame(()=>{scale();scaleEmbeds();});}
+  select.addEventListener('change',()=>{lockUntil=Date.now()+4000;showPage(select.value);});
+  addEventListener('resize',()=>{scale();scaleEmbeds();});
+  addEventListener('message',e=>{
+    if(e.source!==frame.contentWindow||e.data?.type!=='page-changed')return;
+    if(catalog.some(c=>c.value===e.data.page)){current=e.data.page;select.value=current;lockUntil=Date.now()+4000;scale();}
+  });
+  addEventListener('scroll',()=>{
+    if(panel.hidden||Date.now()<lockUntil)return;
+    let node;
+    content.querySelectorAll('[data-preview]').forEach(n=>{if(n.getBoundingClientRect().top<=innerHeight*.35)node=n;});
+    if(node && node.dataset.preview!==current) showPage(node.dataset.preview);
+  },{passive:true});
+  document.addEventListener('pointerdown',e=>{
+    const grip=e.target.closest('.pm-col,.pm-row,.pm-panel-grip,.pm-proto-grip');
+    if(!grip)return;e.preventDefault();
+    const x=e.clientX,y=e.clientY, cell=grip.closest('th,td');
+    const table=cell?.closest('table'),row=cell?.parentElement;
+    const width=cell?.getBoundingClientRect().width,height=row?.getBoundingClientRect().height,panelWidth=panel.offsetWidth;
+    const protoWidth=grip.closest('.prototype-frame')?.clientWidth;
+    function move(ev){
+      if(grip.classList.contains('pm-proto-grip')){
+        scaleEmbeds(Math.max(160,Math.min(1200,protoWidth+ev.clientX-x)));
+      }else if(grip.classList.contains('pm-col')){
+        const col=table.querySelectorAll('colgroup col')[Number(grip.dataset.index)];
+        if(col)col.style.width=Math.max(48,width+ev.clientX-x)+'px';scaleEmbeds();
+      }else if(grip.classList.contains('pm-row'))row.style.height=Math.max(24,height+ev.clientY-y)+'px';
+      else {document.body.style.setProperty('--pm-panel',Math.max(320,Math.min(innerWidth-200,panelWidth+x-ev.clientX))+'px');scale();scaleEmbeds();}
+    }
+    function up(){document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);}
+    document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);
+  });
+  async function writeClipboard(html,text) {
+    try {
+      if(!navigator.clipboard||!window.ClipboardItem)throw Error('fallback');
+      await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})]);
+    }catch(e){
+      const el=document.createElement('div');el.contentEditable='true';el.style.cssText='position:fixed;left:-99999px';el.innerHTML=html;document.body.append(el);
+      const range=document.createRange();range.selectNodeContents(el);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);
+      const ok=document.execCommand('copy');selection.removeAllRanges();el.remove();if(!ok)throw Error('浏览器拒绝复制');
+    }
+  }
+  async function shrink(data) {
+    return new Promise(resolve=>{
+      const im=new Image(); im.onload=()=>{
+        if(im.width<=2000){resolve(data);return;}
+        try{const c=document.createElement('canvas');c.width=2000;c.height=Math.round(im.height*2000/im.width);const ctx=c.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.9));}catch(e){resolve(data);}
+      };im.onerror=()=>resolve(data);im.src=data;
+    });
+  }
+  let copying=false;
+  async function copyAll(force) {
+    if(copying)return;copying=true;
+    try {
+      const clone=clean(content.cloneNode(true));
+      const live=content.querySelectorAll('img,iframe'), images=clone.querySelectorAll('img,iframe');
+      live.forEach((n,i)=>{if(images[i]){images[i].style.width=Math.round(n.getBoundingClientRect().width)+'px';images[i].style.maxWidth='100%';}});
+      const cache=new Map();let ok=0,failed=0;
+      for(const el of Array.from(images)){
+        const src=el.getAttribute('src');if(!src)continue;
+        if(src.startsWith('data:')){ok++;continue;}
+        notify('正在处理图片 '+(ok+failed+1)+'/'+images.length);
+        try{
+          const key=el.tagName+src;
+          if(!cache.has(key)){
+            const data=el.tagName==='IFRAME'?await window.snapshotPrototypeViaServer(src,{force}):await window.inlineAssetViaServer(src,{});
+            cache.set(key,await shrink(data.dataUrl));
+          }
+          const im=document.createElement('img');im.src=cache.get(key);im.alt=el.getAttribute('title')||el.getAttribute('alt')||'原型图';
+          im.style.cssText=el.style.cssText+';height:auto;transform:none;position:static';
+          const outer=el.closest('.prototype-frame');
+          if(outer){outer.style.cssText='height:auto;overflow:visible';}
+          el.replaceWith(im);ok++;
+        }catch(e){
+          const fallback=document.createElement('p');fallback.textContent='[图片未复制：'+(el.title||el.alt||src)+']';el.replaceWith(fallback);failed++;
+        }
+      }
+      clone.querySelectorAll('.pm-edited').forEach(e=>e.classList.remove('pm-edited'));
+      clone.querySelectorAll('table').forEach(t=>t.style.cssText+=';border-collapse:collapse;width:100%');
+      clone.querySelectorAll('th,td').forEach(c=>c.style.cssText+=';border:1px solid #ccc;padding:8px;vertical-align:top');
+      clone.querySelectorAll('button,script').forEach(e=>e.remove());
+      await writeClipboard('<meta charset="utf-8">'+clone.innerHTML,clone.textContent);
+      notify('已复制，包含 '+ok+' 张图'+(failed?'，'+failed+' 张缺失，已标注位置':'。目标文档首次粘贴请确认图片显示正常'));
+      return {ok,failed};
+    }finally{copying=false;}
+  }
+  function serialize(){
+    const clone=clean(document.documentElement.cloneNode(true));
+    clone.querySelector('body').classList.remove('pm-dual');
+    return '<!doctype html>\n'+clone.outerHTML;
+  }
+  document.addEventListener('click',async e=>{
+    const button=e.target.closest('[data-pm-action]');if(!button)return;
+    e.preventDefault();
+    try{
+      const action=button.dataset.pmAction;
+      if(action==='add-row'||action==='delete-row')changeRow(button.closest('tr'),action==='delete-row');
+      if(action==='preview')togglePreview();
+      if(action==='fit'){zoom=null;scale();}
+      if(action==='plus'||action==='minus'){
+        const now=parseFloat(panel.querySelector('.pm-zoom').textContent)/100;
+        const steps=[.25,.5,.75,1,1.25,1.5,2,3];
+        zoom=(action==='plus'?steps.find(s=>s>now+.001):steps.reverse().find(s=>s<now-.001))||now;scale();
+      }
+      if(action==='copy'||action==='refresh-copy')await copyAll(action==='refresh-copy');
+      if(action==='save'){
+        button.disabled=true;
+        const result=await window.PMService.save(serialize());
+        notify('已保存并备份。请让 AI 读取文件以同步相关产物');
+        window.dispatchEvent(new CustomEvent('pm-saved',{detail:result}));
+      }
+      if(action==='download'){
+        const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([serialize()],{type:'text/html'}));a.download=decodeURIComponent(location.pathname.split('/').pop()||'PRD.html');a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+        notify('已下载副本，原文件未被覆盖');
+      }
+    }catch(error){notify(error.message);}finally{button.disabled=false;}
+  });
+  if(!window.PM_RUNTIME?.readOnly)initEditing();else scaleEmbeds();
+  panel.hidden=!catalog.length;
+  document.body.classList.toggle('pm-dual',!!catalog.length);
+  if(catalog.length)showPage(current);
+  requestAnimationFrame(()=>scaleEmbeds());
+  if(window.ResizeObserver)new ResizeObserver(()=>scaleEmbeds()).observe(content);
+  window.PMDocument={initEditing,serialize,copyAll,matrix};
+  if(window.PM_RUNTIME?.readOnly)notify('只读分享模式，可浏览或下载副本');
+  else window.PMService?.revision().catch(e=>notify('保存尚未就绪：'+e.message));
+})();
+</script>
+</body>
+</html>
