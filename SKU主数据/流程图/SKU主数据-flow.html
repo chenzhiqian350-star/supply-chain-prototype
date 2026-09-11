@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKU主数据 · 业务流程图</title>
+<style>
+  :root{--bg:#eef1f5;--card:#fff;--line:#d8dfe8;--text:#1f2937;--muted:#6b7280;
+        --step:#2563eb;--decision:#d97706;--yes:#ef4444;--no:#16a34a;--end:#9ca3af}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);padding:28px 16px}
+  .chart-container{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 22px 30px;max-width:880px;margin:0 auto}
+  .chart-title{font-size:17px;font-weight:700;margin:0 0 4px}
+  .chart-note{font-size:12px;color:var(--muted);margin:0 0 22px}
+  .flow{display:flex;flex-direction:column;align-items:center}
+  .node{width:100%;max-width:560px;background:#fff;border:1.5px solid var(--step);border-radius:10px;padding:12px 16px;font-size:14px;line-height:1.5;text-align:center;position:relative}
+  .node .num{display:inline-block;min-width:22px;height:22px;line-height:22px;border-radius:11px;background:var(--step);color:#fff;font-size:12px;font-weight:700;margin-right:8px;text-align:center}
+  .arrow{width:2px;height:26px;background:var(--line);position:relative;margin:0}
+  .arrow::after{content:"";position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--muted);border-bottom:0}
+  .branch-row{width:100%;max-width:760px;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;margin:4px 0}
+  .decision-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+  .decision{background:#fff;border:1.5px solid var(--decision);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;text-align:center;width:100%;max-width:420px;position:relative}
+  .decision .num{background:var(--decision)}
+  .decision .d-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--decision);border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:middle}
+  .side{display:flex;flex-direction:column;justify-content:center;gap:8px}
+  .side .case{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px}
+  .case .lbl{flex:0 0 auto;font-weight:700;font-size:12px;border-radius:5px;padding:2px 9px;color:#fff}
+  .case .lbl.yes{background:var(--yes)}
+  .case .lbl.no{background:var(--no)}
+  .case .term{flex:1 1 auto;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;color:#991b1b;font-size:13px;text-align:center}
+  .case .term.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+  .case .term.muted{background:#f3f4f6;border-color:#e5e7eb;color:#4b5563}
+  .no-branch{align-self:center;font-size:12px;font-weight:700;color:var(--no);background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 12px;margin-top:2px}
+  .connector-note{align-self:center;font-size:12px;color:var(--muted);margin:2px 0 6px}
+  .end{background:#f0fdf4;border-color:#22c55e}
+  .end .num{background:#22c55e}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:24px;padding-top:16px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+  .lg-step i{background:#fff;border:1.5px solid var(--step)}
+  .lg-decision i{background:#fff;border:1.5px solid var(--decision)}
+  .lg-warn i{background:#fef2f2;border:1px solid #fecaca}
+  .lg-end i{background:#f0fdf4;border:1px solid #86efac}
+  .principle{max-width:640px;margin:22px auto 0;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:13px;color:#92400e;text-align:center}
+  .principle b{color:#78350f}
+</style>
+</head>
+<body>
+<div class="chart-container">
+  <h1 class="chart-title">产品 SKU 主数据 · 端到端业务流程</h1>
+  <p class="chart-note">供应链协同平台 · 装柜计划模块 M07｜27 字段结构化维护、校验、变更影响预警与启用停用的主数据闭环</p>
+
+  <div class="flow">
+    <div class="node"><span class="num">1</span><b>进入 SKU 主数据</b>：按产品编码关键字、目的地、运输方式查询，或直接新增记录</div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">2</span><b>打开 27 字段弹窗</b>：① 基本信息（8）② 客户与物流（10）③ 周期参数-天（5）④ 柜型 CBM 上限（4，继承值只读）</div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">3</span><b>填写并提交保存</b>：每个字段旁标注来源（SAP 获取 / 人手维护 / 继承货柜类型主数据 / 排程系统）与必填性</div>
+    <div class="arrow"></div>
+
+    <div class="branch-row">
+      <div class="side">
+        <div class="case"><span class="lbl no">通过</span><span class="term ok">落库保存；启用状态下参与后续预排</span></div>
+        <div class="case"><span class="term muted">件装量 / 目的地 / 周期任一缺失 → 保存但不参与自动预排并提示</span></div>
+        <div class="case"><span class="term muted">四类柜型 CBM 上限随货柜类型主数据同步继承</span></div>
+      </div>
+      <div class="side">
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>保存校验</b>：产品编码是否填写且唯一？组合是否有效？</div>
+        <div class="case"><span class="lbl yes">不通过</span><span class="term">阻止保存：产品编码为空或重复 → 编码必填且唯一</span></div>
+        <div class="case"><span class="term muted">新增预测行时只带出启用且组合有效的记录</span></div>
+      </div>
+    </div>
+    <div class="arrow"></div>
+
+    <div class="branch-row">
+      <div class="side">
+        <div class="case"><span class="lbl yes" style="background:#d97706">影响</span><span class="term">目的地或默认运输方式变更影响未执行计划 → 生成「主数据变更影响」预警</span></div>
+        <div class="case"><span class="term muted">由 SCM 复核处理，不自动改写货柜</span></div>
+      </div>
+      <div class="side">
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>变更影响判定</b>：关键字段（目的地 / 运输方式）是否变化？</div>
+        <div class="case"><span class="lbl no" style="background:#16a34a">无影响</span><span class="term ok">仅作用于后续预排与后续调整</span></div>
+        <div class="case"><span class="term muted">主数据变化不追溯修改已有计划</span></div>
+      </div>
+    </div>
+    <div class="arrow"></div>
+
+    <div class="branch-row">
+      <div class="side">
+        <div class="case"><span class="lbl no">启用</span><span class="term ok">恢复参与后续预排</span></div>
+        <div class="case"><span class="term muted">停用记录仍在列表中可见，便于查历史</span></div>
+      </div>
+      <div class="side">
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>启用 / 停用</b>：是否为非 GMP SKU 停用？</div>
+        <div class="case"><span class="lbl yes">停用</span><span class="term">二次确认后停用 → 不参与后续预排，保留历史计划与日志</span></div>
+        <div class="case"><span class="term muted">非 GMP SKU 停用需二次确认并写入日志</span></div>
+      </div>
+    </div>
+    <div class="arrow"></div>
+
+    <div class="node end"><span class="num">4</span><b>联动与留痕</b>：需求预测按产品编码带出客户与目的地；主数据变更影响预警进入预警中心；保存、停用、启用动作写入操作日志</div>
+  </div>
+
+  <div class="principle"><b>铁律：主数据变化不追溯修改已有计划。</b>字段变更只影响后续预排与后续调整；目的地或运输方式变更影响未执行货柜时生成「主数据变更影响」预警，由 SCM 复核；柜型 CBM 上限在本页只读继承，维护入口在货柜类型主数据。</div>
+
+  <div class="legend">
+    <span class="lg-step"><i></i>处理步骤</span>
+    <span class="lg-decision"><i></i>分支 / 校验</span>
+    <span class="lg-warn"><i></i>拦截 / 影响预警</span>
+    <span class="lg-end"><i></i>闭环 / 留痕</span>
+  </div>
+</div>
+</body>
+</html>
