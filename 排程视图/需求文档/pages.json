@@ -1,0 +1,9 @@
+[
+  {"value": "day", "label": "P01 · 日视图", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 900},
+  {"value": "week", "label": "P02 · 周视图", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 900},
+  {"value": "month", "label": "P03 · 月视图", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 900},
+  {"value": "drawer", "label": "P04 · 货柜编辑抽屉（点击日视图卡片）", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 1000},
+  {"value": "shelf", "label": "P05 · 批次池（上架来源）", "url": "../原型/supply-chain-prototype.html#batches", "w": 1440, "h": 1000},
+  {"value": "split", "label": "P06 · 批次池 / 拆批", "url": "../原型/supply-chain-prototype.html#batches", "w": 1440, "h": 1000},
+  {"value": "preview", "label": "P07 · 装柜明细预览（日视图进抽屉）", "url": "../原型/supply-chain-prototype.html#schedule", "w": 1440, "h": 1000}
+]
