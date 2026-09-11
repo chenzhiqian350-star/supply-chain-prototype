@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>装柜计划执行表 · 业务流程图</title>
+<style>
+  :root{--bg:#eef1f5;--card:#fff;--line:#d8dfe8;--text:#1f2937;--muted:#6b7280;
+        --step:#2563eb;--decision:#d97706;--yes:#ef4444;--no:#16a34a;--end:#9ca3af}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);padding:28px 16px}
+  .chart-container{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 22px 30px;max-width:880px;margin:0 auto}
+  .chart-title{font-size:17px;font-weight:700;margin:0 0 4px}
+  .chart-note{font-size:12px;color:var(--muted);margin:0 0 22px}
+  .flow{display:flex;flex-direction:column;align-items:center}
+  .node{width:100%;max-width:560px;background:#fff;border:1.5px solid var(--step);border-radius:10px;padding:12px 16px;font-size:14px;line-height:1.5;text-align:center;position:relative}
+  .node .num{display:inline-block;min-width:22px;height:22px;line-height:22px;border-radius:11px;background:var(--step);color:#fff;font-size:12px;font-weight:700;margin-right:8px;text-align:center}
+  .arrow{width:2px;height:26px;background:var(--line);position:relative;margin:0}
+  .arrow::after{content:"";position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--muted);border-bottom:0}
+  .branch-row{width:100%;max-width:760px;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;margin:4px 0}
+  .decision-wrap{display:flex;flex-direction:column;align-items:center;gap:0}
+  .decision{background:#fff;border:1.5px solid var(--decision);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;text-align:center;width:100%;max-width:420px;position:relative}
+  .decision .num{background:var(--decision)}
+  .decision .d-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--decision);border-radius:4px;padding:1px 6px;margin-right:8px;vertical-align:middle}
+  .side{display:flex;flex-direction:column;justify-content:center;gap:8px}
+  .side .case{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px}
+  .case .lbl{flex:0 0 auto;font-weight:700;font-size:12px;border-radius:5px;padding:2px 9px;color:#fff}
+  .case .lbl.yes{background:var(--yes)}
+  .case .lbl.no{background:var(--no)}
+  .case .term{flex:1 1 auto;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;color:#991b1b;font-size:13px;text-align:center}
+  .case .term.ok{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+  .case .term.muted{background:#f3f4f6;border-color:#e5e7eb;color:#4b5563}
+  .no-branch{align-self:center;font-size:12px;font-weight:700;color:var(--no);background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:2px 12px;margin-top:2px}
+  .connector-note{align-self:center;font-size:12px;color:var(--muted);margin:2px 0 6px}
+  .end{background:#f0fdf4;border-color:#22c55e}
+  .end .num{background:#22c55e}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:24px;padding-top:16px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+  .lg-step i{background:#fff;border:1.5px solid var(--step)}
+  .lg-decision i{background:#fff;border:1.5px solid var(--decision)}
+  .lg-warn i{background:#fef2f2;border:1px solid #fecaca}
+  .lg-end i{background:#f0fdf4;border:1px solid #86efac}
+  .principle{max-width:640px;margin:22px auto 0;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:13px;color:#92400e;text-align:center}
+  .principle b{color:#78350f}
+</style>
+</head>
+<body>
+<div class="chart-container">
+  <h1 class="chart-title">装柜计划执行表 · 端到端业务流程</h1>
+  <p class="chart-note">供应链协同平台 · 装柜计划模块 M05｜仓库按日执行、补录柜号封条号、SAP 对账的线下执行闭环</p>
+
+  <div class="flow">
+    <div class="node"><span class="num">1</span><b>仓库打开执行表</b>：默认载入今日装柜日；替代线下 Excel 计划表</div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">2</span><b>选择装柜日筛选</b>：按计划装柜日过滤，表格按该日刷新</div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">3</span><b>可见性过滤</b>：仅展示「计划中 / 执行中 / 已完成」；<b>已取消货柜不展示</b>（标签常驻说明）</div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">4</span><b>查看 14 列执行表</b>：货柜编号｜客户｜目的地｜运输方式｜计划时段｜SKU 批次数｜箱数｜CBM｜QC 摘要｜预计 T0｜柜号｜封条号｜状态｜计划有更新（表头固定，横向滚动）</div>
+    <div class="arrow"></div>
+
+    <div class="branch-row">
+      <div class="side">
+        <div class="case"><span class="lbl no" style="background:#16a34a">可编辑</span><span class="term ok">柜号：SCM / SCM 主管 / 仓库可补录，发运后仍可</span></div>
+        <div class="case"><span class="term ok">封条号：仓库为主责，SCM / SCM 主管亦可补录</span></div>
+        <div class="case"><span class="term muted">就地编辑，失焦或回车即保存并写入操作日志</span></div>
+        <div class="case"><span class="term muted">未补录显示「待补录」占位</span></div>
+      </div>
+      <div class="side">
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>字段是否可编辑</b>？柜号 / 封条号 vs 计划字段</div>
+        <div class="case"><span class="lbl yes">只读</span><span class="term">SKU、批次、数量、计划日期不可编辑，不提供入口</span></div>
+        <div class="case"><span class="term muted">无权限角色点击 → 「当前角色无权维护该执行字段」</span></div>
+      </div>
+    </div>
+    <div class="arrow"></div>
+
+    <div class="node"><span class="num">5</span><b>计划有更新提示</b>：24 小时内高亮、之后转灰、<b>永久保留</b>；悬浮查看该货柜全量更新时间列表</div>
+    <div class="arrow"></div>
+
+    <div class="branch-row">
+      <div class="side">
+        <div class="case"><span class="lbl no">已匹配</span><span class="term ok">正常完成，货柜状态推进至已完成</span></div>
+        <div class="case"><span class="term muted">SAP 出库回传覆盖全部计划批次</span></div>
+        <div class="case"><span class="term muted">导出 / 打印随时可用，不依赖人工确认动作</span></div>
+      </div>
+      <div class="side">
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>SAP 出库对账</b>：执行日后是否匹配到出库？</div>
+        <div class="case"><span class="lbl yes">未匹配</span><span class="term">显示「SAP 对账差异」预警；CBM 超限进入执行显示高优先级对账风险</span></div>
+        <div class="case"><span class="term muted">只提示，不阻断查看与补录</span></div>
+      </div>
+    </div>
+    <div class="arrow"></div>
+
+    <div class="node end"><span class="num">6</span><b>导出与留痕</b>：导出「装柜计划执行表-YYYYMMDD.csv」（14 列，带 BOM）或打印；补录、导出、打印动作均写入操作日志</div>
+  </div>
+
+  <div class="principle"><b>铁律：执行表是执行层，计划数据一律只读。</b>仓库只维护柜号与封条号；已取消货柜不在执行表展示，避免按作废计划执行；对账差异与 CBM 风险只提示、不阻断，处理在预警中心完成。</div>
+
+  <div class="legend">
+    <span class="lg-step"><i></i>处理步骤</span>
+    <span class="lg-decision"><i></i>分支 / 判定</span>
+    <span class="lg-warn"><i></i>只读 / 差异提示</span>
+    <span class="lg-end"><i></i>闭环 / 留痕</span>
+  </div>
+</div>
+</body>
+</html>
