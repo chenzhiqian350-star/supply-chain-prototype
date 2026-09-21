@@ -48,7 +48,7 @@
 <body>
 <div class="chart-container">
   <h1 class="chart-title">批次池 · 端到端业务流程</h1>
-  <p class="chart-note">供应链协同平台 · 装柜计划模块 M04｜从批次同步到可排判定、剩余量计算、人工拆批与预警生成的待分配闭环</p>
+  <p class="chart-note">供应链协同平台 · 装柜计划模块 M04｜从批次同步到剩余量计算、SAP 状态判定、整柜归集与预警生成的待分配闭环（批次状态统一由 SAP 状态表征）</p>
 
   <div class="flow">
     <div class="node"><span class="num">1</span><b>批次数据同步</b>：从排程系统与 SAP 拉取批次号、原始可用量、生产完成与 QC 状态，点击「同步排程」只读刷新</div>
@@ -59,33 +59,33 @@
 
     <div class="branch-row">
       <div class="side">
-        <div class="case"><span class="lbl no">可排</span><span class="term ok">归入「可排」页签，参加自动预排与上架</span></div>
-        <div class="case"><span class="term muted">条件：排程状态可用 且 QC 早于最晚 QC 节点 且 剩余量 &gt; 0</span></div>
-        <div class="case"><span class="term muted">默认排序：同客户 → 同目的地 → 同 SKU → 剩余量降序</span></div>
+        <div class="case"><span class="lbl no">非限制</span><span class="term ok">SAP 状态为「非限制」：可参加自动预排与上架</span></div>
+        <div class="case"><span class="term muted">条件：SAP 状态非限制 且 QC 早于最晚 QC 节点 且 剩余量 &gt; 0</span></div>
+        <div class="case"><span class="term muted">默认排序：SAP 非限制优先 → 同客户 → 同目的地 → 同 SKU → 剩余量降序</span></div>
       </div>
       <div class="side">
-        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>可排判定</b>：排程可用 & 且 QC 满足 且 剩余量 &gt; 0？</div>
-        <div class="case"><span class="lbl yes">不可排</span><span class="term">归入「不可排」页签并<b>展示原因</b>，不参加自动预排</span></div>
-        <div class="case"><span class="term muted">排程不可用 / QC 未满足 / 剩余量为 0</span></div>
-        <div class="case"><span class="term muted">保留在列表中，不允许静默排除</span></div>
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>SAP 状态判定</b>（批次表唯一状态类字段）：非限制 / 冻结？</div>
+        <div class="case"><span class="lbl yes">冻结</span><span class="term">SAP 状态「冻结」：标注红色但仍<b>保留列表展示</b>，行内展示不可排原因，不参加自动预排</span></div>
+        <div class="case"><span class="term muted">QC 未满足 / 剩余量为 0 等异常同样保留在列表中并展示原因</span></div>
+        <div class="case"><span class="term muted">不允许静默排除；已取消「可排 / 不可排」独立状态列与页签</span></div>
       </div>
     </div>
     <div class="arrow"></div>
 
-    <div class="node"><span class="num">3</span><b>多条件筛选与浏览</b>：产品编码多选（可搜索）＋ 生产月份 ＋ 排程状态；13 列表格支持排序、分页与横向滚动</div>
+    <div class="node"><span class="num">3</span><b>多条件筛选与浏览</b>：产品编码多选（可搜索）＋ 生产月份 ＋ SAP 状态；13 列表格支持排序、分页与横向滚动</div>
     <div class="arrow"></div>
 
     <div class="branch-row">
       <div class="side">
         <div class="case"><span class="lbl yes" style="background:#2563eb">整柜</span><span class="term muted" style="background:#eff6ff;border-color:#bfdbfe;color:#1e40af">点「整柜」：按 SKU + 客户 + 目的地分组归集，给出建议货柜数与装载率</span></div>
-        <div class="case"><span class="term muted">容量取 SKU 主数据继承的柜型 CBM 上限</span></div>
+        <div class="case"><span class="term muted">容量按 SKU × 柜型 取柜内所有 SKU 上限的 MIN</span></div>
         <div class="case"><span class="term muted">归集为建议，需 SCM 确认后才生成货柜</span></div>
       </div>
       <div class="side">
-        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>批次操作类型</b>：整柜归集 / 人工拆批 / 同步排程？</div>
-        <div class="case"><span class="lbl" style="background:#d97706">拆批</span><span class="term">选中单个可排批次 → 输入拆出箱数 → 确认拆分</span></div>
-        <div class="case"><span class="term muted">整箱为最小单位；拆出量回池，状态「可排·人工拆批」</span></div>
-        <div class="case"><span class="term ok">沿用原 SAP 批号，以拆分标识 + 序号追溯；总分配量守恒</span></div>
+        <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>批次操作类型</b>：整柜归集 / 同步 SAP 状态？</div>
+        <div class="case"><span class="lbl" style="background:#d97706">同步</span><span class="term">点「同步 SAP 状态」拉取 SAP 回传批次库存状态（非限制 / 冻结）并刷新列表</span></div>
+        <div class="case"><span class="term muted">同步只读、不改写货柜计划；状态由非限制变冻结且已排入未执行货柜时生成预警</span></div>
+        <div class="case"><span class="term ok">拆批统一在装柜视图的货柜编辑抽屉处理，本模块不再设拆批入口</span></div>
       </div>
     </div>
     <div class="arrow"></div>
@@ -96,15 +96,15 @@
     <div class="node"><span class="num">5</span><b>对账与预警生成</b>：SAP 销毁或库存差异影响已排批次时生成「批次不足 / SAP 对账差异」预警；QC 未满足生成 QC 类预警</div>
     <div class="arrow"></div>
 
-    <div class="node end"><span class="num">6</span><b>联动与留痕</b>：刷新批次状态、受影响货柜 CBM、达成率与预警；拆批与同步动作写入操作日志；预警只提示与留痕</div>
+    <div class="node end"><span class="num">6</span><b>联动与留痕</b>：刷新批次状态、受影响货柜 CBM、达成率与预警；同步动作写入操作日志；预警只提示与留痕</div>
   </div>
 
-  <div class="principle"><b>铁律：批次状态以排程同步为准，人工只拆批不直改数量。</b>剩余可用量唯一口径为「原始可用量 − max(已排计划量, SAP 出库量) − SAP 销毁量」；预警不自动取消货柜、不改写数量，需要阻断的规则在上架 / 拆批 / 保存等操作点直接阻断。</div>
+  <div class="principle"><b>铁律：批次状态以 SAP 回传为准，人工只同步不直改数量。</b>剩余可用量唯一口径为「原始可用量 − max(已排计划量, SAP 出库量) − SAP 销毁量」；预警不自动取消货柜、不改写数量，需要阻断的规则在上架 / 保存等操作点直接阻断。</div>
 
   <div class="legend">
     <span class="lg-step"><i></i>处理步骤</span>
     <span class="lg-decision"><i></i>分支 / 判定</span>
-    <span class="lg-warn"><i></i>不可排 / 阻断</span>
+    <span class="lg-warn"><i></i>冻结 / 阻断</span>
     <span class="lg-end"><i></i>闭环 / 留痕</span>
   </div>
 </div>
