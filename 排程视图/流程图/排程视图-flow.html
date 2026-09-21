@@ -46,14 +46,14 @@
 <body data-page-node-id="slUU8txEhELwAtHeEyCaTS">
 <div class="chart-container" data-page-node-id="sn5D9tnFcMzmsJeML31D8C">
   <div class="chart-title" data-page-node-id="9Wl2XkyuSoheaOCnBOYFeB">排程视图 · 业务流程图</div>
-  <div class="chart-note" data-page-node-id="XrDDsXU5yRtTup5M22bClF">流程说明：排程调整统一进入未保存状态；关键分支为周末拦截、每日上限拦截与保存校验。</div>
+  <div class="chart-note" data-page-node-id="XrDDsXU5yRtTup5M22bClF">流程说明：编辑与拖拽改期即时生效（无未保存状态）；关键分支为周末落位拦截、单日单时段限 1 柜（月 / 周视图自动顺延同日下一空闲时段，日视图则两柜互换时段）、生成新货柜校验。</div>
 
   <div class="flow" data-page-node-id="QALRe9lg9kqHflJxXmzszm">
-    <div class="node" data-page-node-id="d5e62srfOfWY4ybCBoDeIP"><span class="num" data-page-node-id="10or5Edy4DiEbS4cMq3tWm">1</span>进入排程视图（默认日视图）</div>
+    <div class="node" data-page-node-id="d5e62srfOfWY4ybCBoDeIP"><span class="num" data-page-node-id="10or5Edy4DiEbS4cMq3tWm">1</span>进入排程视图（默认日视图，按香港工作日）</div>
     <div class="arrow" data-page-node-id="fMoFmmqFApFQkwKkvx9DJJ"></div>
-    <div class="node" data-page-node-id="PW3gDWI8UiEsuQt2NgZdBL"><span class="num" data-page-node-id="irRpthNtSzSLsa2AgVX51W">2</span>选择视图：日视图（执行与 QC 风险）/ 周视图（核对排柜顺序）/ 月视图（跨周拖动改期）</div>
+    <div class="node" data-page-node-id="PW3gDWI8UiEsuQt2NgZdBL"><span class="num" data-page-node-id="irRpthNtSzSLsa2AgVX51W">2</span>选择视图：日视图（执行与 QC 风险，可拖动改时段）/ 周视图（时段 × 工作日矩阵）/ 月视图（日期格内按时段分行，可日内拖动改时段 + 跨周改期）；三视图卡片均可点击进详情编辑</div>
     <div class="arrow" data-page-node-id="h1t4BWYIP3PZJuWKkzftwb"></div>
-    <div class="node" data-page-node-id="h8Z1aMEo6ocSTfJPClNhNe"><span class="num" data-page-node-id="IXNll3ikYnjKHkYsAZuW8A">3</span>拖动货柜到目标日期 / 时段</div>
+    <div class="node" data-page-node-id="h8Z1aMEo6ocSTfJPClNhNe"><span class="num" data-page-node-id="IXNll3ikYnjKHkYsAZuW8A">3</span>拖动货柜到目标日期格 / 时段行</div>
     <div class="arrow" data-page-node-id="KouatAzHvyuSZF8DdY8AIf"></div>
 
     <div class="branch-row" data-page-node-id="U8wmYcc8HdxC5ZJpAnUlIj">
@@ -69,32 +69,32 @@
 
     <div class="branch-row" data-page-node-id="AZlnqsxzawqUb3i8C3c8RP">
       <div class="decision-wrap" data-page-node-id="VLg4Ep2kcHlEVvBYCQwd8f">
-        <div class="decision" data-page-node-id="4y66xFVx6tFKvK1bzLoECt"><span class="d-tag" data-page-node-id="GpWK0hFDuPSQFlpuXCcqtT">判断②</span>是否超过每日上限？</div>
+        <div class="decision" data-page-node-id="4y66xFVx6tFKvK1bzLoECt"><span class="d-tag" data-page-node-id="GpWK0hFDuPSQFlpuXCcqtT">判断②</span>目标时段是否已被占用？（单日单时段限 1 柜）</div>
       </div>
       <div class="side" data-page-node-id="wFecfRT3x64paLLLklHgcK">
-        <div class="case" data-page-node-id="O54DdjnEvBrRlDf6hVFIR0"><span class="lbl yes" data-page-node-id="2zLgB7zszbC2j0wR5FjkAi">超限</span><span class="term" data-page-node-id="5leiUfrcbaDbBqNFOtDiTN">拦截，提示改期或申请扩容</span></div>
-        <div class="case" data-page-node-id="auSikvOsEwxpfiCqBMJgaC"><span class="lbl no" data-page-node-id="YLAtj1HYhwBsQ39LbNYOpN">未超</span><span class="term ok" data-page-node-id="O3mYMR3KjX4Hei5MdHJciO">继续</span></div>
+        <div class="case" data-page-node-id="O54DdjnEvBrRlDf6hVFIR0"><span class="lbl yes" data-page-node-id="2zLgB7zszbC2j0wR5FjkAi">已占用</span><span class="term" data-page-node-id="5leiUfrcbaDbBqNFOtDiTN">月 / 周视图：自动顺延同日下一空闲时段（同日排满则跨后续工作日）；日视图：与该时段货柜互换时段</span></div>
+        <div class="case" data-page-node-id="auSikvOsEwxpfiCqBMJgaC"><span class="lbl no" data-page-node-id="YLAtj1HYhwBsQ39LbNYOpN">空闲</span><span class="term ok" data-page-node-id="O3mYMR3KjX4Hei5MdHJciO">按目标时段落位</span></div>
       </div>
     </div>
     <div class="arrow" data-page-node-id="XOTEZWLemAX2beVznZHy08"></div>
 
-    <div class="node" data-page-node-id="qrhok2L4G9P1Tdm0SQFoRI"><span class="num" data-page-node-id="qBlhIFCQo8dSvSwdG9HOsi">4</span>标记未保存，进入未保存状态</div>
+    <div class="node" data-page-node-id="qrhok2L4G9P1Tdm0SQFoRI"><span class="num" data-page-node-id="qBlhIFCQo8dSvSwdG9HOsi">4</span>落位校验（CBM / QC 完成时间 / 工作日）通过后即时生效</div>
     <div class="arrow" data-page-node-id="pNkzvGWEvbhH9ztekF7GQh"></div>
-    <div class="node" data-page-node-id="M6Z0UwoZCVejyKIHggpd1p"><span class="num" data-page-node-id="RVJAeGHhoXF2eId9pb3xLB">5</span>撤销未保存 或 批量保存</div>
+    <div class="node" data-page-node-id="M6Z0UwoZCVejyKIHggpd1p"><span class="num" data-page-node-id="RVJAeGHhoXF2eId9pb3xLB">5</span>Toast 提示落位 / 互换结果；拖回原时段视为无操作；可再点击卡片进抽屉继续编辑</div>
     <div class="arrow" data-page-node-id="VDiQEKij0AUJB5qQW77Z9V"></div>
 
     <div class="branch-row" data-page-node-id="H4S5dwnTZU7Of4Pi4A2szq">
       <div class="decision-wrap" data-page-node-id="lo63EaBZwb5vxMdYjQ1SBl">
-        <div class="decision" data-page-node-id="Riu5Rttknh8kDJNgnFFMrV"><span class="d-tag" data-page-node-id="qi7UHrGd1EWMBDc7QE4A0u">判断③</span>保存校验（上限 / CBM / QC / 工作日）是否通过？</div>
+        <div class="decision" data-page-node-id="Riu5Rttknh8kDJNgnFFMrV"><span class="d-tag" data-page-node-id="qi7UHrGd1EWMBDc7QE4A0u">判断③</span>抽屉内编辑（上架 / 拆批 / 下架 / 取消）校验是否通过？</div>
       </div>
       <div class="side" data-page-node-id="LCZcnPS0XLY6wa0SoirbZQ">
         <div class="case" data-page-node-id="uQBCWGXd2haT6HYsqff0KS"><span class="lbl yes" data-page-node-id="ARe1SofXxRYtRxImJYBr1s">否</span><span class="term" data-page-node-id="ekShwJ2MkBFWDXytan1Qbx">提示对应异常，返回修正</span></div>
-        <div class="case" data-page-node-id="EelkGt10jceW9CAGGsO03c"><span class="lbl no" data-page-node-id="pyCbH0HjXqmqtwSptjFDaA">是</span><span class="term ok" data-page-node-id="SRYApGNiiQCljA9a1fgd7I">落库完成</span></div>
+        <div class="case" data-page-node-id="EelkGt10jceW9CAGGsO03c"><span class="lbl no" data-page-node-id="pyCbH0HjXqmqtwSptjFDaA">是</span><span class="term ok" data-page-node-id="SRYApGNiiQCljA9a1fgd7I">即时生效</span></div>
       </div>
     </div>
     <div class="arrow" data-page-node-id="e6uFwujAeBCnuWbxNjRyWT"></div>
 
-    <div class="node end" data-page-node-id="K7MywD9CBOxyjNDHnIXO6D"><span class="num" data-page-node-id="wbJyMAfvOLQQub0osisacO">6</span>排程调整完成，计划生效</div>
+    <div class="node end" data-page-node-id="K7MywD9CBOxyjNDHnIXO6D"><span class="num" data-page-node-id="wbJyMAfvOLQQub0osisacO">6</span>排程调整完成，计划即时生效</div>
   </div>
 
   <div class="legend" data-page-node-id="6MAyzKenCpttZNSWAHNA3q">
