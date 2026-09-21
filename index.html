@@ -89,7 +89,7 @@
     <div class="card">
       <span class="tag mod">模块 02</span>
       <h3>SKU 待分配批次池</h3>
-      <p class="desc">可排/不可排分栏、剩余可用量唯一口径与算例、人工拆批沿用原批号、整柜归集、同步排程与批次预警。</p>
+      <p class="desc">批次全量列表（已取消可排/不可排分栏与状态列，批次状态统一由「SAP 状态」表征）、剩余可用量唯一口径与算例、同步 SAP 状态与 SAP 状态筛选、排程/QC 计划与实际双口径日期（实际值带「实际」标识）、整柜归集与批次预警；拆批统一在装柜视图处理。</p>
       <div class="links">
         <a class="btn primary" href="%E6%89%B9%E6%AC%A1%E6%B1%A0/%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3/%E6%89%B9%E6%AC%A1%E6%B1%A0-PRD.html">进入 PRD</a>
         <a class="btn" href="%E6%89%B9%E6%AC%A1%E6%B1%A0/%E6%B5%81%E7%A8%8B%E5%9B%BE/%E6%89%B9%E6%AC%A1%E6%B1%A0-flow.html">看流程图</a>
@@ -100,7 +100,7 @@
     <div class="card">
       <span class="tag mod">模块 03</span>
       <h3>装柜计划执行表</h3>
-      <p class="desc">仓库按日执行、14 列表格、柜号封条号补录、计划有更新时效、SAP 对账差异、已取消货柜不可见。</p>
+      <p class="desc">装柜日默认当天（无排柜日自动回落）、12 列表格、CBM 含单柜上限对比（超限标红、利用率 ≤ 85% 标黄）、柜号封条号补录、计划有更新时效、SAP 对账差异、已取消货柜不可见；仅导出、不提供打印。</p>
       <div class="links">
         <a class="btn primary" href="%E8%A3%85%E6%9F%9C%E8%AE%A1%E5%88%92%E6%89%A7%E8%A1%8C%E8%A1%A8/%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3/%E8%A3%85%E6%9F%9C%E8%AE%A1%E5%88%92%E6%89%A7%E8%A1%8C%E8%A1%A8-PRD.html">进入 PRD</a>
         <a class="btn" href="%E8%A3%85%E6%9F%9C%E8%AE%A1%E5%88%92%E6%89%A7%E8%A1%8C%E8%A1%A8/%E6%B5%81%E7%A8%8B%E5%9B%BE/%E8%A3%85%E6%9F%9C%E8%AE%A1%E5%88%92%E6%89%A7%E8%A1%8C%E8%A1%A8-flow.html">看流程图</a>
@@ -111,7 +111,7 @@
     <div class="card">
       <span class="tag mod">模块 04</span>
       <h3>产品 SKU 主数据</h3>
-      <p class="desc">27 字段弹窗维护（四组）、字段来源标注、四类柜型 CBM 上限继承、启用停用与主数据变更影响预警。</p>
+      <p class="desc">27 字段弹窗维护（四组）、字段来源标注、四类柜型 CBM 上限继承、启用停用与主数据变更影响预警；工具栏含同步 SAP、下载模板，查询区含 SPU。</p>
       <div class="links">
         <a class="btn primary" href="SKU%E4%B8%BB%E6%95%B0%E6%8D%AE/%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3/SKU%E4%B8%BB%E6%95%B0%E6%8D%AE-PRD.html">进入 PRD</a>
         <a class="btn" href="SKU%E4%B8%BB%E6%95%B0%E6%8D%AE/%E6%B5%81%E7%A8%8B%E5%9B%BE/SKU%E4%B8%BB%E6%95%B0%E6%8D%AE-flow.html">看流程图</a>
@@ -133,7 +133,7 @@
     <div class="card">
       <span class="tag mod">模块 06</span>
       <h3>排程视图</h3>
-      <p class="desc">月 / 周 / 日三视图、跨周拖动、每日上限与 QC 风险、货柜编辑抽屉、批次池上下架与拆批。</p>
+      <p class="desc">日 / 周 / 月三视图（日视图默认、按香港工作日，三视图卡片均可点击进详情编辑）、月视图按 5 个装柜时段分行并可日内拖动改时段、日视图拖动改时段时两柜互换、月 / 周视图拖到已占用时段自动顺延同日下一空闲时段、单日单时段限 1 柜、货柜时间轴计划/实际双路径、日视图新增货柜排柜、货柜编辑抽屉（上架/下架/拆批，批次状态取 SAP 状态）。</p>
       <div class="links">
         <a class="btn primary" href="%E6%8E%92%E7%A8%8B%E8%A7%86%E5%9B%BE/%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3/%E6%8E%92%E7%A8%8B%E8%A7%86%E5%9B%BE-PRD.html">进入 PRD</a>
         <a class="btn" href="%E6%8E%92%E7%A8%8B%E8%A7%86%E5%9B%BE/%E6%B5%81%E7%A8%8B%E5%9B%BE/%E6%8E%92%E7%A8%8B%E8%A7%86%E5%9B%BE-flow.html">看流程图</a>
@@ -144,7 +144,7 @@
     <div class="card">
       <span class="tag mod">模块 07</span>
       <h3>预警中心</h3>
-      <p class="desc">15 类预警的触发、等级、跳转对象与处置闭环；只提示不干预，阻断在业务操作点执行。</p>
+      <p class="desc">15 类预警的触发、等级、跳转对象与处置闭环；预警类型支持多选查询；只提示不干预，阻断在业务操作点执行。</p>
       <div class="links">
         <a class="btn primary" href="%E9%A2%84%E8%AD%A6%E4%B8%AD%E5%BF%83/%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3/%E9%A2%84%E8%AD%A6%E4%B8%AD%E5%BF%83-PRD.html">进入 PRD</a>
         <a class="btn" href="%E9%A2%84%E8%AD%A6%E4%B8%AD%E5%BF%83/%E6%B5%81%E7%A8%8B%E5%9B%BE/%E9%A2%84%E8%AD%A6%E4%B8%AD%E5%BF%83-flow.html">看流程图</a>
