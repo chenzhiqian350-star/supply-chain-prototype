@@ -5,8 +5,8 @@
   <tbody>
     <tr><th>项目名称</th><td>供应链协同平台</td><th>模块</th><td>装柜计划工作台</td></tr>
     <tr><th>需求名称</th><td>装柜工作台（SCM 每日入口）</td><th>负责人</th><td>SCM 产品线</td></tr>
-    <tr><th>文档版本</th><td>V1.0</td><th>状态</th><td>已确认</td></tr>
-    <tr><th>更新日期</th><td>2026-09-11</td><th>关联原型</th><td>supply-chain-prototype.html（装柜工作台页）</td></tr>
+    <tr><th>文档版本</th><td>V1.1</td><th>状态</th><td>已确认</td></tr>
+    <tr><th>更新日期</th><td>2026-09-20</td><th>关联原型</th><td>supply-chain-prototype.html（装柜工作台页）</td></tr>
   </tbody>
 </table>
 
@@ -15,6 +15,7 @@
   <thead><tr><th>版本</th><th>日期</th><th>变更说明</th><th>作者</th></tr></thead>
   <tbody>
     <tr><td>V1.0</td><td>2026-09-11</td><td>初版：工作台三筛选、数据准备状态、四张核心指标卡与跳转、SCM 待处理清单排序、SKU 需求缺口与计划列表折叠表、生成与重新预排入口</td><td>SCM 产品线</td></tr>
+    <tr><td>V1.1</td><td>2026-09-20</td><td>筛选器由三筛选收敛为「需求月份」单筛选（默认当前月、仅支持单月）；指标卡由四张改为三张，口径重定为「装柜覆盖（SKU 口径）/ 本周期待办 / CBM 风险」，并统一点击跳转；移除「SKU 需求缺口」「计划列表」两个折叠模块（与 SKU 达成率报表重复）；待处理清单移除「SKU 需求缺口」条目类型</td><td>SCM 产品线</td></tr>
   </tbody>
 </table>
 
@@ -25,9 +26,9 @@
 <h2>需求目标</h2>
 <ul>
   <li>提供一个统一的 SCM 每日入口，先确认数据是否可用，再处理最高优先级风险。</li>
-  <li>需求月份、客户、目的地三个筛选联动汇总当前启用预测版本、批次池与货柜计划。</li>
+  <li>按「需求月份」单筛选（默认当前月）汇总当前启用预测版本、批次池与货柜计划。</li>
   <li>数据准备状态集中展示需求版本、排程、QC、SAP 的最近同步时间与异常，点击可跳转对应模块。</li>
-  <li>四张核心指标卡展示预测量、计划量、达成率与 CBM 风险柜数，点击可跳转对应明细。</li>
+  <li>三张核心指标卡展示装柜覆盖（SKU 口径）、本周期待办与 CBM 风险，点击可跳转对应明细。</li>
   <li>SCM 待处理清单按固定优先级排序：当日执行风险 &gt; CBM 超限 &gt; QC/批次不足 &gt; SAP 差异 &gt; T0 延期 &gt; 数据缺失。</li>
   <li>生成预排仅使用可排且 QC 可满足的批次；重新预排保护既有货柜，只补新增需求或已有缺口。</li>
   <li>所有缺失与风险保留预警提示，不静默排除、不自动阻断既有计划。</li>
@@ -38,10 +39,8 @@
 <iframe src="../流程图/装柜工作台-flow.html" style="width:100%;height:640px;border:1px solid #e3e8ef;border-radius:8px" title="业务流程图"></iframe>
 
 <h2>界面截图</h2>
-<p>下图为现有系统「装柜工作台」页面的真实运行截图（供应链数字化平台）。工作台由顶部三筛选、数据准备状态卡、四张核心指标卡与待处理清单构成：</p>
+<p>下图为现有系统「装柜工作台」页面的真实运行截图（供应链数字化平台）。工作台由顶部「需求月份」单筛选、数据准备状态卡、三张核心指标卡与待处理清单构成：</p>
 <img src="images/workspace-overview.png" alt="装柜工作台总览" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
-<p>下方的 SKU 需求缺口折叠表与计划列表折叠表（计划列表只作浏览与跳转，不提供直接编辑）：</p>
-<img src="images/workspace-tables.png" alt="SKU 需求缺口与计划列表" style="width:100%;border:1px solid #e3e8ef;border-radius:8px" />
 
 <h2>详细方案</h2>
 <table>
@@ -51,14 +50,14 @@
   </thead>
   <tbody>
     <tr data-preview="overview">
-      <td rowspan="7">装柜工作台</td>
-      <td>三筛选联动</td>
-      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/workspace-overview.png" alt="三筛选联动" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td rowspan="5">装柜工作台</td>
+      <td>需求月份筛选</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/workspace-overview.png" alt="需求月份筛选" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
       <td>
-        <p><b>【页面元素】</b>页面顶部三个筛选器：需求月份（下拉，默认当前处理月份）、客户（下拉，默认全部）、目的地（下拉，默认全部）；右侧为「刷新」按钮。</p>
-        <p><b>【交互说明】</b>任一筛选变化 → 重新汇总当前启用预测版本、批次池与货柜计划，刷新下方全部卡片、清单与折叠表；客户与目的地筛选对指标卡与待处理清单同时生效。</p>
-        <p><b>【功能逻辑】</b>需求月份决定预测版本与排柜范围的基准；客户、目的地为叠加过滤条件，不改变数据源。</p>
-        <p><b>【数据与内容规则】</b>需求月份可选范围为当前月起 N 至 N+6；客户与目的地选项来源于 SKU 主数据中启用且组合有效的记录。</p>
+        <p><b>【页面元素】</b>页面顶部仅一个筛选器：需求月份（下拉）；右侧为「刷新」按钮。</p>
+        <p><b>【交互说明】</b>切换需求月份 → 重新汇总当前启用预测版本、批次池与货柜计划，刷新下方全部卡片与清单。</p>
+        <p><b>【功能逻辑】</b>需求月份决定预测版本与排柜范围的基准，是工作台唯一的数据基准条件。<b>一期仅支持按单月筛选</b>，不支持跨月合并或月份区间。</p>
+        <p><b>【数据与内容规则】</b>页面加载时默认选中<b>当前自然月</b>；可选范围为本月起 N 至 N+6。</p>
       </td>
     </tr>
     <tr data-preview="overview">
@@ -75,10 +74,13 @@
       <td>核心指标卡</td>
       <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/workspace-overview.png" alt="核心指标卡" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
       <td>
-        <p><b>【页面元素】</b>四张可点击指标卡：① 需求预测量（当前启用版本按 SKU 合并后汇总）；② 预计装柜量（当前计划汇总）；③ 达成率（= 当月预计装柜量 / 当月需求预测量）；④ CBM 风险柜数（低装载 + 超限合计）。</p>
-        <p><b>【交互说明】</b>点预测量卡 → 跳转需求预测；点装柜量卡或达成率卡 → 跳转排程视图或达成率报表；点 CBM 风险卡 → 跳转预警中心并筛选 CBM 类。</p>
-        <p><b>【功能逻辑】</b>四张卡实时按当前三筛选条件重算；达成率按 SKU 维度分别计算，卡片展示汇总值。</p>
-        <p><b>【数据与内容规则】</b>达成率分母为合并后需求预测量；预测数量为 0 的 SKU 不参与达成率计算（标记「不参与预排」）。</p>
+        <p><b>【页面元素】</b>三张可点击指标卡，统一点击即跳转：</p>
+        <p>① <b>装柜覆盖</b>：主数值为「已排 SKU 数 / 有需求 SKU 数」（如 12 / 25 个 SKU），副文案为「已覆盖 xk · 待补缺口 xk」。<b>注意此处为 SKU 覆盖口径而非柜数</b>——货柜全部由系统预排或人工创建，不存在「该排未排」的空柜，用柜数做分子分母恒等、无意义。</p>
+        <p>② <b>本周期待办</b>：主数值为待处理条目总数（含 CBM 类），副文案按优先级分档「高 x · 中 y · 低 z」。</p>
+        <p>③ <b>CBM 风险</b>：主数值为风险货柜总数（超限 + 低装载合计），副文案拆分「超限 x · 低装载 y」。</p>
+        <p><b>【交互说明】</b>点装柜覆盖卡 → 跳转 SKU 达成率报表并聚焦明细；点本周期待办卡 → 页面内滚动定位到「SCM 待处理清单」；点 CBM 风险卡 → 跳转预警中心并<b>自动筛选 CBM 超限与 CBM 不足 85% 两类预警</b>。</p>
+        <p><b>【功能逻辑】</b>三张卡实时按当前需求月份重算。</p>
+        <p><b>【数据与内容规则】</b>装柜覆盖的分母只统计需求预测量 &gt; 0 的 SKU，分子只统计当月预计装柜量 &gt; 0 的 SKU；CBM 风险阈值：利用率 &gt; 100% 计超限、≤ 85% 计低装载。</p>
       </td>
     </tr>
     <tr data-preview="overview">
@@ -89,25 +91,6 @@
         <p><b>【交互说明】</b>点「去处理」→ 跳转对应货柜、批次、SKU 或预警详情；处理后该条目从清单移除或标记已处理。</p>
         <p><b>【功能逻辑】</b>清单按固定优先级排序：<b>当日执行风险 &gt; CBM 超限 &gt; QC/批次不足 &gt; SAP 差异 &gt; T0 延期 &gt; 数据缺失</b>；同级按业务对象编号升序。</p>
         <p><b>【数据与内容规则】</b>清单为实时计算，不落库；风险消除后条目自动消失，处理动作写入操作日志。</p>
-      </td>
-    </tr>
-    <tr data-preview="tables">
-      <td>SKU 需求缺口表</td>
-      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/workspace-tables.png" alt="SKU 需求缺口表" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
-      <td>
-        <p><b>【页面元素】</b>可折叠表格，7 列：产品编码、产品名称、客户、目的地、需求预测量、已排量、缺口量。缺口量 &gt; 0 的行以警示样式标识。</p>
-        <p><b>【交互说明】</b>点表头折叠/展开；点某行产品编码 → 跳转批次池并按该 SKU 预筛选。</p>
-        <p><b>【功能逻辑】</b>缺口量 = 需求预测量 − 已排量；按 SKU + 客户 + 目的地的组合键汇总，缺口由大到小排序。</p>
-        <p><b>【数据与内容规则】</b>数据源为当前启用预测版本与当前货柜计划的实时对比；预测为 0 的 SKU 不进入缺口表。</p>
-      </td>
-    </tr>
-    <tr data-preview="tables">
-      <td>计划列表</td>
-      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/workspace-tables.png" alt="计划列表" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
-      <td>
-        <p><b>【页面元素】</b>可折叠表格，展示当前筛选范围内的货柜计划行（货柜编号、客户、目的地、计划装柜日、状态、CBM 利用率、SKU 批次数）。</p>
-        <p><b>【交互说明】</b>点货柜编号 → 跳转排程视图日视图并定位该货柜；本表<b>只作浏览与跳转，不提供直接编辑</b>（编辑在排程视图 / 货柜编辑抽屉完成）。</p>
-        <p><b>【功能逻辑】</b>展示范围为当月且符合当前客户/目的地筛选的未删除货柜；已取消货柜不展示。</p>
       </td>
     </tr>
     <tr data-preview="overview">
@@ -131,7 +114,6 @@
     <tr><td>汇总数据准备状态并提供跳转</td><td>不在此页维护需求版本</td><td>需求预测（M02）</td></tr>
     <tr><td>按优先级排序并展示待处理清单</td><td>不在此页处理预警，处理在预警中心</td><td>预警中心（M06）</td></tr>
     <tr><td>生成 / 重新预排的发起入口</td><td>不在此页调整单个货柜的日期与批次</td><td>排程视图（M03）/ 货柜编辑抽屉（M09）</td></tr>
-    <tr><td>计划列表浏览与跳转</td><td>不在此页直接编辑计划内容</td><td>排程视图（M03）</td></tr>
   </tbody>
 </table>
 
@@ -145,7 +127,7 @@
     <tr><td>CBM 利用率 ≤ 85%（低装载）</td><td>计入 CBM 风险柜数；确认后允许发布且不再提示</td></tr>
     <tr><td>CBM 利用率 &gt; 100%（超限）</td><td>高优先级待处理，排在待处理清单前列</td></tr>
     <tr><td>保护式重新预排</td><td>既有货柜不被改写；需求下降形成的计划余量以预警提示</td></tr>
-    <tr><td>无当前月份数据</td><td>指标卡与折叠表显示空态占位，不报错</td></tr>
+    <tr><td>无当前月份数据</td><td>指标卡显示空态占位（如「无需求」），不报错</td></tr>
   </tbody>
 </table>
 
@@ -153,11 +135,10 @@
 <table>
   <thead><tr><th>事件名</th><th>触发时机</th><th>关键属性</th></tr></thead>
   <tbody>
-    <tr><td>workspace_filter_change</td><td>切换需求月份 / 客户 / 目的地</td><td>月份、客户、目的地</td></tr>
+    <tr><td>workspace_filter_change</td><td>切换需求月份</td><td>月份</td></tr>
     <tr><td>workspace_status_jump</td><td>点击数据准备状态跳转</td><td>目标类型（需求版本/排程/QC/SAP）</td></tr>
-    <tr><td>workspace_kpi_click</td><td>点击核心指标卡</td><td>卡片类型、当前值</td></tr>
+    <tr><td>workspace_kpi_click</td><td>点击核心指标卡</td><td>卡片类型（装柜覆盖/本周期待办/CBM 风险）、当前值</td></tr>
     <tr><td>workspace_task_handle</td><td>点击待处理清单「去处理」</td><td>风险类型、业务对象、排序位次</td></tr>
-    <tr><td>workspace_gap_jump</td><td>点击 SKU 需求缺口行</td><td>产品编码、缺口量</td></tr>
     <tr><td>workspace_auto_plan</td><td>发起生成 / 重新预排</td><td>类型（首次/保护式）、缺口 SKU 数、生成建议数</td></tr>
   </tbody>
 </table>
@@ -166,7 +147,7 @@
 <table>
   <thead><tr><th>阶段</th><th>内容</th><th>时间</th></tr></thead>
   <tbody>
-    <tr><td>一期</td><td>三筛选联动、数据准备状态与跳转、四张指标卡、待处理清单排序、SKU 需求缺口与计划列表折叠表、生成与保护式重新预排</td><td>待确认</td></tr>
+    <tr><td>一期</td><td>需求月份单筛选、数据准备状态与跳转、三张指标卡与跳转、待处理清单排序、生成与保护式重新预排</td><td>待确认</td></tr>
     <tr><td>二期</td><td>待处理清单自定义排序、指标卡趋势对比、一键批量处理同类风险</td><td>待确认</td></tr>
   </tbody>
 </table>
@@ -176,8 +157,7 @@
   <thead><tr><th>术语</th><th>说明</th></tr></thead>
   <tbody>
     <tr><td>数据准备状态</td><td>需求版本、排程批次、QC、SAP 四类数据的最近同步时间与异常汇总</td></tr>
-    <tr><td>达成率</td><td>当月预计装柜量 / 当月需求预测量，按 SKU 维度分别计算</td></tr>
-    <tr><td>需求缺口</td><td>需求预测量 − 已排量，按 SKU + 客户 + 目的地组合键汇总</td></tr>
+    <tr><td>达成率</td><td>当月预计装柜量 / 当月需求预测量，按 SKU 维度分别计算；工作台「装柜覆盖」卡按有需求 SKU 数中已覆盖的比例呈现</td></tr>
     <tr><td>生成预排</td><td>按需求缺口首次生成货柜建议，仅使用可排且 QC 可满足的批次</td></tr>
     <tr><td>保护式重新预排</td><td>不改变既有货柜，仅为新增需求或已有缺口生成补量建议</td></tr>
     <tr><td>待处理优先级</td><td>当日执行风险 &gt; CBM 超限 &gt; QC/批次不足 &gt; SAP 差异 &gt; T0 延期 &gt; 数据缺失</td></tr>
