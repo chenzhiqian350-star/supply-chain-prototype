@@ -5,8 +5,8 @@
   <tbody>
     <tr><th>项目名称</th><td>供应链协同平台</td><th>模块</th><td>产品 SKU 主数据</td></tr>
     <tr><th>需求名称</th><td>产品 SKU 主数据（27 字段维护）</td><th>负责人</th><td>SCM 产品线</td></tr>
-    <tr><th>文档版本</th><td>V1.0</td><th>状态</th><td>已确认</td></tr>
-    <tr><th>更新日期</th><td>2026-09-11</td><th>关联原型</th><td>supply-chain-prototype.html（产品 SKU 主数据页）</td></tr>
+    <tr><th>文档版本</th><td>V1.1</td><th>状态</th><td>已确认</td></tr>
+    <tr><th>更新日期</th><td>2026-09-20</td><th>关联原型</th><td>supply-chain-prototype.html（产品 SKU 主数据页）</td></tr>
   </tbody>
 </table>
 
@@ -14,7 +14,8 @@
 <table>
   <thead><tr><th>版本</th><th>日期</th><th>变更说明</th><th>作者</th></tr></thead>
   <tbody>
-    <tr><td>V1.0</td><td>2026-09-11</td><td>初版：查询区与 SKU 列表、27 字段弹窗维护（4 组）、字段来源标注、四类柜型 CBM 上限继承、启用/停用、主数据变更影响预警、字段口径与校验规则</td><td>SCM 产品线</td></tr>
+    <tr><td>V1.0</td><td>2026-09-11</td><td>初版：查询区与 SKU 列表、27 字段弹窗维护（4 组）、字段来源标注、产品 CBM 上限（SKU × 柜型）、启用/停用、主数据变更影响预警、字段口径与校验规则</td><td>SCM 产品线</td></tr>
+    <tr><td>V1.1</td><td>2026-09-20</td><td>工具栏新增「同步 SAP」与「下载模板」两个操作（「下载模板」置于「导入主数据」左侧）；查询区新增「SPU」查询条件并支持模糊匹配；新增「同步 SAP 主数据」「下载导入模板」两项功能说明与对应埋点；上线计划一期同步纳入</td><td>SCM 产品线</td></tr>
   </tbody>
 </table>
 
@@ -27,11 +28,14 @@
 <ul>
   <li>提供 SKU 主数据列表，支持按产品编码关键字、目的地、运输方式查询。</li>
   <li>新增与维护全部通过结构化弹窗完成，一次维护全部 27 个字段，分为四个分组。</li>
-  <li>字段列表显式标注来源（SAP 获取 / 人手维护 / 继承货柜类型主数据 / 排程系统），便于判断维护入口。</li>
-  <li>四类柜型（40'RF / 40'HQ / 20'RF / 20'GP）CBM 上限展示为继承值，不在此页直接维护，用于导入校验。</li>
+  <li>字段列表显式标注来源（SAP 获取 / 人手维护 / 产品主数据 / 排程系统），便于判断维护入口。</li>
+  <li>四类柜型（40'RF / 40'HQ / 20'RF / 20'GP）的产品 CBM 上限按「SKU × 柜型」在本页直接维护；货柜校验取柜内所有 SKU 上限的 <code>MIN</code>。</li>
   <li>产品编码必填且唯一；缺失件装量、目的地或周期的 SKU 不参与自动预排。</li>
   <li>支持停用 SKU：停用后不参与后续预排，但保留历史计划与操作日志；非 GMP SKU 停用需二次确认。</li>
   <li>目的地或默认运输方式变更影响未执行计划时，生成「主数据变更影响」预警，由 SCM 复核。</li>
+  <li>提供「同步 SAP」入口：一键从 SAP 产品主数据接口拉取最新字段值，刷新列表中的 SAP 来源字段。</li>
+  <li>提供「下载模板」入口（位于「导入主数据」左侧）：下载标准 CSV 导入模板，供离线填报后批量导入。</li>
+  <li>查询区在原有产品编码关键字之外，新增「SPU」查询条件，支持按 SPU 定位同一系列下的全部产品编码。</li>
 </ul>
 
 <h2>业务流程图</h2>
@@ -41,7 +45,7 @@
 <h2>界面截图</h2>
 <p>下图为现有系统「产品 SKU 主数据」页面的真实运行截图。上方为查询区（产品编码搜索、目的地、运输方式）与 SKU 列表：</p>
 <img src="images/sku-overview.png" alt="SKU 主数据列表" style="width:100%;border:1px solid #e3e8ef;border-radius:8px;margin-bottom:12px" />
-<p>下方为规则说明卡（四类柜型 CBM 上限继承说明、字段来源说明等）：</p>
+<p>下方为规则说明卡（产品 CBM 上限说明、字段来源说明等）：</p>
 <img src="images/sku-rules.png" alt="规则说明卡" style="width:100%;border:1px solid #e3e8ef;border-radius:8px" />
 
 <h2>详细方案</h2>
@@ -52,21 +56,21 @@
   </thead>
   <tbody>
     <tr data-preview="overview">
-      <td rowspan="6">产品 SKU 主数据</td>
+      <td rowspan="8">产品 SKU 主数据</td>
       <td>查询区</td>
       <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/sku-overview.png" alt="查询区" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
       <td>
-        <p><b>【页面元素】</b>查询区含：产品编码搜索框（支持关键字模糊匹配）、目的地下拉、运输方式下拉、「查询」按钮。</p>
+        <p><b>【页面元素】</b>查询区含：<b>SPU 搜索框</b>（新增，支持模糊匹配，如「SPU-0182」）、产品编码搜索框（支持关键字模糊匹配）、目的地下拉、运输方式下拉、「查询」按钮。</p>
         <p><b>【交互说明】</b>输入或选择条件后点「查询」→ 列表刷新；条件可叠加（AND）；清空条件后重新展示全部启用与停用记录。</p>
-        <p><b>【功能逻辑】</b>查询仅过滤展示，不改变数据；默认展示全部记录并按产品编码升序排列。</p>
-        <p><b>【数据与内容规则】</b>目的地、运输方式选项来源于已维护的 SKU 主数据聚合值。</p>
+        <p><b>【功能逻辑】</b>查询仅过滤展示，不改变数据；默认展示全部记录并按产品编码升序排列。SPU 与产品编码两个关键字条件、目的地与运输方式两个下拉条件之间均为叠加关系（AND）。</p>
+        <p><b>【数据与内容规则】</b>目的地、运输方式选项来源于已维护的 SKU 主数据聚合值；SPU 与产品编码为文本关键字，大小写不敏感。</p>
       </td>
     </tr>
     <tr data-preview="overview">
       <td>SKU 列表</td>
       <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/sku-overview.png" alt="SKU 列表" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
       <td>
-        <p><b>【页面元素】</b>列表展示产品编码、产品名称、客户、目的地、运输方式、规模属性、生产区域、GMP 状态与启用状态，行尾提供「编辑」「停用 / 启用」入口。</p>
+        <p><b>【页面元素】</b>列表上方工具栏含四个操作：「<b>同步 SAP</b>」「<b>下载模板</b>」「导入主数据」「新增 SKU」（「下载模板」固定位于「导入主数据」左侧）。列表展示产品编码、产品名称、客户、目的地、运输方式、规模属性、生产区域、GMP 状态与启用状态，行尾提供「编辑」「停用 / 启用」入口。</p>
         <p><b>【交互说明】</b>点「编辑」→ 打开 27 字段弹窗并带入当前值；点「停用」→ 二次确认后停用；点「启用」→ 恢复参与预排。</p>
         <p><b>【功能逻辑】</b>停用记录仍在列表中可见（便于查历史），但状态列显示为「已停用」且不进入后续预排。</p>
       </td>
@@ -75,27 +79,48 @@
       <td>27 字段弹窗维护</td>
       <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/sku-overview.png" alt="字段弹窗" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
       <td>
-        <p><b>【页面元素】</b>结构化弹窗，按四个分组纵向排列 27 个字段：① 基本信息（8）；② 客户与物流（10）；③ 周期参数（天）（5）；④ 柜型 CBM 上限（4）。每个字段旁标注来源与必填性。</p>
+        <p><b>【页面元素】</b>结构化弹窗，按四个分组纵向排列 27 个字段：① 基本信息（8）；② 客户与物流（10）；③ 周期参数（天）（5）；④ 产品 CBM 上限（SKU × 柜型，4）。每个字段旁标注来源与必填性。</p>
         <p><b>【交互说明】</b>新增时弹窗为空表单；编辑时带入当前值；点「保存」→ 执行校验后落库；点「取消」→ 放弃变更并关闭。</p>
         <p><b>【功能逻辑】</b>一次性维护全部字段；批量导入为辅助手段，<b>不能直接覆盖已排计划</b>。</p>
-        <p><b>【前置条件与权限】</b>产品编码必填且唯一；四类柜型 CBM 上限为继承值（只读展示），维护入口在货柜类型主数据。</p>
+        <p><b>【前置条件与权限】</b>产品编码必填且唯一；四类柜型下的产品 CBM 上限按「SKU × 柜型」在本页维护；货柜校验取柜内所有 SKU 上限的 MIN。</p>
       </td>
     </tr>
     <tr data-preview="rules">
       <td>字段来源标注</td>
       <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/sku-rules.png" alt="字段来源" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
       <td>
-        <p><b>【页面元素】</b>列表与弹窗中，每个字段标注来源：<b>从 SAP 获取</b>、<b>人手维护</b>、<b>继承货柜类型主数据</b>、<b>排程系统</b>。</p>
+        <p><b>【页面元素】</b>列表与弹窗中，每个字段标注来源：<b>从 SAP 获取</b>、<b>人手维护</b>、<b>产品主数据（SKU × 柜型）</b>、<b>排程系统</b>。</p>
         <p><b>【功能逻辑】</b>来源标注明确该字段的数据责任方与维护入口，SCM 据此判断字段异常时应联系哪个系统或角色修正。</p>
-        <p><b>【数据与内容规则】</b>「继承货柜类型主数据」的字段在本页只读；「从 SAP 获取」的字段以 SAP 同步值为准，人工不可覆盖。</p>
+        <p><b>【数据与内容规则】</b>「产品主数据」来源的字段以主数据维护值为准；「从 SAP 获取」的字段以 SAP 同步值为准，人工不可覆盖。</p>
       </td>
     </tr>
     <tr data-preview="rules">
-      <td>柜型 CBM 上限继承</td>
+      <td>产品 CBM 上限（SKU × 柜型）</td>
       <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/sku-rules.png" alt="柜型上限" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
       <td>
-        <p><b>【功能逻辑】</b>四类柜型容量（40'RF / 40'HQ / 20'RF / 20'GP）展示为本 SKU 的继承值，用于导入校验与柜型选择；容量本身<b>只能在货柜类型主数据中维护</b>。</p>
-        <p><b>【数据与内容规则】</b>继承值随货柜类型主数据的变更而更新，本页不提供直接编辑。</p>
+        <p><b>【功能逻辑】</b>四类柜型下的产品 CBM 上限（40'RF / 40'HQ / 20'RF / 20'GP）按「SKU × 柜型」在本页维护；货柜校验取柜内所有 SKU 上限的 MIN。</p>
+        <p><b>【数据与内容规则】</b>上限变更不追溯改写既有货柜，仅生成受影响计划预警。</p>
+      </td>
+    </tr>
+    <tr data-preview="overview">
+      <td>同步 SAP 主数据</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/sku-overview.png" alt="同步 SAP" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>工具栏「同步 SAP」按钮（与「下载模板」「导入主数据」「新增 SKU」并列）。</p>
+        <p><b>【交互说明】</b>点「同步 SAP」→ 以加载态拉取 SAP 产品主数据接口最新值；同步期间按钮置灰，完成后刷新列表并提示同步结果（新增 / 更新 / 无变化条数）。</p>
+        <p><b>【功能逻辑】</b>同步为<b>只读拉取</b>，仅覆盖标注为「从 SAP 获取」的字段（如产品名称、剂型、件装量、每件 CBM、产品有效期、GMP 状态等）；<b>人手维护字段不被覆盖</b>；同步不追溯改写既有货柜计划，涉及未执行计划的变更按原规则生成「主数据变更影响」预警。</p>
+        <p><b>【前置条件与权限】</b>仅 SCM 计划员 / SCM 主管可执行；同步为全量刷新，不支持按选中行同步。原型中该按钮为静态占位，实际以 SAP 产品主数据接口为准。</p>
+        <p><b>【文案规范】</b>「同步 SAP 主数据：原型为静态占位，实际以 SAP 产品主数据接口为准」为统一提示文案。</p>
+      </td>
+    </tr>
+    <tr data-preview="overview">
+      <td>下载导入模板</td>
+      <td><div class="prototype-frame" data-pw="1440" data-ph="900"><img src="images/sku-overview.png" alt="下载模板" style="width:100%;height:auto;border:1px solid #e3e8ef;border-radius:8px" /></div></td>
+      <td>
+        <p><b>【页面元素】</b>工具栏「下载模板」按钮，固定位于「导入主数据」左侧。</p>
+        <p><b>【交互说明】</b>点「下载模板」→ 下载标准 CSV 模板文件，文件名「SKU主数据导入模板.csv」；模板首行为 27 字段的中文表头，带 UTF-8 BOM 以兼容 Excel 中文。</p>
+        <p><b>【功能逻辑】</b>模板表头与「导入主数据」解析规则一一对应；用户按模板离线填报后可原样导入，避免因表头不一致导致导入失败。</p>
+        <p><b>【数据与内容规则】</b>模板仅含表头行，不含示例数据行；字段顺序与页面 27 字段清单保持一致。</p>
       </td>
     </tr>
     <tr data-preview="overview">
@@ -155,14 +180,14 @@
   </tbody>
 </table>
 
-<h3>④ 柜型 CBM 上限（4 项，继承值）</h3>
+<h3>④ 产品 CBM 上限（SKU × 柜型，4 项）</h3>
 <table>
   <thead><tr><th>字段</th><th>说明</th><th>来源</th><th>必填性</th></tr></thead>
   <tbody>
-    <tr><td>40'RF CBM 上限</td><td>40 尺冻柜容量上限</td><td>继承货柜类型主数据</td><td>只读继承</td></tr>
-    <tr><td>40'HQ CBM 上限</td><td>40 尺高柜容量上限</td><td>继承货柜类型主数据</td><td>只读继承</td></tr>
-    <tr><td>20'RF CBM 上限</td><td>20 尺冻柜容量上限</td><td>继承货柜类型主数据</td><td>只读继承</td></tr>
-    <tr><td>20'GP CBM 上限</td><td>20 尺普柜容量上限</td><td>继承货柜类型主数据</td><td>只读继承</td></tr>
+    <tr><td>40'RF CBM 上限</td><td>该 SKU 在 40 尺冻柜下的可装上限</td><td>产品主数据（SKU × 柜型）</td><td>按柜型分别维护</td></tr>
+    <tr><td>40'HQ CBM 上限</td><td>该 SKU 在 40 尺高柜下的可装上限</td><td>产品主数据（SKU × 柜型）</td><td>按柜型分别维护</td></tr>
+    <tr><td>20'RF CBM 上限</td><td>该 SKU 在 20 尺冻柜下的可装上限</td><td>产品主数据（SKU × 柜型）</td><td>按柜型分别维护</td></tr>
+    <tr><td>20'GP CBM 上限</td><td>该 SKU 在 20 尺普柜下的可装上限</td><td>产品主数据（SKU × 柜型）</td><td>按柜型分别维护</td></tr>
   </tbody>
 </table>
 
@@ -187,7 +212,7 @@
     <tr><td>SKU 被选入新增预测行</td><td>只带出启用且组合有效的记录；主数据组合不匹配时预测行校验不通过</td></tr>
     <tr><td>停用 SKU</td><td>不参与后续预排，保留历史计划与日志；非 GMP SKU 停用需二次确认</td></tr>
     <tr><td>目的地或运输方式变更</td><td>影响未执行计划时生成「主数据变更影响」预警，由 SCM 复核；不自动改写货柜</td></tr>
-    <tr><td>柜型容量调整</td><td>本页只读继承；调整入口在货柜类型主数据，变更后继承值同步更新</td></tr>
+    <tr><td>CBM 上限调整</td><td>按 SKU × 柜型 在本页维护；变更不追溯改写既有货柜，仅生成受影响计划预警</td></tr>
     <tr><td>批量导入</td><td>作为辅助手段，不能直接覆盖已排计划</td></tr>
   </tbody>
 </table>
@@ -203,6 +228,8 @@
     <tr><td>sku_disable</td><td>停用 SKU</td><td>产品编码、是否 GMP、是否二次确认</td></tr>
     <tr><td>sku_enable</td><td>启用 SKU</td><td>产品编码</td></tr>
     <tr><td>sku_impact_alert</td><td>生成主数据变更影响预警</td><td>产品编码、受影响货柜数</td></tr>
+    <tr><td>sku_sync_sap</td><td>点击同步 SAP</td><td>同步新增数、更新数、无变化数、耗时</td></tr>
+    <tr><td>sku_template_download</td><td>点击下载模板</td><td>模板版本、字段数</td></tr>
   </tbody>
 </table>
 
@@ -210,7 +237,7 @@
 <table>
   <thead><tr><th>阶段</th><th>内容</th><th>时间</th></tr></thead>
   <tbody>
-    <tr><td>一期</td><td>查询区与 SKU 列表、27 字段弹窗维护（4 组）、字段来源标注、柜型 CBM 上限继承、启用/停用、主数据变更影响预警</td><td>待确认</td></tr>
+    <tr><td>一期</td><td>查询区（含 SPU 查询）与 SKU 列表、同步 SAP、下载模板、导入主数据、27 字段弹窗维护（4 组）、字段来源标注、产品 CBM 上限（SKU × 柜型）、启用/停用、主数据变更影响预警</td><td>待确认</td></tr>
     <tr><td>二期</td><td>批量导入增强（变更预览与回滚）、字段级变更历史、按客户/目的地的组合有效性看板</td><td>待确认</td></tr>
   </tbody>
 </table>
@@ -221,7 +248,7 @@
   <tbody>
     <tr><td>SPU</td><td>产品唯一系列标识，一个 SPU 可对应多个产品编码</td></tr>
     <tr><td>有效业务组合</td><td>SKU + 客户 + 目的地，三者缺一不可参与预测与预排</td></tr>
-    <tr><td>继承值</td><td>来自其他主数据（如货柜类型容量）的只读引用值，本页不可直接维护</td></tr>
+    <tr><td>产品 CBM 上限（SKU × 柜型）</td><td>该 SKU 在四类柜型下的可装上限，在本页按 SKU × 柜型 维护；货柜校验取柜内所有 SKU 上限的 <code>MIN</code></td></tr>
     <tr><td>GMP</td><td>药品生产质量管理规范；非 GMP SKU 停用需二次确认</td></tr>
     <tr><td>主数据变更影响</td><td>目的地或运输方式等关键字段变更影响未执行计划时生成的复核预警</td></tr>
     <tr><td>参与自动预排的前置条件</td><td>启用状态 + 件装量 + 目的地 + 周期参数四项完整</td></tr>
