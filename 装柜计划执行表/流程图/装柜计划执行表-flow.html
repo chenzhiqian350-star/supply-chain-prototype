@@ -60,7 +60,7 @@
     <div class="node"><span class="num">3</span><b>可见性过滤</b>：仅展示「计划中 / 执行中 / 已完成」；<b>已取消货柜不展示</b>（标签常驻说明）</div>
     <div class="arrow"></div>
 
-    <div class="node"><span class="num">4</span><b>查看 14 列执行表</b>：货柜编号｜客户｜目的地｜运输方式｜计划时段｜SKU 批次数｜箱数｜CBM｜QC 摘要｜预计 T0｜柜号｜封条号｜状态｜计划有更新（表头固定，横向滚动）</div>
+    <div class="node"><span class="num">4</span><b>查看 12 列执行表</b>：货柜编号｜客户｜目的地｜运输方式｜计划时段｜箱数｜CBM（含单柜上限对比）｜预计 T0｜柜号｜封条号｜状态｜计划有更新（表头固定不换行，横向滚动）</div>
     <div class="arrow"></div>
 
     <div class="branch-row">
@@ -89,13 +89,13 @@
       </div>
       <div class="side">
         <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>SAP 出库对账</b>：执行日后是否匹配到出库？</div>
-        <div class="case"><span class="lbl yes">未匹配</span><span class="term">显示「SAP 对账差异」预警；CBM 超限进入执行显示高优先级对账风险</span></div>
+        <div class="case"><span class="lbl yes">未匹配</span><span class="term">显示「SAP 对账差异」预警；CBM 超限进入执行时该列整格标红并显示高优先级对账风险</span></div>
         <div class="case"><span class="term muted">只提示，不阻断查看与补录</span></div>
       </div>
     </div>
     <div class="arrow"></div>
 
-    <div class="node end"><span class="num">6</span><b>导出与留痕</b>：导出「装柜计划执行表-YYYYMMDD.csv」（14 列，带 BOM）或打印；补录、导出、打印动作均写入操作日志</div>
+    <div class="node end"><span class="num">6</span><b>导出与留痕</b>：导出「装柜计划执行表-YYYYMMDD.csv」（12 列，CBM 列含单柜上限与利用率，带 BOM）；补录与导出动作均写入操作日志</div>
   </div>
 
   <div class="principle"><b>铁律：执行表是执行层，计划数据一律只读。</b>仓库只维护柜号与封条号；已取消货柜不在执行表展示，避免按作废计划执行；对账差异与 CBM 风险只提示、不阻断，处理在预警中心完成。</div>
