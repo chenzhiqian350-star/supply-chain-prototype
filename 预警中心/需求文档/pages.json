@@ -1,6 +1,30 @@
 [
-  {"value": "list", "label": "P01 · 预警中心列表", "url": "../原型/supply-chain-prototype.html#alerts", "w": 1440, "h": 1000},
-  {"value": "catalog", "label": "P02 · 预警生成与目录", "url": "../原型/supply-chain-prototype.html#alerts", "w": 1440, "h": 1000},
-  {"value": "handled", "label": "P03 · 处置后列表", "url": "../原型/supply-chain-prototype.html#alerts", "w": 1440, "h": 1000},
-  {"value": "workbench", "label": "P04 · 装柜工作台（待办联动）", "url": "../原型/supply-chain-prototype.html#workspace", "w": 1440, "h": 900}
+  {
+    "value": "list",
+    "label": "P01 · 预警中心列表（预警类型多选）",
+    "url": "../原型/supply-chain-prototype.html#alerts",
+    "w": 1440,
+    "h": 1000
+  },
+  {
+    "value": "catalog",
+    "label": "P02 · 预警生成与目录",
+    "url": "../原型/supply-chain-prototype.html#alerts",
+    "w": 1440,
+    "h": 1000
+  },
+  {
+    "value": "handled",
+    "label": "P03 · 处置后列表",
+    "url": "../原型/supply-chain-prototype.html#alerts",
+    "w": 1440,
+    "h": 1000
+  },
+  {
+    "value": "workbench",
+    "label": "P04 · 装柜工作台（待办联动）",
+    "url": "../原型/supply-chain-prototype.html#workspace",
+    "w": 1440,
+    "h": 900
+  }
 ]
