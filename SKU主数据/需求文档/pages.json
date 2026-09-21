@@ -1,4 +1,16 @@
 [
-  {"value": "overview", "label": "P01 · SKU 主数据列表", "url": "../原型/supply-chain-prototype.html#skuMaster", "w": 1440, "h": 900},
-  {"value": "rules", "label": "P02 · 规则说明卡", "url": "../原型/supply-chain-prototype.html#skuMaster", "w": 1440, "h": 900}
+  {
+    "value": "overview",
+    "label": "P01 · SKU 主数据列表（含工具栏与 SPU 查询）",
+    "url": "../原型/supply-chain-prototype.html#skuMaster",
+    "w": 1440,
+    "h": 900
+  },
+  {
+    "value": "rules",
+    "label": "P02 · 规则说明卡",
+    "url": "../原型/supply-chain-prototype.html#skuMaster",
+    "w": 1440,
+    "h": 900
+  }
 ]
