@@ -54,17 +54,17 @@
     <div class="node"><span class="num">1</span><b>进入 SKU 主数据</b>：按产品编码关键字、目的地、运输方式查询，或直接新增记录</div>
     <div class="arrow"></div>
 
-    <div class="node"><span class="num">2</span><b>打开 27 字段弹窗</b>：① 基本信息（8）② 客户与物流（10）③ 周期参数-天（5）④ 柜型 CBM 上限（4，继承值只读）</div>
+    <div class="node"><span class="num">2</span><b>打开 27 字段弹窗</b>：① 基本信息（8）② 客户与物流（10）③ 周期参数-天（5）④ 产品 CBM 上限（SKU × 柜型，4）</div>
     <div class="arrow"></div>
 
-    <div class="node"><span class="num">3</span><b>填写并提交保存</b>：每个字段旁标注来源（SAP 获取 / 人手维护 / 继承货柜类型主数据 / 排程系统）与必填性</div>
+    <div class="node"><span class="num">3</span><b>填写并提交保存</b>：每个字段旁标注来源（SAP 获取 / 人手维护 / 产品主数据 / 排程系统）与必填性</div>
     <div class="arrow"></div>
 
     <div class="branch-row">
       <div class="side">
         <div class="case"><span class="lbl no">通过</span><span class="term ok">落库保存；启用状态下参与后续预排</span></div>
         <div class="case"><span class="term muted">件装量 / 目的地 / 周期任一缺失 → 保存但不参与自动预排并提示</span></div>
-        <div class="case"><span class="term muted">四类柜型 CBM 上限随货柜类型主数据同步继承</span></div>
+        <div class="case"><span class="term muted">四类柜型下的产品 CBM 上限按 SKU × 柜型 分别配置</span></div>
       </div>
       <div class="side">
         <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>保存校验</b>：产品编码是否填写且唯一？组合是否有效？</div>
@@ -103,7 +103,7 @@
     <div class="node end"><span class="num">4</span><b>联动与留痕</b>：需求预测按产品编码带出客户与目的地；主数据变更影响预警进入预警中心；保存、停用、启用动作写入操作日志</div>
   </div>
 
-  <div class="principle"><b>铁律：主数据变化不追溯修改已有计划。</b>字段变更只影响后续预排与后续调整；目的地或运输方式变更影响未执行货柜时生成「主数据变更影响」预警，由 SCM 复核；柜型 CBM 上限在本页只读继承，维护入口在货柜类型主数据。</div>
+  <div class="principle"><b>铁律：主数据变化不追溯修改已有计划。</b>字段变更只影响后续预排与后续调整；目的地或运输方式变更影响未执行货柜时生成「主数据变更影响」预警，由 SCM 复核；产品 CBM 上限按 SKU × 柜型 在本页维护，货柜校验取柜内所有 SKU 上限的 MIN。</div>
 
   <div class="legend">
     <span class="lg-step"><i></i>处理步骤</span>
