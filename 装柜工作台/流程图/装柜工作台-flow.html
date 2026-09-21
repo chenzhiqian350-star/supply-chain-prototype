@@ -54,7 +54,7 @@
     <div class="node"><span class="num">1</span><b>进入工作台</b>：SCM 每日首屏入口，默认载入当前需求月份</div>
     <div class="arrow"></div>
 
-    <div class="node"><span class="num">2</span><b>选择三筛选</b>：需求月份（N～N+6）＋ 客户 ＋ 目的地，联动汇总预测版本、批次池与货柜计划</div>
+    <div class="node"><span class="num">2</span><b>选择需求月份</b>：默认当前月（N～N+6，一期仅支持单月），汇总预测版本、批次池与货柜计划</div>
     <div class="arrow"></div>
 
     <div class="node"><span class="num">3</span><b>查看数据准备状态</b>：需求版本、排程批次、QC、SAP 四类数据的最近同步时间与异常</div>
@@ -77,7 +77,7 @@
     </div>
     <div class="arrow"></div>
 
-    <div class="node"><span class="num">4</span><b>查看四张核心指标卡</b>：需求预测量｜预计装柜量｜达成率（预计装柜量 / 预测量）｜CBM 风险柜数；点击可跳转对应明细</div>
+    <div class="node"><span class="num">4</span><b>查看三张核心指标卡</b>：装柜覆盖（已排 SKU 数 / 有需求 SKU 数）｜本周期待办（全量预警数）｜CBM 风险（超限 + 低装载）；点击可跳转对应明细</div>
     <div class="arrow"></div>
 
     <div class="node"><span class="num">5</span><b>处理 SCM 待处理清单</b>：按 <b>当日执行风险 &gt; CBM 超限 &gt; QC/批次不足 &gt; SAP 差异 &gt; T0 延期 &gt; 数据缺失</b> 排序，逐条「去处理」</div>
@@ -87,7 +87,7 @@
       <div class="side">
         <div class="case"><span class="lbl yes" style="background:#2563eb">首次</span><span class="term muted" style="background:#eff6ff;border-color:#bfdbfe;color:#1e40af">点「生成预排」：按 SKU + 客户 + 目的地的需求缺口生成货柜建议</span></div>
         <div class="case"><span class="term muted">仅使用<b>可排且 QC 可满足</b>的批次</span></div>
-        <div class="case"><span class="term muted">缺口表可跳转批次池按 SKU 预筛选</span></div>
+        <div class="case"><span class="term muted">CBM 风险卡可跳预警中心并筛 CBM 两类</span></div>
       </div>
       <div class="side">
         <div class="decision" style="max-width:none"><span class="d-tag">分支</span><b>是否已有计划</b>？</div>
