@@ -1,4 +1,16 @@
 [
-  {"value": "overview", "label": "P01 · 执行表总览", "url": "../原型/supply-chain-prototype.html#executionBoard", "w": 1440, "h": 900},
-  {"value": "table", "label": "P02 · 执行表（14 列）", "url": "../原型/supply-chain-prototype.html#executionBoard", "w": 1440, "h": 900}
+  {
+    "value": "overview",
+    "label": "P01 · 执行表总览（装柜日默认当天）",
+    "url": "../原型/supply-chain-prototype.html#executionBoard",
+    "w": 1440,
+    "h": 900
+  },
+  {
+    "value": "table",
+    "label": "P02 · 执行表（14 列）",
+    "url": "../原型/supply-chain-prototype.html#executionBoard",
+    "w": 1440,
+    "h": 900
+  }
 ]
